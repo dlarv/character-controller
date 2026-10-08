@@ -89,7 +89,6 @@ func _input(event: InputEvent) -> void:
 		_set_sprint_mode(event)
 
 
-var height := 0.0
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	var _walk_speed := _get_movement_vector(sprint_speed if is_sprinting else walk_speed)
 	state.apply_central_force(_walk_speed)
@@ -103,10 +102,6 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		gravity_scale = _initial_gravity_scale
 		can_jump = true
 	
-	if is_on_floor and height > 0:
-		print(height)
-		height = 0
-
 
 func _get_movement_vector(speed: float) -> Vector3:
 	var _input_dir := Input.get_vector(move_left_action, move_right_action, move_up_action, move_down_action)
@@ -167,12 +162,11 @@ func _set_sprint_mode(event: InputEvent) -> void:
 func _try_fall(gravity: float) -> bool:
 	# Don't apply heavier gravity before coyote time runs out
 	if not _coyote_timer.is_stopped(): return false
-	if not is_on_floor: return false
+	if is_on_floor: return false
 	if can_jump:
 		_coyote_timer.start()
 		# player is falling, just not with heavier gravity
 		return true
-	height = max(height, position.y)
 	if is_falling:
 		gravity_scale = 2 * jump_height / pow(jump_down_time, 2) / gravity
 	return true
