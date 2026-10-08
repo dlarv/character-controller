@@ -3,7 +3,7 @@ extends RigidBody3D
 @export_category("Movement Parameters")
 @export_group("Horizontal Motion")
 @export var walk_speed := 50.0
-## Sets default linear_damp to this value. If -1, uses value inside linear_damp instead.
+@export var sprint_enabled := true
 @export var sprint_speed := 100.0
 ## If false, player must press and hold run button to run
 @export var sprint_toggle_mode := true
@@ -48,6 +48,9 @@ var is_moving_vertical: bool:
 var is_walking: bool:
 	get:
 		return  is_moving_horizontal and not is_sprinting
+var is_falling: bool:
+	get:
+		return linear_velocity.y < falling_threshold
 var is_on_floor := true
 var can_jump := true
 
@@ -82,14 +85,8 @@ func _enter_tree() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if sprint_toggle_mode:
-		if event.is_action_pressed(sprint_action):
-			is_sprinting = true
-		elif event.is_action_released(sprint_action):
-			is_sprinting = false
-	else:
-		if event.is_action_pressed(sprint_action):
-			is_sprinting = not is_sprinting
+	if sprint_enabled:
+		_set_sprint_mode(event)
 
 
 var height := 0.0
@@ -98,31 +95,10 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	state.apply_central_force(_walk_speed)
 	_calculate_damping(state)
 
-	_check_if_on_floor(state)
+	_calculate_if_on_floor(state)
 
-	if jump_enabled \
-			and Input.is_action_pressed(jump_action) \
-			and can_jump:
-		if _check_variable_jump_running(false):
-			_variable_jump_timer.start()
-		can_jump = false
-		_coyote_timer.stop()
-		state.linear_velocity.y = 0
-		_jump(state)
-	elif Input.is_action_pressed(jump_action) and _check_variable_jump_running(true):
-		_jump(state, variable_jump_amount, false)
-	# Don't apply heavier gravity before coyote time runs out
-	elif not _coyote_timer.is_stopped():
-		pass
-	elif not is_on_floor:
-		if can_jump:
-			_coyote_timer.start()
-			return
-		height = max(height, position.y)
-		var _gravity: float = abs(state.total_gravity.y)
-		var _velocity := state.linear_velocity.y
-		if _velocity < falling_threshold:
-			gravity_scale = 2 * jump_height / pow(jump_down_time, 2) / _gravity
+	if _try_jump(state): pass
+	elif _try_fall(abs(state.total_gravity.y)): pass
 	else:
 		gravity_scale = _initial_gravity_scale
 		can_jump = true
@@ -139,7 +115,7 @@ func _get_movement_vector(speed: float) -> Vector3:
 
 
 ## Checks if player is standing on horizontal surface.
-func _check_if_on_floor(state: PhysicsDirectBodyState3D) -> void:
+func _calculate_if_on_floor(state: PhysicsDirectBodyState3D) -> void:
 	if _skip_next_grounded_check:
 		is_on_floor = false
 		_skip_next_grounded_check = false
@@ -176,6 +152,47 @@ func _calculate_damping(state: PhysicsDirectBodyState3D) -> void:
 	var _v_damp := 1 - (vertical_damping + _damp) / Engine.physics_ticks_per_second
 	state.linear_velocity *= _v_damp
 
+
+func _set_sprint_mode(event: InputEvent) -> void:
+	if sprint_toggle_mode:
+		if event.is_action_pressed(sprint_action):
+			is_sprinting = true
+		elif event.is_action_released(sprint_action):
+			is_sprinting = false
+	else:
+		if event.is_action_pressed(sprint_action):
+			is_sprinting = not is_sprinting
+
+
+func _try_fall(gravity: float) -> bool:
+	# Don't apply heavier gravity before coyote time runs out
+	if not _coyote_timer.is_stopped(): return false
+	if not is_on_floor: return false
+	if can_jump:
+		_coyote_timer.start()
+		# player is falling, just not with heavier gravity
+		return true
+	height = max(height, position.y)
+	if is_falling:
+		gravity_scale = 2 * jump_height / pow(jump_down_time, 2) / gravity
+	return true
+
+
+func _try_jump(state: PhysicsDirectBodyState3D) -> bool:
+	if jump_enabled \
+			and Input.is_action_pressed(jump_action) \
+			and can_jump:
+		if _check_variable_jump_running(false):
+			_variable_jump_timer.start()
+		can_jump = false
+		_coyote_timer.stop()
+		state.linear_velocity.y = 0
+		_jump(state)
+		return true
+	elif Input.is_action_pressed(jump_action) and _check_variable_jump_running(true):
+		_jump(state, variable_jump_amount, false)
+		return true
+	return false
 
 func _jump(state: PhysicsDirectBodyState3D, velocity_modifier:=1.0, adjust_gravity:=true) -> void:
 	# d = vt/2
