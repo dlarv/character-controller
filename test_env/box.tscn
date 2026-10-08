@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://ch7spnl5xfdw"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_f3sb7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fj7yv"]
+
+[node name="RigidBody3D" type="RigidBody3D" unique_id=1191880979]
+mass = 5.0
+custom_integrator = true
+linear_velocity = Vector3(-50, 0, 0)
+angular_damp = 10.0
+constant_force = Vector3(-10, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=915733099]
+mesh = SubResource("BoxMesh_f3sb7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1169992764]
+shape = SubResource("BoxShape3D_fj7yv")

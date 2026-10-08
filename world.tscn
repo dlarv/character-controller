@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://in8eyraxd88n"]
+
+[ext_resource type="PackedScene" uid="uid://dui6kmiicvskf" path="res://physics_character.tscn" id="1_f3sb7"]
+[ext_resource type="PackedScene" uid="uid://ch7spnl5xfdw" path="res://test_env/box.tscn" id="2_fj7yv"]
+[ext_resource type="Material" uid="uid://plen0swcshlr" path="res://assets/placeholder_grid_texture/placeholder_grid.tres" id="3_tlwt5"]
+[ext_resource type="Script" uid="uid://bfro2p6y5x88u" path="res://camera_controller.gd" id="4_aqk2v"]
+[ext_resource type="PackedScene" uid="uid://bn37sg7ohhspq" path="res://character_controller.tscn" id="5_036b0"]
+
+[node name="World" type="Node3D" unique_id=1225734566]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1759571699]
+transform = Transform3D(0.8660254, -0.25, 0.4330127, 0, 0.8660254, 0.5, -0.5, -0.4330127, 0.75, 0, 0, 0)
+
+[node name="Box" parent="." unique_id=1191880979 instance=ExtResource("2_fj7yv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8999996, 1, 1)
+mass = 2.0
+custom_integrator = false
+linear_velocity = Vector3(-10, 0, 0)
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1076342184]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D" unique_id=17635182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+size = Vector3(32, 4, 32)
+material = ExtResource("3_tlwt5")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1696843001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+operation = 2
+size = Vector3(30, 4, 30)
+material = ExtResource("3_tlwt5")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=337223818 node_paths=PackedStringArray("target_a", "target_b")]
+transform = Transform3D(1, 0, 0, 0, 0.9063078, 0.42261827, 0, -0.42261824, 0.90630776, 0, 0, 0)
+script = ExtResource("4_aqk2v")
+target_a = NodePath("../PhysicsCharacter")
+target_b = NodePath("../CharacterController")
+offset = Vector3(0, 3, 5)
+
+[node name="CharacterController" parent="." unique_id=1418535907 instance=ExtResource("5_036b0")]
+process_mode = 4
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 2)
+jump_height = 10.0
+jump_up_time = 1.0
+
+[node name="PhysicsCharacter" parent="." unique_id=133858657 instance=ExtResource("1_f3sb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+continuous_cd = true
+max_contacts_reported = 500
+walk_damp = -1.0
+sprint_damp = -1.0
+falling_damp = 0.0
+falling_gravity_mod = 8.0
+jump_height = 10.0
