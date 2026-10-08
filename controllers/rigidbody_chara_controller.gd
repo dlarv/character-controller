@@ -15,6 +15,10 @@ extends RigidBody3D
 ## If value != -1, only consider colliders with in this layer when checking whether player is grounded.
 @export var floor_collision_layer := -1
 @export var vertical_damping := 0.0
+## If player's velocity meets or exceeds this amount, they'll be temp immobilized after hitting ground.
+@export var heavy_fall_threshold := 50.0
+## How long player will be immobilized for after hitting ground in heavy fall.
+@export var heavy_fall_wait_time := 1.0
 @export_subgroup("Jumping")
 @export var jump_enabled := true
 @export_range(1, 1000) var jump_height := 10.0
@@ -51,6 +55,7 @@ var is_walking: bool:
 var is_falling: bool:
 	get:
 		return linear_velocity.y < falling_threshold
+var is_heavy_fall := false
 var is_on_floor := true
 var can_jump := true
 
@@ -61,6 +66,7 @@ var _skip_next_grounded_check := false
 var _initial_gravity_scale: float
 var _coyote_timer: Timer
 var _variable_jump_timer: Timer = null
+var _heavy_fall_timer: Timer = null
 
 
 func _enter_tree() -> void:
@@ -82,6 +88,11 @@ func _enter_tree() -> void:
 	if variable_jump_frames > 0:
 		_variable_jump_timer = _create_timer.call(float(variable_jump_frames) / Engine.physics_ticks_per_second)
 		add_child(_variable_jump_timer)
+	
+	if heavy_fall_threshold > 0:
+		_heavy_fall_timer = _create_timer.call(heavy_fall_wait_time)
+		add_child(_heavy_fall_timer)
+		_heavy_fall_timer.timeout.connect(func(): is_heavy_fall = false)
 
 
 func _input(event: InputEvent) -> void:
@@ -90,6 +101,8 @@ func _input(event: InputEvent) -> void:
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	if _heavy_fall_timer and not _heavy_fall_timer.is_stopped(): return
+
 	var _walk_speed := _get_movement_vector(sprint_speed if is_sprinting else walk_speed)
 	state.apply_central_force(_walk_speed)
 	_calculate_damping(state)
@@ -101,6 +114,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	else:
 		gravity_scale = _initial_gravity_scale
 		can_jump = true
+		if is_heavy_fall and _heavy_fall_timer:
+			_heavy_fall_timer.start()
+	
+	if abs(linear_velocity.y) >= heavy_fall_threshold:
+		is_heavy_fall = true
 	
 
 func _get_movement_vector(speed: float) -> Vector3:
