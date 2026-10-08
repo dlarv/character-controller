@@ -65,5 +65,5 @@ heavy_fall_wait_time = 0.2
 jump_up_time = 0.5
 jump_down_time = 0.2
 falling_threshold = -0.5
-coyote_time = 1.0
+coyote_time = 0.3
 variable_jump_amount = 0.2

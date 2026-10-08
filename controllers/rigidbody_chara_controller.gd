@@ -18,7 +18,11 @@ extends RigidBody3D
 ## If player's velocity meets or exceeds this amount, they'll be temp immobilized after hitting ground.
 @export var heavy_fall_threshold := 50.0
 ## How long player will be immobilized for after hitting ground in heavy fall.
-@export var heavy_fall_wait_time := 1.0
+@export var heavy_fall_wait_time := 1.0:
+	set(val):
+		heavy_fall_wait_time = val
+		if not Engine.is_editor_hint() and _heavy_fall_timer:
+			_heavy_fall_timer.wait_time = val
 @export_subgroup("Jumping")
 @export var jump_enabled := true
 @export_range(1, 1000) var jump_height := 10.0
@@ -27,9 +31,18 @@ extends RigidBody3D
 @export_range(0.1, 100) var jump_down_time := 1.0
 ## Once velocity.y falls below this value, body is considered to be falling.
 @export var falling_threshold := 0.0
-@export var coyote_time := 0.1
+@export var coyote_time := 0.1:
+	set(val):
+		coyote_time = val
+		if not Engine.is_editor_hint() and _coyote_timer:
+			_coyote_timer.wait_time = val
 ## The number of frames after pressing jump button where holding button will increase jump velocity.
-@export var variable_jump_frames:= 0
+@export var variable_jump_frames:= 0:
+	set(val):
+		variable_jump_frames = val
+		if not Engine.is_editor_hint() and _variable_jump_timer:
+			_variable_jump_timer.wait_time = float(val) / Engine.physics_ticks_per_second
+
 ## Modifies how much extra velocity is added per frame of variable jump
 @export var variable_jump_amount := 0.3
 
