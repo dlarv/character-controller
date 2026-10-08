@@ -31,23 +31,19 @@ extends RigidBody3D
 @export var sprint_action := ""
 @export var jump_action := "ui_select"
 
-# @onready var jump_initial_velocity := (jump_height / jump_up_time) + (9.8 * jump_up_time) / 2
-# @onready var jump_initial_velocity := sqrt(2 * 9.8 * jump_height)
-@warning_ignore_start("unused_private_class_variable")
-var _gravity_tween: Tween
 # Helper vars that can be read by AnimationTree
-var _is_sprinting := false
-var _is_moving_horizontal: bool:
+var is_sprinting := false
+var is_moving_horizontal: bool:
 	get:
 		return abs(linear_velocity.x) > 0 or abs(linear_velocity.z) > 0
-var _is_moving_vertical: bool:
+var is_moving_vertical: bool:
 	get:
 		return abs(linear_velocity.y) > 0
-var _is_walking: bool:
+var is_walking: bool:
 	get:
-		return  _is_moving_horizontal and not _is_sprinting
-var _is_on_floor := true
-## For some reason, _is_on_floor returns true for the tick right after the player jumps, despite player not
+		return  is_moving_horizontal and not is_sprinting
+var is_on_floor := true
+## For some reason, is_on_floor returns true for the tick right after the player jumps, despite player not
 ## being grounded. This seems to happen for the CharacterBody3D as well, so its not just my impl.
 ## This is a gross fix, hopefully I'll figure out how to solve it later.
 var _skip_next_grounded_check := false
@@ -61,76 +57,68 @@ func _enter_tree() -> void:
 func _input(event: InputEvent) -> void:
 	if sprint_toggle_mode:
 		if event.is_action_pressed(sprint_action):
-			_is_sprinting = true
+			is_sprinting = true
 		elif event.is_action_released(sprint_action):
-			_is_sprinting = false
+			is_sprinting = false
 	else:
 		if event.is_action_pressed(sprint_action):
-			_is_sprinting = not _is_sprinting
+			is_sprinting = not is_sprinting
 
 
-var _height := []
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
-	var vel := _get_movement_vector(sprint_speed if _is_sprinting else walk_speed)
-	state.apply_central_force(vel)
+	var _walk_speed := _get_movement_vector(sprint_speed if is_sprinting else walk_speed)
+	state.apply_central_force(_walk_speed)
 	_calculate_damping(state)
 
 	_check_if_on_floor(state)
 
-	if _is_on_floor and Input.is_action_just_pressed(jump_action):
+	if is_on_floor and Input.is_action_just_pressed(jump_action):
 		_jump(state)
-	elif not _is_on_floor:
+	elif not is_on_floor:
 		if state.linear_velocity.y < 0:
 			gravity_scale = falling_gravity_mod
 			pass
 	else:
 		gravity_scale = 1
 
-	if not _is_on_floor:
-		_height.append(position.y)
-	elif len(_height) > 0:
-		print("h = %.2f" % _height.max())
-		_height = []
-
 
 func _get_movement_vector(speed: float) -> Vector3:
-	var inputDir := Input.get_vector(move_left_action, move_right_action, move_up_action, move_down_action)
-	var direction := Vector3(inputDir.x, 0, inputDir.y).normalized()
-	return direction * speed
+	var _input_dir := Input.get_vector(move_left_action, move_right_action, move_up_action, move_down_action)
+	var _direction := Vector3(_input_dir.x, 0, _input_dir.y).normalized()
+	return _direction * speed
 
 
 ## Checks if player is standing on horizontal surface.
 func _check_if_on_floor(state: PhysicsDirectBodyState3D) -> void:
 	if _skip_next_grounded_check:
-		_is_on_floor = false
+		is_on_floor = false
 		_skip_next_grounded_check = false
 		return
 
-	_is_on_floor = false
+	is_on_floor = false
 	for i in state.get_contact_count():
 		if floor_collision_layer > 0: 
-			var obj = state.get_contact_collider_object(i)
+			var _obj = state.get_contact_collider_object(i)
 
-			if not obj.has_method("get_collision_layer_value") \
-					or not obj.get_collision_layer_value(floor_collision_layer):
+			if not _obj.has_method("get_collision_layer_value") \
+					or not _obj.get_collision_layer_value(floor_collision_layer):
 				continue
 
-		var normal := state.get_contact_local_normal(i)
-		if normal.dot(Vector3.UP) >= floor_normal_threshold:
-			_is_on_floor = true
+		var _normal := state.get_contact_local_normal(i)
+		if _normal.dot(Vector3.UP) >= floor_normal_threshold:
+			is_on_floor = true
 			break
-	#_set_damping_mode()
 
 
 func _calculate_damping(state: PhysicsDirectBodyState3D) -> void:
-	var damp := state.total_linear_damp if linear_damp_mode == DAMP_MODE_COMBINE else 0.0
+	var _damp := state.total_linear_damp if linear_damp_mode == DAMP_MODE_COMBINE else 0.0
 
-	var h_damp := 1 - (horizontal_damping + damp) / Engine.physics_ticks_per_second
-	state.linear_velocity.x *= h_damp
-	state.linear_velocity.z *= h_damp
+	var _h_damp := 1 - (horizontal_damping + _damp) / Engine.physics_ticks_per_second
+	state.linear_velocity.x *= _h_damp
+	state.linear_velocity.z *= _h_damp
 
-	var v_damp := 1 - (vertical_damping + damp) / Engine.physics_ticks_per_second
-	state.linear_velocity *= v_damp
+	var _v_damp := 1 - (vertical_damping + _damp) / Engine.physics_ticks_per_second
+	state.linear_velocity *= _v_damp
 
 
 func _jump(state: PhysicsDirectBodyState3D) -> void:
