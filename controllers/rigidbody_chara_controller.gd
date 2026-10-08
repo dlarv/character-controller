@@ -70,36 +70,20 @@ func _input(event: InputEvent) -> void:
 
 
 var _height := []
-var tick := -1
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	var vel := _get_movement_vector(sprint_speed if _is_sprinting else walk_speed)
 	state.apply_central_force(vel)
-
-	# damping: 1 - combined_damp / physics_tps
-	_check_if_on_floor(state)
 	_calculate_damping(state)
 
-	tick += 1
+	_check_if_on_floor(state)
 
-	var velocity := state.linear_velocity.y
 	if _is_on_floor and Input.is_action_just_pressed(jump_action):
-		velocity =_get_jump_initial_velocity()
-		_set_jump_acceleration(velocity)
-		state.apply_central_impulse(Vector3.UP * velocity)
-
-		_skip_next_grounded_check = true
-
-		# print("a = %.2f" % gravity_scale)
-		_height = []
-		print("Tick %f - JUMP" % tick)
-		# print("vel = %.2f / %.2f = %.2f" % [velocity, state.linear_velocity.y, velocity / state.linear_velocity.y])
+		_jump(state)
 	elif not _is_on_floor:
-		print("Tick %f" % tick)
-		if velocity < 0:
+		if state.linear_velocity.y < 0:
 			gravity_scale = falling_gravity_mod
 			pass
 	else:
-		print("Tick %f - GROUNDED" % tick)
 		gravity_scale = 1
 
 	if not _is_on_floor:
@@ -149,10 +133,13 @@ func _calculate_damping(state: PhysicsDirectBodyState3D) -> void:
 	state.linear_velocity *= v_damp
 
 
-func _get_jump_initial_velocity() -> float:
-	# return jump_height / jump_up_time + 4.9 * jump_up_time
-	return 2 * jump_height / jump_up_time
+func _jump(state: PhysicsDirectBodyState3D) -> void:
+	# d = vt/2
+	var _velocity := 2 * jump_height / jump_up_time
+	# d = vt + att/2
+	var _acceleration := pow(_velocity, 2) / (2 * jump_height)
+	gravity_scale = _acceleration / abs(state.total_gravity.y)
 
+	state.apply_central_impulse(Vector3.UP * _velocity)
 
-func _set_jump_acceleration(velocity: float) -> void:
-	gravity_scale = pow(velocity, 2) / (2 * jump_height) / 9.8
+	_skip_next_grounded_check = true
