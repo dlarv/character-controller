@@ -1,27 +1,20 @@
 extends RigidBody3D
 
 @export_category("Movement Parameters")
-@export_group("Walking")
+@export_group("Horizontal Motion")
 @export var walk_speed := 50.0
 ## Sets default linear_damp to this value. If -1, uses value inside linear_damp instead.
-@export var walk_damp := -1.0
-@export_group("Sprinting")
 @export var sprint_speed := 100.0
-@export_subgroup("Sprint Damping")
-## Sets linear_damp while player is running. If -1, uses default value instead.
-@export var sprint_damp := -1.0
-## If player is currently sprinting and hits button to stop, how quickly to switch from sprint_damp to walk_damp
-@export var sprint_damp_falloff := 3.0
 ## If false, player must press and hold run button to run
-@export_subgroup("")
 @export var sprint_toggle_mode := true
+@export var horizontal_damping := 5.0
 @export_group("Vertical Motion")
 ## How "horizontal" another physics body must be to be considered "ground."
 ## e.g. a value of 1.0 means ground must be perfectly horizontal.
 @export_range(0, 1) var floor_normal_threshold := 0.99
 ## If value != -1, only consider colliders with in this layer when checking whether player is grounded.
 @export var floor_collision_layer := -1
-@export var falling_damp := 0.0
+@export var vertical_damping := 0.0
 @export var falling_gravity_mod := 10.0
 @export_subgroup("Jumping")
 @export var jump_height := 10.0
@@ -43,10 +36,7 @@ extends RigidBody3D
 @warning_ignore_start("unused_private_class_variable")
 var _gravity_tween: Tween
 # Helper vars that can be read by AnimationTree
-var _is_sprinting := false:
-	set(val):
-		_is_sprinting = val
-		_set_damping_mode()
+var _is_sprinting := false
 var _is_moving_horizontal: bool:
 	get:
 		return abs(linear_velocity.x) > 0 or abs(linear_velocity.z) > 0
@@ -67,14 +57,6 @@ func _enter_tree() -> void:
 	# This allows apply_force() and similar methods to be called in _integrate_forces()
 	can_sleep = false
 
-	if walk_damp < 0:
-		walk_damp = linear_damp
-	else:
-		linear_damp = walk_damp
-
-	if sprint_damp < 0:
-		sprint_damp = walk_damp
-
 
 func _input(event: InputEvent) -> void:
 	if sprint_toggle_mode:
@@ -93,7 +75,9 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	var vel := _get_movement_vector(sprint_speed if _is_sprinting else walk_speed)
 	state.apply_central_force(vel)
 
+	# damping: 1 - combined_damp / physics_tps
 	_check_if_on_floor(state)
+	_calculate_damping(state)
 
 	tick += 1
 
@@ -131,20 +115,7 @@ func _get_movement_vector(speed: float) -> Vector3:
 	return direction * speed
 
 
-func _set_damping_mode() -> void:
-	if not _is_on_floor:
-		linear_damp = falling_damp
-	elif _is_sprinting:
-		linear_damp = sprint_damp
-	elif _is_moving_horizontal and sprint_damp > 0:
-		var tween := create_tween()
-		tween.tween_property(self, "linear_damp", walk_damp, sprint_damp_falloff)
-	else:
-		linear_damp = walk_damp
-
-
 ## Checks if player is standing on horizontal surface.
-## Sets _is_on_floor helper variable and calls _set_damping_mode
 func _check_if_on_floor(state: PhysicsDirectBodyState3D) -> void:
 	if _skip_next_grounded_check:
 		_is_on_floor = false
@@ -165,6 +136,17 @@ func _check_if_on_floor(state: PhysicsDirectBodyState3D) -> void:
 			_is_on_floor = true
 			break
 	#_set_damping_mode()
+
+
+func _calculate_damping(state: PhysicsDirectBodyState3D) -> void:
+	var damp := state.total_linear_damp if linear_damp_mode == DAMP_MODE_COMBINE else 0.0
+
+	var h_damp := 1 - (horizontal_damping + damp) / Engine.physics_ticks_per_second
+	state.linear_velocity.x *= h_damp
+	state.linear_velocity.z *= h_damp
+
+	var v_damp := 1 - (vertical_damping + damp) / Engine.physics_ticks_per_second
+	state.linear_velocity *= v_damp
 
 
 func _get_jump_initial_velocity() -> float:
