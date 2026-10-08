@@ -15,13 +15,14 @@ extends RigidBody3D
 ## If value != -1, only consider colliders with in this layer when checking whether player is grounded.
 @export var floor_collision_layer := -1
 @export var vertical_damping := 0.0
-@export var falling_gravity_mod := 10.0
 @export_subgroup("Jumping")
-@export var jump_height := 10.0
+@export var can_jump := true
+@export_range(1, 1000) var jump_height := 10.0
 ## Approx time to reach apex of jump. Loses accuracy the higher above 1.0 it gets.
-@export var jump_up_time := 1.0
-@export var jump_hang_time := 0.5
-@export var jump_down_time := 1.0
+@export_range(0.1, 100) var jump_up_time := 1.0
+@export_range(0.1, 100) var jump_down_time := 1.0
+## Once velocity.y falls below this value, body is considered to be falling.
+@export var falling_threshold := 0.0
 
 @export_category("Input Action Labels")
 @export var move_left_action := "ui_left"
@@ -47,11 +48,13 @@ var is_on_floor := true
 ## being grounded. This seems to happen for the CharacterBody3D as well, so its not just my impl.
 ## This is a gross fix, hopefully I'll figure out how to solve it later.
 var _skip_next_grounded_check := false
+var _initial_gravity_scale: float
 
 
 func _enter_tree() -> void:
 	# This allows apply_force() and similar methods to be called in _integrate_forces()
 	can_sleep = false
+	_initial_gravity_scale = gravity_scale
 
 
 func _input(event: InputEvent) -> void:
@@ -72,14 +75,15 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 	_check_if_on_floor(state)
 
-	if is_on_floor and Input.is_action_just_pressed(jump_action):
+	if can_jump and is_on_floor and Input.is_action_pressed(jump_action):
 		_jump(state)
 	elif not is_on_floor:
-		if state.linear_velocity.y < 0:
-			gravity_scale = falling_gravity_mod
-			pass
+		var _gravity: float = abs(state.total_gravity.y)
+		var _velocity := state.linear_velocity.y
+		if _velocity < falling_threshold:
+			gravity_scale = 2 * jump_height / pow(jump_down_time, 2) / _gravity
 	else:
-		gravity_scale = 1
+		gravity_scale = _initial_gravity_scale
 
 
 func _get_movement_vector(speed: float) -> Vector3:
