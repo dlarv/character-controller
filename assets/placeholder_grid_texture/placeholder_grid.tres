@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://plen0swcshlr"]
+
+[ext_resource type="Texture2D" uid="uid://bmf10o71rbaua" path="res://assets/placeholder_grid_texture/PNG/Light/texture_07.png" id="1_ix675"]
+
+[resource]
+albedo_color = Color(0.5132329, 0.5132329, 0.5132329, 1)
+albedo_texture = ExtResource("1_ix675")
+emission = Color(1, 1, 1, 1)
+emission_operator = 1
+uv1_triplanar = true
+uv1_world_triplanar = true
