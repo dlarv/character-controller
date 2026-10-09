@@ -45,6 +45,12 @@ extends RigidBody3D
 
 ## Modifies how much extra velocity is added per frame of variable jump
 @export var variable_jump_amount := 0.3
+## How long to keep jump buffer for
+@export var jump_buffer_time := 0.1:
+	set(val):
+		jump_buffer_time = val
+		if not Engine.is_editor_hint() and _jump_buffer_timer:
+			_jump_buffer_timer.wait_time = val
 
 @export_category("Input Action Labels")
 @export var move_left_action := "ui_left"
@@ -80,6 +86,8 @@ var _initial_gravity_scale: float
 var _coyote_timer: Timer
 var _variable_jump_timer: Timer = null
 var _heavy_fall_timer: Timer = null
+var _jump_buffered := false
+var _jump_buffer_timer: Timer
 
 
 func _enter_tree() -> void:
@@ -106,11 +114,18 @@ func _enter_tree() -> void:
 		_heavy_fall_timer = _create_timer.call(heavy_fall_wait_time)
 		add_child(_heavy_fall_timer)
 		_heavy_fall_timer.timeout.connect(func(): is_heavy_fall = false)
+	
+	_jump_buffer_timer = _create_timer.call(jump_buffer_time)
+	add_child(_jump_buffer_timer)
+	_jump_buffer_timer.timeout.connect(func(): _jump_buffered = false)
 
 
 func _input(event: InputEvent) -> void:
 	if sprint_enabled:
 		_set_sprint_mode(event)
+	if event.is_action_pressed(jump_action):
+		_jump_buffer_timer.start()
+		_jump_buffered = true
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
@@ -205,7 +220,7 @@ func _try_fall(gravity: float) -> bool:
 
 func _try_jump(state: PhysicsDirectBodyState3D) -> bool:
 	if jump_enabled \
-			and Input.is_action_pressed(jump_action) \
+			and _jump_buffered \
 			and can_jump:
 		if _check_variable_jump_running(false):
 			_variable_jump_timer.start()
