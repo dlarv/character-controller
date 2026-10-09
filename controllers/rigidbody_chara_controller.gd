@@ -52,6 +52,20 @@ extends RigidBody3D
 		if not Engine.is_editor_hint() and _jump_buffer_timer:
 			_jump_buffer_timer.wait_time = val
 
+@export_category("Dash")
+@export var dash_enabled := true
+@export var dash_length := 3.0
+@export var dash_time := 1.0:
+	set(val):
+		dash_time = val
+		if not Engine.is_editor_hint() and _dash_timer:
+			_dash_timer.wait_time = val
+@export var dash_buffer_time := 0.1:
+	set(val):
+		dash_buffer_time = val
+		if not Engine.is_editor_hint() and _dash_buffer_timer:
+			_dash_buffer_timer.wait_time = val
+
 @export_category("Input Action Labels")
 @export var move_left_action := "ui_left"
 @export var move_right_action := "ui_right"
@@ -59,6 +73,7 @@ extends RigidBody3D
 @export var move_down_action := "ui_down"
 @export var sprint_action := ""
 @export var jump_action := "ui_select"
+@export var dash_action := ""
 
 # Helper vars that can be read by AnimationTree
 var is_sprinting := false
@@ -74,9 +89,11 @@ var is_walking: bool:
 var is_falling: bool:
 	get:
 		return linear_velocity.y < falling_threshold
+var is_dashing: bool
 var is_heavy_fall := false
 var is_on_floor := true
 var can_jump := true
+var can_dash := true
 
 ## For some reason, is_on_floor returns true for the tick right after the player jumps, despite player not
 ## being grounded. This seems to happen for the CharacterBody3D as well, so its not just my impl.
@@ -88,6 +105,12 @@ var _variable_jump_timer: Timer = null
 var _heavy_fall_timer: Timer = null
 var _jump_buffered := false
 var _jump_buffer_timer: Timer
+var _dash_velocity: Vector3
+var _dash_y_position: float
+var _dash_timer: Timer
+var _last_facing_direction: Vector3
+var _dash_buffered := false
+var _dash_buffer_timer: Timer
 
 
 func _enter_tree() -> void:
@@ -119,6 +142,14 @@ func _enter_tree() -> void:
 	add_child(_jump_buffer_timer)
 	_jump_buffer_timer.timeout.connect(func(): _jump_buffered = false)
 
+	_dash_timer = _create_timer.call(dash_time)
+	add_child(_dash_timer)
+	_dash_timer.timeout.connect(func(): is_dashing = false)
+
+	_dash_buffer_timer = _create_timer.call(dash_buffer_time)
+	add_child(_dash_buffer_timer)
+	_dash_buffer_timer.timeout.connect(func(): _dash_buffered = false)
+
 
 func _input(event: InputEvent) -> void:
 	if sprint_enabled:
@@ -126,22 +157,36 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed(jump_action):
 		_jump_buffer_timer.start()
 		_jump_buffered = true
+	if event.is_action_pressed(dash_action):
+		_dash_buffer_timer.start()
+		_dash_buffered = true
 
 
+var tick := -1
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	tick += 1
 	if _heavy_fall_timer and not _heavy_fall_timer.is_stopped(): return
+	if is_dashing: 
+		state.linear_velocity = _dash_velocity
+		global_position.y = _dash_y_position
+		print("Tick %f -- %v" % [tick, state.linear_velocity])
+		return
 
 	var _walk_speed := _get_movement_vector(sprint_speed if is_sprinting else walk_speed)
+	if _walk_speed.length() > 0:
+		_last_facing_direction = _walk_speed.normalized()
 	state.apply_central_force(_walk_speed)
 	_calculate_damping(state)
 
 	_calculate_if_on_floor(state)
 
-	if _try_jump(state): pass
+	if _try_dash(state): pass
+	elif _try_jump(state): pass
 	elif _try_fall(abs(state.total_gravity.y)): pass
 	else:
 		gravity_scale = _initial_gravity_scale
 		can_jump = true
+		can_dash = true
 		if is_heavy_fall and _heavy_fall_timer:
 			_heavy_fall_timer.start()
 	
@@ -234,6 +279,7 @@ func _try_jump(state: PhysicsDirectBodyState3D) -> bool:
 		return true
 	return false
 
+
 func _jump(state: PhysicsDirectBodyState3D, velocity_modifier:=1.0, adjust_gravity:=true) -> void:
 	# d = vt/2
 	var _velocity := 2 * jump_height / jump_up_time * velocity_modifier
@@ -244,3 +290,22 @@ func _jump(state: PhysicsDirectBodyState3D, velocity_modifier:=1.0, adjust_gravi
 	state.apply_central_impulse(Vector3.UP * _velocity)
 
 	_skip_next_grounded_check = true
+
+
+func _try_dash(state: PhysicsDirectBodyState3D) -> bool:
+	if not dash_enabled or not can_dash: return false
+	if not _dash_buffered: return false
+
+	is_dashing = true
+	_dash_timer.start()
+	state.linear_velocity = Vector3.ZERO
+
+	var _direction := _last_facing_direction
+	var _velocity :=  dash_length / dash_time
+	_dash_velocity = _velocity * _direction
+	state.linear_velocity = _dash_velocity
+	_dash_y_position = global_position.y
+
+	print("Tick %f -- %v" % [tick, state.linear_velocity])
+
+	return true
