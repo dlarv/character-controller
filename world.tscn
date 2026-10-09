@@ -36,6 +36,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -12.8)
 size = Vector3(12, 4, 4)
 material = ExtResource("3_tlwt5")
 
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1255083415]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.8, -11)
+size = Vector3(2, 4, 2.3)
+material = ExtResource("3_tlwt5")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D" unique_id=912878238]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.8, -3)
+size = Vector3(2, 4, 2)
+material = ExtResource("3_tlwt5")
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1863472863]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.8, 6.3499994)
+size = Vector3(2, 4, 2)
+material = ExtResource("3_tlwt5")
+
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="CSGCombiner3D" unique_id=1438193968]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6, 0, -10.8)
 polygon = PackedVector2Array(0, 0, 0, 2.8, 8.2, 0, 1, 0)
@@ -62,8 +77,11 @@ max_contacts_reported = 500
 floor_normal_threshold = 0.5
 heavy_fall_threshold = 25.0
 heavy_fall_wait_time = 0.2
-jump_up_time = 0.5
-jump_down_time = 0.2
+jump_height = 2.0
+jump_up_time = 0.30000000000000004
+jump_down_time = 0.15000000000000002
 falling_threshold = -0.5
 coyote_time = 0.3
 variable_jump_amount = 0.2
+dash_time = 0.1
+dash_action = "dash"
