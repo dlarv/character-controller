@@ -32,13 +32,13 @@ size = Vector3(30, 4, 30)
 material = ExtResource("3_tlwt5")
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D" unique_id=747480814]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -12.8)
 size = Vector3(12, 4, 4)
 material = ExtResource("3_tlwt5")
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="CSGCombiner3D" unique_id=1438193968]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6, 0, -8)
-polygon = PackedVector2Array(0, 0, 0, 2.8, 5.6, -0.5, 1, 0)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6, 0, -10.8)
+polygon = PackedVector2Array(0, 0, 0, 2.8, 8.2, 0, 1, 0)
 depth = 2.0
 material = ExtResource("3_tlwt5")
 
