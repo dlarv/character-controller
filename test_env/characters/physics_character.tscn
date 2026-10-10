@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dui6kmiicvskf"]
 
-[ext_resource type="Script" uid="uid://275scp4h71ib" path="res://controllers/rigidbody_chara_controller.gd" id="1_d5r4c"]
+[ext_resource type="Script" uid="uid://275scp4h71ib" path="res://addons/character_controller/controllers/rigidbody_chara_controller.gd" id="1_d5r4c"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d5r4c"]
 albedo_color = Color(1, 0, 0, 1)
