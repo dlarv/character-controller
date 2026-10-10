@@ -57,12 +57,11 @@ polygon = PackedVector2Array(0, 0, 0, 2.8, 8.2, 0, 1, 0)
 depth = 2.0
 material = ExtResource("3_tlwt5")
 
-[node name="Camera3D" type="Camera3D" parent="." unique_id=337223818 node_paths=PackedStringArray("target_a", "target_b")]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=337223818 node_paths=PackedStringArray("targets")]
 transform = Transform3D(1, 0, 0, 0, 0.9063078, 0.42261827, 0, -0.42261824, 0.90630776, 0, 0, 0)
 script = ExtResource("4_aqk2v")
-target_a = NodePath("../PhysicsCharacter")
-target_b = NodePath("../CharacterController")
 offset = Vector3(0, 3, 5)
+targets = [NodePath("../PhysicsCharacter"), NodePath("../CharacterController")]
 
 [node name="CharacterController" parent="." unique_id=1418535907 instance=ExtResource("5_036b0")]
 process_mode = 4
