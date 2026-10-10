@@ -23,7 +23,7 @@ var detection_type := "max":
 var value := 0.0
 
 var _last_target: Node3D
-var _update_value: Callable
+var _update_value: Callable = max
 
 func _ready() -> void:
 	$Label3D.text = detector_label
@@ -41,6 +41,3 @@ func _on_body_entered(body: Node3D) -> void:
 		_last_target = body
 	else:
 		$ResultsLabel3D.text = "%.3f" % value
-
-
-
