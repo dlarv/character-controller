@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://in8eyraxd88n"]
 
-[ext_resource type="PackedScene" uid="uid://dui6kmiicvskf" path="res://physics_character.tscn" id="1_f3sb7"]
-[ext_resource type="PackedScene" uid="uid://ch7spnl5xfdw" path="res://test_env/box.tscn" id="2_fj7yv"]
+[ext_resource type="PackedScene" uid="uid://dui6kmiicvskf" path="res://test_env/characters/physics_character.tscn" id="1_f3sb7"]
+[ext_resource type="PackedScene" uid="uid://ch7spnl5xfdw" path="res://test_env/objects/box.tscn" id="2_fj7yv"]
 [ext_resource type="Material" uid="uid://plen0swcshlr" path="res://assets/placeholder_grid_texture/placeholder_grid.tres" id="3_tlwt5"]
-[ext_resource type="Script" uid="uid://bfro2p6y5x88u" path="res://camera_controller.gd" id="4_aqk2v"]
-[ext_resource type="PackedScene" uid="uid://bn37sg7ohhspq" path="res://character_controller.tscn" id="5_036b0"]
+[ext_resource type="Script" uid="uid://bfro2p6y5x88u" path="res://test_env/camera_controller.gd" id="4_aqk2v"]
+[ext_resource type="PackedScene" uid="uid://bn37sg7ohhspq" path="res://test_env/characters/character_controller.tscn" id="5_036b0"]
 
 [node name="World" type="Node3D" unique_id=1225734566]
 
