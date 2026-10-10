@@ -1,6 +1,5 @@
 extends Camera3D
 
-
 @export var offset: Vector3
 @export var targets: Array[Node3D]
 @export var switch_delay := 0.5
@@ -15,7 +14,11 @@ var _god_mode := false
 
 
 func _ready():
+	for target in targets:
+		target.process_mode = Node.PROCESS_MODE_DISABLED
+
 	_next_perspective(start_idx)
+
 
 
 func _input(event: InputEvent):
