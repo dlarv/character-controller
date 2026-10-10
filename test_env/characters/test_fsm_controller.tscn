@@ -10,7 +10,7 @@
 [sub_resource type="Resource" id="Resource_xe3dv"]
 script = ExtResource("3_ljn5q")
 name = "Entry"
-metadata/graph_offset = Vector2(101.5, 181.5)
+metadata/graph_offset = Vector2(41.5, 181.5)
 
 [sub_resource type="Resource" id="Resource_g8cj2"]
 script = ExtResource("3_ljn5q")
@@ -146,7 +146,6 @@ to = "falling"
 conditions = {
 "v_speed": SubResource("Resource_xy6wp")
 }
-priority = 1
 
 [sub_resource type="Resource" id="Resource_k20am"]
 script = ExtResource("6_6hrbs")
@@ -160,7 +159,6 @@ to = "heavy_fall"
 conditions = {
 "heavy_fall": SubResource("Resource_k20am")
 }
-priority = 1
 
 [sub_resource type="Resource" id="Resource_k143n"]
 script = ExtResource("5_6hrbs")
