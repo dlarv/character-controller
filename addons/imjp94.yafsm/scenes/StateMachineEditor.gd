@@ -183,6 +183,7 @@ func _on_path_viewer_dir_pressed(dir, index):
 	_last_index = index
 	_last_path = path
 
+#DLARV: context menu logic
 func _on_context_menu_index_pressed(index):
 	var new_node = StateNode.instantiate()
 	new_node.theme.get_stylebox("focus", "FlowChartNode").border_color = editor_accent_color

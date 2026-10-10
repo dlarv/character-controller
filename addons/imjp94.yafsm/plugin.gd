@@ -7,6 +7,8 @@ const StateInspector = preload("scenes/state_nodes/StateInspector.gd")
 
 const StackPlayerIcon = preload("assets/icons/stack_player_icon.png")
 const StateMachinePlayerIcon = preload("assets/icons/state_machine_player_icon.png")
+#DLARV
+# const ContextMenu = preload("res://addons/imjp94.yafsm/scenes/ContextMenu.tscn")
 
 var state_machine_editor = StateMachineEditor.instantiate()
 var transition_inspector = TransitionInspector.new()
@@ -100,6 +102,8 @@ func _on_EditorSelection_selection_changed():
 			return
 	set_focused_object(null)
 
+#DLARV: method executed when player selects StateMachine, which opens the related dock
+#DLARV: here's where I'd need to edit context menu contents
 func _on_focused_object_changed(new_obj):
 	if new_obj:
 		# Must be shown first, otherwise StateMachineEditor can't execute ui action as it is not added to scene tree
