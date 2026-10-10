@@ -120,18 +120,19 @@ func _enter_tree() -> void:
 		var _timer := Timer.new()
 		_timer.autostart = false
 		_timer.one_shot = true
-		_timer.wait_time = time
+		if time > 0:
+			_timer.wait_time = time
 		return _timer
 
 	_coyote_timer = _create_timer.call(coyote_time)
 	add_child(_coyote_timer)
 	_coyote_timer.timeout.connect(func(): can_jump = false)
 
-	if variable_jump_frames > 0:
+	if  OS.is_debug_build() or variable_jump_frames > 0:
 		_variable_jump_timer = _create_timer.call(float(variable_jump_frames) / Engine.physics_ticks_per_second)
 		add_child(_variable_jump_timer)
 	
-	if heavy_fall_threshold > 0:
+	if OS.is_debug_build() or heavy_fall_threshold > 0:
 		_heavy_fall_timer = _create_timer.call(heavy_fall_wait_time)
 		add_child(_heavy_fall_timer)
 		_heavy_fall_timer.timeout.connect(func(): is_heavy_fall = false)
