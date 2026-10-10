@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://h0iow78t0ico"]
+
+[ext_resource type="Script" uid="uid://c8ft7hhq76c4i" path="res://test_env/testing_tools/detector.gd" id="1_tajbi"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_e2hcr"]
+size = Vector3(2.5, 1, 2.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e2hcr"]
+resource_local_to_scene = true
+albedo_color = Color(0, 0.5483641, 0.548364, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8wx2m"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_e2hcr")
+size = Vector3(3, 0.1, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8wx2m"]
+size = Vector3(3, 0.1, 3)
+
+[node name="Detector" type="Area3D" unique_id=1072357290]
+script = ExtResource("1_tajbi")
+property_name = ":global_position:y"
+
+[node name="TargetPlate" type="CollisionShape3D" parent="." unique_id=822178510]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+shape = SubResource("BoxShape3D_e2hcr")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=978649822]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1810323254]
+unique_name_in_owner = true
+mesh = SubResource("BoxMesh_8wx2m")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1892176434]
+shape = SubResource("BoxShape3D_8wx2m")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=1471462738]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+text = "Label
+"
+
+[node name="ResultsLabel3D" type="Label3D" parent="." unique_id=1472820370]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0.90000004, 1.7)
+text = "Results"
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
