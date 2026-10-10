@@ -26,9 +26,7 @@ extends RigidBody3D
 @export_subgroup("Jumping")
 @export var jump_enabled := true
 @export_range(1, 1000) var jump_height := 10.0
-## Approx time to reach apex of jump. Loses accuracy the higher above 1.0 it gets.
-@export_range(0.1, 100) var jump_up_time := 1.0
-@export_range(0.1, 100) var jump_down_time := 1.0
+@export_range(.01, 1000) var falling_gravity_mod := 1.0
 ## Once velocity.y falls below this value, body is considered to be falling.
 @export var falling_threshold := 0.0
 @export var coyote_time := 0.1:
@@ -182,7 +180,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 	if _try_dash(state): pass
 	elif _try_jump(state): pass
-	elif _try_fall(abs(state.total_gravity.y)): pass
+	elif _try_fall(falling_gravity_mod): pass
 	else:
 		gravity_scale = _initial_gravity_scale
 		can_jump = true
@@ -250,7 +248,7 @@ func _set_sprint_mode(event: InputEvent) -> void:
 			is_sprinting = not is_sprinting
 
 
-func _try_fall(gravity: float) -> bool:
+func _try_fall(gravity_mod: float) -> bool:
 	# Don't apply heavier gravity before coyote time runs out
 	if not _coyote_timer.is_stopped(): return false
 	if is_on_floor: return false
@@ -259,7 +257,7 @@ func _try_fall(gravity: float) -> bool:
 		# player is falling, just not with heavier gravity
 		return true
 	if is_falling:
-		gravity_scale = 2 * jump_height / pow(jump_down_time, 2) / gravity
+		gravity_scale = gravity_mod
 	return true
 
 
@@ -275,18 +273,14 @@ func _try_jump(state: PhysicsDirectBodyState3D) -> bool:
 		_jump(state)
 		return true
 	elif Input.is_action_pressed(jump_action) and _check_variable_jump_running(true):
-		_jump(state, variable_jump_amount, false)
+		_jump(state, variable_jump_amount)
 		return true
 	return false
 
 
-func _jump(state: PhysicsDirectBodyState3D, velocity_modifier:=1.0, adjust_gravity:=true) -> void:
-	# d = vt/2
-	var _velocity := 2 * jump_height / jump_up_time * velocity_modifier
-	if adjust_gravity:
-		# d = vt + att/2
-		var _acceleration := pow(_velocity, 2) / (2 * jump_height)
-		gravity_scale = _acceleration / abs(state.total_gravity.y)
+func _jump(state: PhysicsDirectBodyState3D, velocity_modifier:=1.0) -> void:
+	# 0 = v^2 + 2ax
+	var _velocity := sqrt(2 * abs(state.total_gravity.y) * jump_height) * velocity_modifier
 	state.apply_central_impulse(Vector3.UP * _velocity)
 
 	_skip_next_grounded_check = true
@@ -305,7 +299,5 @@ func _try_dash(state: PhysicsDirectBodyState3D) -> bool:
 	_dash_velocity = _velocity * _direction
 	state.linear_velocity = _dash_velocity
 	_dash_y_position = global_position.y
-
-	print("Tick %f -- %v" % [tick, state.linear_velocity])
 
 	return true
