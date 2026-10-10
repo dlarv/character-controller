@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://cbmm2ipeekyb5"]
+
+[ext_resource type="Script" uid="uid://diev6fpp7dd4k" path="res://addons/character_controller/interactables/interactable.gd" id="1_wt4so"]
+[ext_resource type="Script" uid="uid://l7gvlh1m33i1" path="res://test_env/interactables/input_prompt_label.gd" id="2_il1p3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wt4so"]
+albedo_color = Color(0.5333242, 1.0949746e-06, 2.8878452e-07, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wt4so"]
+material = SubResource("StandardMaterial3D_wt4so")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_il1p3"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_il1p3"]
+radius = 2.0
+
+[node name="Button" type="Area3D" unique_id=571931540]
+script = ExtResource("1_wt4so")
+metadata/_custom_type_script = "uid://diev6fpp7dd4k"
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1713468549]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=800802152]
+mesh = SubResource("BoxMesh_wt4so")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1563181174]
+shape = SubResource("BoxShape3D_il1p3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=692827705]
+shape = SubResource("SphereShape3D_il1p3")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=239169134 node_paths=PackedStringArray("interactable")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+text = "placeholder"
+script = ExtResource("2_il1p3")
+interactable = NodePath("..")
+prompt = "interact"
+idx = 1
+
+[connection signal="interactor_entered" from="." to="Label3D" method="_on_button_interactor_entered"]
+[connection signal="interactor_exited" from="." to="Label3D" method="_on_button_interactor_exited"]

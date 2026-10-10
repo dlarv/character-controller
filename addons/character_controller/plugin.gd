@@ -1,15 +1,16 @@
 @tool
 extends EditorPlugin
 
+const InteractableScene := preload("res://addons/character_controller/interactables/interactable.gd")
+const InteractableIcon := preload("res://assets/hand-tap-svgrepo-com.svg")
+
 
 func _enable_plugin() -> void:
-	# Add autoloads here.
-	pass
+	add_custom_type("Interactable", "Area3D", InteractableScene, InteractableIcon)
 
 
 func _disable_plugin() -> void:
-	# Remove autoloads here.
-	pass
+	remove_custom_type("Interactable")
 
 
 func _enter_tree() -> void:

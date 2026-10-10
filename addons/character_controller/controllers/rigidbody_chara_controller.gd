@@ -150,7 +150,7 @@ func _enter_tree() -> void:
 	_dash_buffer_timer.timeout.connect(func(): _dash_buffered = false)
 
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if sprint_enabled:
 		_set_sprint_mode(event)
 	if event.is_action_pressed(jump_action):
@@ -219,7 +219,7 @@ func _calculate_if_on_floor(state: PhysicsDirectBodyState3D) -> void:
 
 
 func _check_variable_jump_running(running:=true) -> bool:
-	if not _variable_jump_timer: return false
+	if variable_jump_frames == 0: return false
 	elif running: return not _variable_jump_timer.is_stopped()
 	else: return _variable_jump_timer.is_stopped()
 

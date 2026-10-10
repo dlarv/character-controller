@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bn0isf3015gnt"]
+
+[ext_resource type="Script" uid="uid://bh1c2i6n28n73" path="res://test_env/interactables/interactable_label.gd" id="1_0em0v"]
+
+[node name="InteractableLabel" type="Label3D" unique_id=1447970233]
+text = "Test"
+script = ExtResource("1_0em0v")

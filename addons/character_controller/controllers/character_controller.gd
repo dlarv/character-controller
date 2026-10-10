@@ -22,14 +22,11 @@ func _physics_process(delta: float) -> void:
 		velocity.y = _get_jump_velocity()
 		_set_jump_acceleration(velocity.y)
 		_height = []
-		print("JUMP")
 	
 	if not is_on_floor():
 		_height.append(position.y)
 	elif len(_height) > 0:
 		_height = []
-	else:
-		print("GROUNDED")
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
