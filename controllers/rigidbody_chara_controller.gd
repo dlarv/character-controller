@@ -160,14 +160,11 @@ func _input(event: InputEvent) -> void:
 		_dash_buffered = true
 
 
-var tick := -1
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
-	tick += 1
 	if _heavy_fall_timer and not _heavy_fall_timer.is_stopped(): return
 	if is_dashing: 
 		state.linear_velocity = _dash_velocity
 		global_position.y = _dash_y_position
-		print("Tick %f -- %v" % [tick, state.linear_velocity])
 		return
 
 	var _walk_speed := _get_movement_vector(sprint_speed if is_sprinting else walk_speed)
