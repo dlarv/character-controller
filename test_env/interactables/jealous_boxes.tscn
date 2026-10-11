@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://c6fby36ghp0ru"]
+
+[ext_resource type="PackedScene" uid="uid://bn0isf3015gnt" path="res://test_env/interactables/interactable_label.tscn" id="1_m7yuc"]
+[ext_resource type="PackedScene" uid="uid://cbmm2ipeekyb5" path="res://test_env/interactables/Button.tscn" id="2_m88ga"]
+
+[node name="JealousBoxes" type="Node3D" unique_id=1822857881]
+
+[node name="InteractableLabel" parent="." unique_id=1447970233 instance=ExtResource("1_m7yuc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1, 0)
+billboard = 1
+
+[node name="Button" parent="." unique_id=571931540 instance=ExtResource("2_m88ga")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
+
+[node name="Button2" parent="." unique_id=1573423255 instance=ExtResource("2_m88ga")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+
+[connection signal="interacted" from="Button" to="InteractableLabel" method="_on_button_interacted"]
+[connection signal="interactor_exited" from="Button" to="InteractableLabel" method="_on_button_interactor_exited"]
+[connection signal="interacted" from="Button2" to="InteractableLabel" method="_on_button_interacted"]
+[connection signal="interactor_exited" from="Button2" to="InteractableLabel" method="_on_button_interactor_exited"]

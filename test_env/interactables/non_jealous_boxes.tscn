@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bi7vkl82lfueq"]
+
+[ext_resource type="PackedScene" uid="uid://cbmm2ipeekyb5" path="res://test_env/interactables/Button.tscn" id="1_ijl7n"]
+[ext_resource type="Script" uid="uid://c6txt7yd53n5j" path="res://test_env/interactables/counter_label.gd" id="2_byru7"]
+
+[node name="NonJealousBoxes" type="Node3D" unique_id=895281751]
+
+[node name="Button" parent="." unique_id=571931540 instance=ExtResource("1_ijl7n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+jealous = false
+consume_input = false
+
+[node name="Button2" parent="." unique_id=619829804 instance=ExtResource("1_ijl7n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+jealous = false
+consume_input = false
+
+[node name="CounterLabel" type="Label3D" parent="." unique_id=608026080]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+script = ExtResource("2_byru7")
+
+[connection signal="interacted" from="Button" to="CounterLabel" method="_on_button_interacted"]
+[connection signal="interacted" from="Button2" to="CounterLabel" method="_on_button_interacted"]

@@ -32,6 +32,7 @@ shape = SubResource("SphereShape3D_il1p3")
 
 [node name="Label3D" type="Label3D" parent="." unique_id=239169134 node_paths=PackedStringArray("interactable")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+billboard = 1
 text = "placeholder"
 script = ExtResource("2_il1p3")
 interactable = NodePath("..")
