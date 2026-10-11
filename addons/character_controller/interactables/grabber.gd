@@ -4,7 +4,7 @@ extends Interactor
 class_name Grabber
 
 ## Physics Object to be connected to Grabbable.
-## Defaults to this object's parents.
+## Defaults to this object's parent.
 @export var body: PhysicsBody3D
 
 var joint: Joint3D
@@ -21,12 +21,6 @@ func _ready() -> void:
 		child_exiting_tree.connect(_on_child_exiting_tree)
 
 
-func _get_configuration_warnings() -> PackedStringArray:
-	if not joint:
-		return ["Grabber must have a Joint3D child in order to work"]
-	return []
-
-
 func grab(other: PhysicsBody3D) -> void:
 	if body == null or joint == null: return
 	joint.node_a = body.get_path()
@@ -37,6 +31,12 @@ func drop() -> void:
 	if joint == null: return
 	joint.node_a = NodePath()
 	joint.node_b = NodePath()
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	if not joint:
+		return ["Grabber must have a Joint3D child in order to work"]
+	return []
 
 
 func _on_child_entered_tree(node: Node) -> void:
