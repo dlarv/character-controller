@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://m3m847qoxpd0"
-path="res://.godot/imported/hand-tap-svgrepo-com.svg-577001482c9376e9279aa4cc2d58fadf.ctex"
+uid="uid://dfgxtm8kwmq8e"
+path="res://.godot/imported/push-svgrepo-com.svg-8bd1ecdca697e2017472105512d48d23.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/hand-tap-svgrepo-com.svg"
-dest_files=["res://.godot/imported/hand-tap-svgrepo-com.svg-577001482c9376e9279aa4cc2d58fadf.ctex"]
+source_file="res://addons/character_controller/icons/push-svgrepo-com.svg"
+dest_files=["res://.godot/imported/push-svgrepo-com.svg-8bd1ecdca697e2017472105512d48d23.ctex"]
 
 [params]
 

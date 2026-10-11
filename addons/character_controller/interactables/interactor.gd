@@ -1,3 +1,4 @@
+@icon("uid://jq8ri4g3wpiw")
 extends Area3D
 class_name Interactor
 
@@ -5,8 +6,9 @@ enum OccupiedMode { FREE, JEALOUS, NON_JEALOUS }
 
 var occupied_mode := OccupiedMode.FREE
 
+
 func _ready() -> void:
-	add_to_group(Interactable.INTERACTOR_GROUP)
+	add_to_group(Interactable.BASE_INTERACTOR_GROUP)
 
 
 func interact_with(interactable: Interactable) -> void:

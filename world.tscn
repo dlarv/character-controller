@@ -6,11 +6,11 @@
 [ext_resource type="Script" uid="uid://bfro2p6y5x88u" path="res://test_env/camera_controller.gd" id="4_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://bn37sg7ohhspq" path="res://test_env/characters/character_controller.tscn" id="5_036b0"]
 [ext_resource type="PackedScene" uid="uid://c6fby36ghp0ru" path="res://test_env/interactables/jealous_boxes.tscn" id="7_gbfbk"]
-[ext_resource type="Script" uid="uid://d24g57moi63cx" path="res://addons/character_controller/interactables/interactor.gd" id="7_ioo17"]
 [ext_resource type="PackedScene" uid="uid://h0iow78t0ico" path="res://test_env/testing_tools/detector.tscn" id="7_pkg7o"]
 [ext_resource type="PackedScene" uid="uid://bi7vkl82lfueq" path="res://test_env/interactables/non_jealous_boxes.tscn" id="9_ioo17"]
+[ext_resource type="PackedScene" uid="uid://dcrmucc242m3u" path="res://test_env/interactables/draggable/draggable.tscn" id="9_wse8f"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wse8f"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_ioo17"]
 
 [node name="World" type="Node3D" unique_id=1225734566]
 
@@ -70,10 +70,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -4)
 detector_label = "Height"
 
 [node name="Box" parent="TestingObjects" unique_id=1191880979 instance=ExtResource("2_fj7yv")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8999996, 1, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1, 0.5, 1)
 mass = 2.0
 custom_integrator = false
-linear_velocity = Vector3(-10, 0, 0)
+linear_velocity = Vector3(0, 0, 0)
 
 [node name="Characters" type="Node3D" parent="." unique_id=1939529387]
 
@@ -95,16 +95,18 @@ variable_jump_amount = 0.2
 dash_time = 0.1
 dash_action = "dash"
 
-[node name="Interactor" type="Area3D" parent="Characters/PhysicsCharacter" unique_id=1579814733]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-script = ExtResource("7_ioo17")
-metadata/_custom_type_script = "uid://d24g57moi63cx"
+[node name="Area3D" type="Area3D" parent="Characters/PhysicsCharacter" unique_id=1216281669]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Characters/PhysicsCharacter/Interactor" unique_id=1820454264]
-shape = SubResource("CapsuleShape3D_wse8f")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Characters/PhysicsCharacter/Area3D" unique_id=1196508215]
+shape = SubResource("BoxShape3D_ioo17")
+
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="Characters/PhysicsCharacter" unique_id=1706790214]
 
 [node name="JealousBoxes" parent="." unique_id=1822857881 instance=ExtResource("7_gbfbk")]
 transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -11, 0, 3)
 
 [node name="NonJealousBoxes" parent="." unique_id=895281751 instance=ExtResource("9_ioo17")]
 transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, 3, 0, 6)
+
+[node name="RigidBody3D" parent="." unique_id=1585341445 instance=ExtResource("9_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)

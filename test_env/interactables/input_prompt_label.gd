@@ -15,6 +15,12 @@ func _ready() -> void:
 	text = "Press %s to %s" % [action_text, prompt]
 	hide()
 
+	if not interactable: return
+	if not interactable.interactor_entered.is_connected(_on_button_interactor_entered):
+		interactable.interactor_entered.connect(_on_button_interactor_entered)
+	if not interactable.interactor_exited.is_connected(_on_button_interactor_exited):
+		interactable.interactor_exited.connect(_on_button_interactor_exited)
+
 
 func _on_button_interactor_exited(_interactor: Node3D) -> void:
 	hide()

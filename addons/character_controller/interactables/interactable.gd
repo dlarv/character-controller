@@ -1,4 +1,4 @@
-@icon("res://assets/hand-tap-svgrepo-com.svg")
+@icon("uid://m3m847qoxpd0")
 extends Area3D
 class_name Interactable
 
@@ -10,7 +10,7 @@ signal interactor_entered(interactor: Node3D)
 signal interactor_exited(interactor: Node3D)
 
 const OccupiedMode := Interactor.OccupiedMode
-const INTERACTOR_GROUP := "interactor"
+const BASE_INTERACTOR_GROUP := "interactor"
 
 @export var input_action := "ui_select"
 ## An object passed to anything listening to the interacted signal.
@@ -23,6 +23,7 @@ const INTERACTOR_GROUP := "interactor"
 
 var _interactor: Node3D
 var _label: Label3D
+var _interactor_group := ""
 
 func _enter_tree() -> void:
 	area_entered.connect(_on_area_entered)
@@ -32,6 +33,9 @@ func _enter_tree() -> void:
 		target = get_parent()
 		if target == null:
 			target = self
+	
+	if _interactor_group == "":
+		_interactor_group = BASE_INTERACTOR_GROUP
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -57,7 +61,7 @@ func _on_area_exited(body: Node3D) -> void:
 
 
 func _check_interactor(node: Node3D) -> bool:
-	if not node is Interactor: return false
+	if not node is Interactor or not node.is_in_group(_interactor_group): return false
 	# Jealous and non-jealous interactables. Assume body is in range of both at once.
 	# Jealous -> Jealous			only first shows prompt
 	# non-jealous -> Jealous		only first shows prompt
