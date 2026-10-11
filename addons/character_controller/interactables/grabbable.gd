@@ -1,3 +1,4 @@
+@tool
 @icon("uid://1qxooiure0ql")
 extends Interactable
 class_name Grabbable

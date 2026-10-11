@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cbmm2ipeekyb5"]
 
 [ext_resource type="Script" uid="uid://diev6fpp7dd4k" path="res://addons/character_controller/interactables/interactable.gd" id="1_wt4so"]
-[ext_resource type="Script" uid="uid://l7gvlh1m33i1" path="res://test_env/interactables/input_prompt_label.gd" id="2_il1p3"]
+[ext_resource type="Script" uid="uid://l7gvlh1m33i1" path="res://addons/character_controller/interactables/input_prompt_label.gd" id="2_il1p3"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wt4so"]
 albedo_color = Color(0.5333242, 1.0949746e-06, 2.8878452e-07, 1)

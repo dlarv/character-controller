@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dcrmucc242m3u"]
 
 [ext_resource type="Script" uid="uid://ch7n1cjy556v7" path="res://addons/character_controller/interactables/grabbable.gd" id="1_1rjvv"]
-[ext_resource type="Script" uid="uid://l7gvlh1m33i1" path="res://test_env/interactables/input_prompt_label.gd" id="2_dpal8"]
+[ext_resource type="Script" uid="uid://l7gvlh1m33i1" path="res://addons/character_controller/interactables/input_prompt_label.gd" id="2_dpal8"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_1rjvv"]
 
@@ -20,9 +20,8 @@ mesh = SubResource("BoxMesh_1rjvv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("BoxShape3D_1rjvv")
 
-[node name="Grabbable" type="Area3D" parent="." unique_id=748493141 node_paths=PackedStringArray("target")]
+[node name="Grabbable" type="Area3D" parent="." unique_id=748493141]
 script = ExtResource("1_1rjvv")
-target = NodePath("..")
 metadata/_custom_type_script = "uid://ch7n1cjy556v7"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Grabbable" unique_id=1225886421]

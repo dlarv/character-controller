@@ -1,3 +1,4 @@
+@tool
 @icon("uid://m3m847qoxpd0")
 extends Area3D
 class_name Interactable
@@ -10,6 +11,7 @@ signal interactor_entered(interactor: Node3D)
 signal interactor_exited(interactor: Node3D)
 
 const OccupiedMode := Interactor.OccupiedMode
+const PromptLabel := preload("uid://l7gvlh1m33i1")
 const BASE_INTERACTOR_GROUP := "interactor"
 
 @export var input_action := "ui_select"
@@ -20,12 +22,21 @@ const BASE_INTERACTOR_GROUP := "interactor"
 @export var jealous := true
 ## If true, iteractable will set input as handled.
 @export var consume_input := true
+## Adds an input_prompt_label.gd as a child and sets owner
+@export_tool_button("Add Prompt Label")
+var _add_prompt_label := func() -> void:
+	var label := PromptLabel.new()
+	label.interactable = self
+	add_child(label)
+	label.owner = get_tree().edited_scene_root
+	label.name = "PromptLabel"
+	label.show()
 
 var _interactor: Node3D
-var _label: Label3D
 var _interactor_group := ""
 
 func _enter_tree() -> void:
+	if Engine.is_editor_hint(): return
 	area_entered.connect(_on_area_entered)
 	area_exited.connect(_on_area_exited)
 
@@ -39,6 +50,7 @@ func _enter_tree() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if Engine.is_editor_hint(): return
 	if _interactor == null: return
 	if event.is_action_pressed(input_action):
 		interacted.emit(target, self, _interactor)
@@ -70,3 +82,4 @@ func _check_interactor(node: Node3D) -> bool:
 	elif node.occupied_mode == OccupiedMode.JEALOUS: return false
 	# non-jealous -> non-jealous	both show prompt
 	return true
+
