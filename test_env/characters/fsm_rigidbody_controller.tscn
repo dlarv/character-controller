@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://crhako82sjnt0"]
 
-[ext_resource type="Script" uid="uid://cf5n1jdumxche" path="res://controllers/fsm_rigidbody_controller.gd" id="1_naxel"]
+[ext_resource type="Script" uid="uid://cf5n1jdumxche" path="res://controllers/fsm/fsm_rigidbody_controller.gd" id="1_naxel"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sxd7g"]
 albedo_color = Color(0, 1, 0.56078434, 1)

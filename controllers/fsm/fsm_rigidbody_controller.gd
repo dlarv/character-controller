@@ -5,10 +5,8 @@ extends RigidBody3D
 @export var state_machine: StateMachine
 @export var root_state: ControllerActionState = null
 
-var state_machine_player: StateMachinePlayer
 @onready var active_state: ControllerActionState = root_state
-
-var _input_map: Dictionary[String, Array]
+var state_machine_player: StateMachinePlayer
 
 
 func _enter_tree() -> void:
@@ -17,12 +15,22 @@ func _enter_tree() -> void:
 	for state in states.values():
 		state.setup(self)
 
-		if _input_map.has(state.input_action):
-			_input_map[state.input_action].append(state)
-		else:
-			_input_map[state.input_action] = [state]
+	state_machine_player = StateMachinePlayer.new()
+	add_child(state_machine_player)
+	state_machine_player.state_machine = state_machine
+	state_machine_player.updated.connect(_on_state_machine_updated)
 
 
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	pass
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	pass
+
+
+func _on_state_machine_updated(state: String, _delta: float) -> void:
+	pass
 
 ## Uses a StateMachine to define the structure of a graph
 @warning_ignore("shadowed_variable")
