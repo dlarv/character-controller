@@ -19,7 +19,7 @@ func _ready() -> void:
 	_interactor_group = GRABBER_GROUP
 
 
-func _on_interacted(physics_body: Node, interactable: Interactable, interactor: Node3D) -> void:
+func _on_interacted(physics_body: Node, _interactable: Interactable, interactor: Node3D) -> void:
 	_is_grabbed = not _is_grabbed
 
 	if _is_grabbed:

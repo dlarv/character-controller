@@ -21,6 +21,12 @@ func _ready() -> void:
 		child_exiting_tree.connect(_on_child_exiting_tree)
 
 
+	var joints := find_children("", "Joint3D", false)
+	if len(joints) > 0:
+		joint = joints[-1]
+
+
+
 func grab(other: PhysicsBody3D) -> void:
 	if body == null or joint == null: return
 	joint.node_a = body.get_path()
