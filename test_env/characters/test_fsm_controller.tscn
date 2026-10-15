@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b7x2odhf16foy"]
 
-[ext_resource type="Script" uid="uid://bwwjjbpdcwvwt" path="res://controllers/test_fsm_physics_controller.gd" id="1_iu1lp"]
+[ext_resource type="Script" uid="uid://bwwjjbpdcwvwt" path="res://controllers/fsm_physics_controller.gd" id="1_iu1lp"]
 [ext_resource type="Script" uid="uid://dhw7he35ucnlu" path="res://addons/imjp94.yafsm/src/states/StateMachine.gd" id="2_itlah"]
 [ext_resource type="Script" uid="uid://ct816lw6pekyo" path="res://addons/imjp94.yafsm/src/states/State.gd" id="3_ljn5q"]
 [ext_resource type="Script" uid="uid://vxegqxvsviyc" path="res://addons/imjp94.yafsm/src/transitions/Transition.gd" id="4_i7x5t"]
@@ -25,7 +25,7 @@ metadata/graph_offset = Vector2(913, 241.5)
 [sub_resource type="Resource" id="Resource_i7x5t"]
 script = ExtResource("3_ljn5q")
 name = "idle"
-metadata/graph_offset = Vector2(235.68054, 181.79167)
+metadata/graph_offset = Vector2(161.5, 161.5)
 
 [sub_resource type="Resource" id="Resource_6hrbs"]
 script = ExtResource("3_ljn5q")

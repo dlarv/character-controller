@@ -1,0 +1,215 @@
+[gd_scene format=3 uid="uid://crhako82sjnt0"]
+
+[ext_resource type="Script" uid="uid://b7i0kk765xrdj" path="res://test_env/characters/modular_rigidbody_controller.gd" id="1_sxd7g"]
+[ext_resource type="Script" uid="uid://dhw7he35ucnlu" path="res://addons/imjp94.yafsm/src/states/StateMachine.gd" id="2_sykxo"]
+[ext_resource type="Script" uid="uid://ct816lw6pekyo" path="res://addons/imjp94.yafsm/src/states/State.gd" id="3_aknp4"]
+[ext_resource type="Script" uid="uid://c4fwy0sa0kqmr" path="res://controllers/fsm/action_states/walk_action.gd" id="3_wer8d"]
+[ext_resource type="Script" uid="uid://vxegqxvsviyc" path="res://addons/imjp94.yafsm/src/transitions/Transition.gd" id="4_l66rk"]
+[ext_resource type="Script" uid="uid://ciy8rvmvbim28" path="res://addons/imjp94.yafsm/src/conditions/BooleanCondition.gd" id="5_5vgij"]
+[ext_resource type="Script" uid="uid://dytpysox33va8" path="res://controllers/fsm/action_states/jump_action.gd" id="7_rxdya"]
+
+[sub_resource type="Resource" id="Resource_48l1f"]
+script = ExtResource("3_aknp4")
+name = "Entry"
+metadata/graph_offset = Vector2(181.5, 81.5)
+
+[sub_resource type="Resource" id="Resource_xb5ic"]
+script = ExtResource("3_aknp4")
+name = "Entry"
+metadata/graph_offset = Vector2(161.5, 121.5)
+
+[sub_resource type="Resource" id="Resource_eswgp"]
+script = ExtResource("3_aknp4")
+name = "Exit"
+metadata/graph_offset = Vector2(871.7428, 193.04166)
+
+[sub_resource type="Resource" id="Resource_xss7c"]
+script = ExtResource("3_aknp4")
+name = "falling"
+metadata/graph_offset = Vector2(685.9142, 156.19354)
+
+[sub_resource type="Resource" id="Resource_i8kjj"]
+script = ExtResource("3_aknp4")
+name = "jump"
+metadata/graph_offset = Vector2(301.5, 121.5)
+
+[sub_resource type="Resource" id="Resource_pic5f"]
+script = ExtResource("3_aknp4")
+name = "rising"
+metadata/graph_offset = Vector2(481.5, 121.5)
+
+[sub_resource type="Resource" id="Resource_tkpua"]
+script = ExtResource("4_l66rk")
+from = "Entry"
+to = "jump"
+
+[sub_resource type="Resource" id="Resource_conrn"]
+script = ExtResource("4_l66rk")
+from = "falling"
+to = "Exit"
+
+[sub_resource type="Resource" id="Resource_w28wt"]
+script = ExtResource("4_l66rk")
+from = "jump"
+to = "rising"
+
+[sub_resource type="Resource" id="Resource_lc2w0"]
+script = ExtResource("4_l66rk")
+from = "rising"
+to = "falling"
+
+[sub_resource type="Resource" id="Resource_0nipp"]
+script = ExtResource("2_sykxo")
+states = {
+"Entry": SubResource("Resource_xb5ic"),
+"Exit": SubResource("Resource_eswgp"),
+"falling": SubResource("Resource_xss7c"),
+"jump": SubResource("Resource_i8kjj"),
+"rising": SubResource("Resource_pic5f")
+}
+transitions = {
+"Entry": {
+"jump": SubResource("Resource_tkpua")
+},
+"falling": {
+"Exit": SubResource("Resource_conrn")
+},
+"jump": {
+"rising": SubResource("Resource_w28wt")
+},
+"rising": {
+"falling": SubResource("Resource_lc2w0")
+}
+}
+name = "jump"
+metadata/graph_offset = Vector2(481.5, 281.5)
+
+[sub_resource type="Resource" id="Resource_q21fg"]
+script = ExtResource("3_aknp4")
+name = "sprint"
+metadata/graph_offset = Vector2(592.5, 101.5)
+
+[sub_resource type="Resource" id="Resource_chmaa"]
+script = ExtResource("3_aknp4")
+name = "walk"
+metadata/graph_offset = Vector2(374.5, 90.5)
+
+[sub_resource type="Resource" id="Resource_sykxo"]
+script = ExtResource("4_l66rk")
+from = "Entry"
+to = "walk"
+
+[sub_resource type="Resource" id="Resource_rxdya"]
+script = ExtResource("5_5vgij")
+value = true
+name = "jump_buffered"
+
+[sub_resource type="Resource" id="Resource_xhkwq"]
+script = ExtResource("4_l66rk")
+from = "sprint"
+to = "jump"
+conditions = {
+"jump_buffered": SubResource("Resource_rxdya")
+}
+
+[sub_resource type="Resource" id="Resource_vvkio"]
+script = ExtResource("5_5vgij")
+name = "is_sprinting"
+
+[sub_resource type="Resource" id="Resource_owdsj"]
+script = ExtResource("4_l66rk")
+from = "sprint"
+to = "walk"
+conditions = {
+"is_sprinting": SubResource("Resource_vvkio")
+}
+
+[sub_resource type="Resource" id="Resource_q2p6m"]
+script = ExtResource("5_5vgij")
+value = true
+name = "jump_buffered"
+
+[sub_resource type="Resource" id="Resource_mosq4"]
+script = ExtResource("4_l66rk")
+from = "walk"
+to = "jump"
+conditions = {
+"jump_buffered": SubResource("Resource_q2p6m")
+}
+
+[sub_resource type="Resource" id="Resource_gecrs"]
+script = ExtResource("5_5vgij")
+value = true
+name = "is_sprinting"
+
+[sub_resource type="Resource" id="Resource_epw64"]
+script = ExtResource("4_l66rk")
+from = "walk"
+to = "sprint"
+conditions = {
+"is_sprinting": SubResource("Resource_gecrs")
+}
+
+[sub_resource type="Resource" id="Resource_121qj"]
+script = ExtResource("2_sykxo")
+states = {
+"Entry": SubResource("Resource_48l1f"),
+"jump": SubResource("Resource_0nipp"),
+"sprint": SubResource("Resource_q21fg"),
+"walk": SubResource("Resource_chmaa")
+}
+transitions = {
+"Entry": {
+"walk": SubResource("Resource_sykxo")
+},
+"sprint": {
+"jump": SubResource("Resource_xhkwq"),
+"walk": SubResource("Resource_owdsj")
+},
+"walk": {
+"jump": SubResource("Resource_mosq4"),
+"sprint": SubResource("Resource_epw64")
+}
+}
+metadata/_custom_type_script = "uid://dhw7he35ucnlu"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sxd7g"]
+albedo_color = Color(0, 1, 0.56078434, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_mskpc"]
+material = SubResource("StandardMaterial3D_sxd7g")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tlwt5"]
+
+[node name="ModularRigidbodyController" type="RigidBody3D" unique_id=133858657 node_paths=PackedStringArray("root_state")]
+collision_layer = 3
+collision_mask = 3
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+can_sleep = false
+contact_monitor = true
+max_contacts_reported = 100
+script = ExtResource("1_sxd7g")
+state_machine = SubResource("Resource_121qj")
+root_state = NodePath("walk")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=65133136]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_mskpc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=559097436]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_tlwt5")
+
+[node name="walk" type="Node" parent="." unique_id=1007233602]
+script = ExtResource("3_wer8d")
+damping = Vector3(5, 0, 5)
+
+[node name="sprint" type="Node" parent="." unique_id=915165407]
+script = ExtResource("3_wer8d")
+walk_speed = 125.0
+damping = Vector3(5, 0, 5)
+
+[node name="jump" type="Node" parent="." unique_id=496067049]
+script = ExtResource("7_rxdya")

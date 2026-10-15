@@ -38,8 +38,20 @@ extends RigidBody3D
 @export var variable_jump_frames:= 0:
 	set(val):
 		variable_jump_frames = val
-		if not Engine.is_editor_hint() and _variable_jump_timer:
-			_variable_jump_timer.wait_time = float(val) / Engine.physics_ticks_per_second
+		if Engine.is_editor_hint(): return
+		if OS.is_debug_build():
+			if not _variable_jump_timer and val > 0:
+				_variable_jump_timer = Timer.new()
+				_variable_jump_timer.autostart = false
+				_variable_jump_timer.one_shot = true
+				add_child(_variable_jump_timer)
+			elif _variable_jump_timer and val == 0:
+				remove_child(_variable_jump_timer)
+				_variable_jump_timer = null
+				return
+		_variable_jump_timer.wait_time = float(val) / Engine.physics_ticks_per_second
+
+
 
 ## Modifies how much extra velocity is added per frame of variable jump
 @export var variable_jump_amount := 0.3
@@ -128,7 +140,7 @@ func _enter_tree() -> void:
 	add_child(_coyote_timer)
 	_coyote_timer.timeout.connect(func(): can_jump = false)
 
-	if  OS.is_debug_build() or variable_jump_frames > 0:
+	if  variable_jump_frames > 0:
 		_variable_jump_timer = _create_timer.call(float(variable_jump_frames) / Engine.physics_ticks_per_second)
 		add_child(_variable_jump_timer)
 	
