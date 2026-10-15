@@ -6,7 +6,7 @@ extends Camera3D
 @export var start_idx := 0
 @export var god_mode_speed := 30.0
 
-@onready var _target: Node3D = targets[start_idx] if len(targets) > 0 else null
+@onready var _target: Node3D = targets[start_idx % len(targets)] if len(targets) > 0 else null
 @onready var _curr_target_idx := start_idx
 
 var _perspective_switch_tween: Tween
@@ -15,8 +15,12 @@ var _god_mode := false
 
 func _ready():
 	for target in targets:
-		target.process_mode = Node.PROCESS_MODE_DISABLED
+		if target == null:
+			targets.remove_at(targets.find(target))
+		else:
+			target.process_mode = Node.PROCESS_MODE_DISABLED
 
+	start_idx %= len(targets)
 	_next_perspective(start_idx)
 
 
