@@ -13,7 +13,6 @@ func physics_update(state: PhysicsDirectBodyState3D) -> void:
 	if _walk_speed.length() > 0:
 		_last_facing_direction = _walk_speed.normalized()
 	state.apply_central_force(_walk_speed)
-	_calculate_damping(state)
 
 
 func _get_movement_vector(speed: float) -> Vector3:

@@ -87,3 +87,6 @@ dash_action = "dash"
 
 [node name="ModularRigidbodyController" parent="Characters" unique_id=1369840596 instance=ExtResource("7_gbfbk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 5)
+damping = Vector3(5, 0, 5)
+floor_normal_threshold = 0.99
+floor_collision_layer = -1
