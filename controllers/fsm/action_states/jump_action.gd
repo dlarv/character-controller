@@ -18,6 +18,7 @@ var _is_on_floor: bool:
 var can_jump := true
 
 var _state_machine_player: StateMachinePlayer
+var _coyote_timer: Timer
 
 func setup(controller: Node3D) -> void:
 	super.setup(controller)
@@ -29,11 +30,11 @@ func setup(controller: Node3D) -> void:
 	)
 	timer_register_request.emit("jump_buffer", buffer_timer, true)
 
-	var coyote_timer: Timer = _create_timer(coyote_time)
-	coyote_timer.timeout.connect(func():
+	_coyote_timer = _create_timer(coyote_time)
+	_coyote_timer.timeout.connect(func():
 		_state_machine_player.set_trigger("coyote_timeout")
 	)
-	timer_register_request.emit("coyote", coyote_timer, true)
+	timer_register_request.emit("coyote", _coyote_timer, true)
 
 
 func activate() -> void:
@@ -46,6 +47,7 @@ func physics_update(state: PhysicsDirectBodyState3D) -> void:
 		can_jump = false
 		state.linear_velocity.y = 0
 		_jump(state)
+		_coyote_timer.stop()
 	elif _is_on_floor:
 		can_jump = true
 

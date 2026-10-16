@@ -10,6 +10,7 @@ class_name ModularRigidBodyController
 ## Be careful, not every special char works with StateMachinePlayer.
 ## See _parse_substate() for more details.
 @export var substate_special_char := "$"
+@export var state_machine_player: StateMachinePlayer
 
 @export_category("Universal Physics")
 @export var damping := Vector3.ZERO
@@ -23,7 +24,6 @@ class_name ModularRigidBodyController
 
 @onready var active_state: ControllerActionState = root_state
 
-var state_machine_player: StateMachinePlayer
 var states: Dictionary[StringName, ControllerActionState]
 var is_on_floor := true
 
@@ -32,10 +32,12 @@ var _timers: Dictionary[String, Timer] = {}
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
 
-	state_machine_player = StateMachinePlayer.new()
-	add_child(state_machine_player)
-	state_machine_player.state_machine = state_machine
-	state_machine_player.updated.connect(_on_state_machine_updated)
+	if not state_machine_player:
+		state_machine_player = StateMachinePlayer.new()
+		add_child(state_machine_player)
+		state_machine_player.state_machine = state_machine
+	if not state_machine_player.updated.is_connected(_on_state_machine_updated):
+		state_machine_player.updated.connect(_on_state_machine_updated)
 
 	states = {}
 	for child in get_children():
@@ -69,6 +71,7 @@ func _process(delta: float) -> void:
 
 
 func _on_state_machine_updated(key: String, _delta:=0.0) -> void:
+	print(key)
 	var _curr_state := active_state
 	var parsed_key := key.split("/")
 	key = parsed_key[0]
