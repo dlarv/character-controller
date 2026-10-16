@@ -96,8 +96,8 @@ func _parse_substate(substates: Array[String]) -> void:
 			_timers[key.substr(2)].start()
 		elif key.begins_with("T" + substate_special_char):
 			_timers[key.substr(2)].stop()
-		elif key.begins_with("r" + substate_special_char):
-			_on_state_machine_updated(key.substr(2))
+	elif key.begins_with("r" + substate_special_char):
+		_on_state_machine_updated(key.substr(2))
 	else:
 		active_state.propagate_substate(substates)
 

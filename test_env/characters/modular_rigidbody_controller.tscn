@@ -6,169 +6,382 @@
 [ext_resource type="Script" uid="uid://c4fwy0sa0kqmr" path="res://controllers/fsm/action_states/walk_action.gd" id="3_wer8d"]
 [ext_resource type="Script" uid="uid://vxegqxvsviyc" path="res://addons/imjp94.yafsm/src/transitions/Transition.gd" id="4_l66rk"]
 [ext_resource type="Script" uid="uid://ciy8rvmvbim28" path="res://addons/imjp94.yafsm/src/conditions/BooleanCondition.gd" id="5_5vgij"]
+[ext_resource type="Script" uid="uid://dq2sqhaamfpiu" path="res://addons/imjp94.yafsm/src/conditions/FloatCondition.gd" id="5_xhkwq"]
+[ext_resource type="Script" uid="uid://d1ygxhyoe2bc5" path="res://addons/imjp94.yafsm/src/conditions/Condition.gd" id="7_q2p6m"]
 [ext_resource type="Script" uid="uid://dytpysox33va8" path="res://controllers/fsm/action_states/jump_action.gd" id="7_rxdya"]
+[ext_resource type="Script" uid="uid://b0vxc2nbll1aq" path="res://addons/character_controller/interactables/grabber.gd" id="11_i8kjj"]
 
 [sub_resource type="Resource" id="Resource_48l1f"]
 script = ExtResource("3_aknp4")
 name = "Entry"
 metadata/graph_offset = Vector2(181.5, 81.5)
 
-[sub_resource type="Resource" id="Resource_xb5ic"]
+[sub_resource type="Resource" id="Resource_pic5f"]
 script = ExtResource("3_aknp4")
-name = "Entry"
-metadata/graph_offset = Vector2(161.5, 121.5)
-
-[sub_resource type="Resource" id="Resource_eswgp"]
-script = ExtResource("3_aknp4")
-name = "Exit"
-metadata/graph_offset = Vector2(871.7428, 193.04166)
+name = "ascending"
+metadata/graph_offset = Vector2(392.5, 421.5)
 
 [sub_resource type="Resource" id="Resource_xss7c"]
 script = ExtResource("3_aknp4")
-name = "falling"
-metadata/graph_offset = Vector2(685.9142, 156.19354)
-
-[sub_resource type="Resource" id="Resource_i8kjj"]
-script = ExtResource("3_aknp4")
-name = "jump"
-metadata/graph_offset = Vector2(301.5, 121.5)
-
-[sub_resource type="Resource" id="Resource_pic5f"]
-script = ExtResource("3_aknp4")
-name = "rising"
-metadata/graph_offset = Vector2(481.5, 121.5)
-
-[sub_resource type="Resource" id="Resource_tkpua"]
-script = ExtResource("4_l66rk")
-from = "Entry"
-to = "jump"
-
-[sub_resource type="Resource" id="Resource_conrn"]
-script = ExtResource("4_l66rk")
-from = "falling"
-to = "Exit"
+name = "descending"
+metadata/graph_offset = Vector2(588, 501.5)
 
 [sub_resource type="Resource" id="Resource_w28wt"]
-script = ExtResource("4_l66rk")
-from = "jump"
-to = "rising"
+script = ExtResource("3_aknp4")
+name = "Entry"
+metadata/graph_offset = Vector2(370.42856, 232.39285)
 
-[sub_resource type="Resource" id="Resource_lc2w0"]
-script = ExtResource("4_l66rk")
-from = "rising"
-to = "falling"
+[sub_resource type="Resource" id="Resource_wepj7"]
+script = ExtResource("3_aknp4")
+name = "Exit"
+metadata/graph_offset = Vector2(601.5, 241.5)
 
-[sub_resource type="Resource" id="Resource_0nipp"]
+[sub_resource type="Resource" id="Resource_qdkmr"]
+script = ExtResource("3_aknp4")
+name = "t$coyote"
+metadata/graph_offset = Vector2(481.5, 241.5)
+
+[sub_resource type="Resource" id="Resource_vsqy6"]
+script = ExtResource("4_l66rk")
+from = "Entry"
+to = "t$coyote"
+
+[sub_resource type="Resource" id="Resource_85hdf"]
+script = ExtResource("4_l66rk")
+from = "t$coyote"
+to = "Exit"
+
+[sub_resource type="Resource" id="Resource_d83qw"]
 script = ExtResource("2_sykxo")
 states = {
-"Entry": SubResource("Resource_xb5ic"),
-"Exit": SubResource("Resource_eswgp"),
-"falling": SubResource("Resource_xss7c"),
-"jump": SubResource("Resource_i8kjj"),
-"rising": SubResource("Resource_pic5f")
+"Entry": SubResource("Resource_w28wt"),
+"Exit": SubResource("Resource_wepj7"),
+"t$coyote": SubResource("Resource_qdkmr")
 }
 transitions = {
 "Entry": {
-"jump": SubResource("Resource_tkpua")
+"t$coyote": SubResource("Resource_vsqy6")
 },
-"falling": {
-"Exit": SubResource("Resource_conrn")
+"t$coyote": {
+"Exit": SubResource("Resource_85hdf")
+}
+}
+name = "falling"
+metadata/graph_offset = Vector2(621.5, 201.5)
+
+[sub_resource type="Resource" id="Resource_mosq4"]
+script = ExtResource("3_aknp4")
+name = "idle"
+metadata/graph_offset = Vector2(582.5, 101.5)
+
+[sub_resource type="Resource" id="Resource_m74jx"]
+script = ExtResource("3_aknp4")
+name = "Entry"
+metadata/graph_offset = Vector2(361.5, 161.5)
+
+[sub_resource type="Resource" id="Resource_5yd85"]
+script = ExtResource("3_aknp4")
+name = "Exit"
+metadata/graph_offset = Vector2(656.03906, 224.76563)
+
+[sub_resource type="Resource" id="Resource_e6dae"]
+script = ExtResource("3_aknp4")
+name = "T$coyote"
+metadata/graph_offset = Vector2(493.5, 161.5)
+
+[sub_resource type="Resource" id="Resource_i8kjj"]
+script = ExtResource("3_aknp4")
+name = "T_coyote"
+metadata/graph_offset = Vector2(-38.5, -18.5)
+
+[sub_resource type="Resource" id="Resource_22p85"]
+script = ExtResource("4_l66rk")
+from = "Entry"
+to = "T$coyote"
+
+[sub_resource type="Resource" id="Resource_prv20"]
+script = ExtResource("4_l66rk")
+from = "Entry"
+to = "T_coyote"
+
+[sub_resource type="Resource" id="Resource_roq7b"]
+script = ExtResource("4_l66rk")
+from = "T$coyote"
+to = "Exit"
+
+[sub_resource type="Resource" id="Resource_vuiwn"]
+script = ExtResource("4_l66rk")
+from = "T_coyote"
+to = "Exit"
+
+[sub_resource type="Resource" id="Resource_c6t4w"]
+script = ExtResource("2_sykxo")
+states = {
+"Entry": SubResource("Resource_m74jx"),
+"Exit": SubResource("Resource_5yd85"),
+"T$coyote": SubResource("Resource_e6dae"),
+"T_coyote": SubResource("Resource_i8kjj")
+}
+transitions = {
+"Entry": {
+"T$coyote": SubResource("Resource_22p85"),
+"T_coyote": SubResource("Resource_prv20")
 },
-"jump": {
-"rising": SubResource("Resource_w28wt")
+"T$coyote": {
+"Exit": SubResource("Resource_roq7b")
 },
-"rising": {
-"falling": SubResource("Resource_lc2w0")
+"T_coyote": {
+"Exit": SubResource("Resource_vuiwn")
 }
 }
 name = "jump"
-metadata/graph_offset = Vector2(481.5, 281.5)
+metadata/graph_offset = Vector2(341.5, 241.5)
 
-[sub_resource type="Resource" id="Resource_q21fg"]
+[sub_resource type="Resource" id="Resource_tkpua"]
+script = ExtResource("3_aknp4")
+name = "landed"
+metadata/graph_offset = Vector2(961.5, 221.5)
+
+[sub_resource type="Resource" id="Resource_7t753"]
 script = ExtResource("3_aknp4")
 name = "sprint"
-metadata/graph_offset = Vector2(592.5, 101.5)
+metadata/graph_offset = Vector2(961.5, 21.5)
 
-[sub_resource type="Resource" id="Resource_chmaa"]
+[sub_resource type="Resource" id="Resource_c64e0"]
 script = ExtResource("3_aknp4")
 name = "walk"
-metadata/graph_offset = Vector2(374.5, 90.5)
+metadata/graph_offset = Vector2(401.5, -18.5)
 
-[sub_resource type="Resource" id="Resource_sykxo"]
+[sub_resource type="Resource" id="Resource_lc2w0"]
 script = ExtResource("4_l66rk")
 from = "Entry"
-to = "walk"
+to = "idle"
 
-[sub_resource type="Resource" id="Resource_rxdya"]
+[sub_resource type="Resource" id="Resource_conrn"]
+script = ExtResource("5_xhkwq")
+comparation = 3
+name = "v_speed"
+
+[sub_resource type="Resource" id="Resource_46b7c"]
+script = ExtResource("4_l66rk")
+from = "ascending"
+to = "descending"
+conditions = {
+"v_speed": SubResource("Resource_conrn")
+}
+
+[sub_resource type="Resource" id="Resource_13ksh"]
+script = ExtResource("5_xhkwq")
+comparation = 2
+name = "v_speed"
+
+[sub_resource type="Resource" id="Resource_67mr2"]
+script = ExtResource("4_l66rk")
+from = "descending"
+to = "ascending"
+conditions = {
+"v_speed": SubResource("Resource_13ksh")
+}
+
+[sub_resource type="Resource" id="Resource_gwayd"]
+script = ExtResource("5_xhkwq")
+name = "v_speed"
+
+[sub_resource type="Resource" id="Resource_c5uvf"]
+script = ExtResource("4_l66rk")
+from = "descending"
+to = "landed"
+conditions = {
+"v_speed": SubResource("Resource_gwayd")
+}
+
+[sub_resource type="Resource" id="Resource_2qdxs"]
+script = ExtResource("7_q2p6m")
+name = "coyote_timeout"
+
+[sub_resource type="Resource" id="Resource_k208p"]
+script = ExtResource("4_l66rk")
+from = "falling"
+to = "descending"
+conditions = {
+"coyote_timeout": SubResource("Resource_2qdxs")
+}
+priority = 1
+
+[sub_resource type="Resource" id="Resource_nlrc2"]
 script = ExtResource("5_5vgij")
 value = true
 name = "jump_buffered"
 
-[sub_resource type="Resource" id="Resource_xhkwq"]
+[sub_resource type="Resource" id="Resource_5epsc"]
 script = ExtResource("4_l66rk")
-from = "sprint"
+from = "falling"
 to = "jump"
 conditions = {
-"jump_buffered": SubResource("Resource_rxdya")
+"jump_buffered": SubResource("Resource_nlrc2")
 }
 
-[sub_resource type="Resource" id="Resource_vvkio"]
+[sub_resource type="Resource" id="Resource_0l1cb"]
 script = ExtResource("5_5vgij")
-name = "is_sprinting"
+value = true
+name = "is_on_floor"
 
-[sub_resource type="Resource" id="Resource_owdsj"]
+[sub_resource type="Resource" id="Resource_2mfco"]
 script = ExtResource("4_l66rk")
-from = "sprint"
-to = "walk"
+from = "falling"
+to = "landed"
 conditions = {
-"is_sprinting": SubResource("Resource_vvkio")
+"is_on_floor": SubResource("Resource_0l1cb")
 }
 
-[sub_resource type="Resource" id="Resource_q2p6m"]
+[sub_resource type="Resource" id="Resource_s4nsl"]
+script = ExtResource("5_xhkwq")
+comparation = 3
+name = "v_speed"
+
+[sub_resource type="Resource" id="Resource_odoip"]
+script = ExtResource("4_l66rk")
+from = "idle"
+to = "falling"
+conditions = {
+"v_speed": SubResource("Resource_s4nsl")
+}
+priority = 1
+
+[sub_resource type="Resource" id="Resource_rchi2"]
 script = ExtResource("5_5vgij")
 value = true
 name = "jump_buffered"
 
-[sub_resource type="Resource" id="Resource_mosq4"]
+[sub_resource type="Resource" id="Resource_uhke3"]
 script = ExtResource("4_l66rk")
-from = "walk"
+from = "idle"
 to = "jump"
 conditions = {
-"jump_buffered": SubResource("Resource_q2p6m")
+"jump_buffered": SubResource("Resource_rchi2")
 }
+priority = 2
 
-[sub_resource type="Resource" id="Resource_gecrs"]
+[sub_resource type="Resource" id="Resource_dxsc7"]
 script = ExtResource("5_5vgij")
 value = true
 name = "is_sprinting"
 
-[sub_resource type="Resource" id="Resource_epw64"]
+[sub_resource type="Resource" id="Resource_qrhkq"]
 script = ExtResource("4_l66rk")
-from = "walk"
+from = "idle"
 to = "sprint"
 conditions = {
-"is_sprinting": SubResource("Resource_gecrs")
+"is_sprinting": SubResource("Resource_dxsc7")
 }
+
+[sub_resource type="Resource" id="Resource_ecok3"]
+script = ExtResource("5_5vgij")
+name = "is_sprinting"
+
+[sub_resource type="Resource" id="Resource_o02e2"]
+script = ExtResource("4_l66rk")
+from = "idle"
+to = "walk"
+conditions = {
+"is_sprinting": SubResource("Resource_ecok3")
+}
+
+[sub_resource type="Resource" id="Resource_0nipp"]
+script = ExtResource("5_xhkwq")
+comparation = 2
+name = "v_speed"
+
+[sub_resource type="Resource" id="Resource_eswgp"]
+script = ExtResource("4_l66rk")
+from = "jump"
+to = "ascending"
+conditions = {
+"v_speed": SubResource("Resource_0nipp")
+}
+
+[sub_resource type="Resource" id="Resource_t6agq"]
+script = ExtResource("5_xhkwq")
+name = "v_speed"
+
+[sub_resource type="Resource" id="Resource_raap1"]
+script = ExtResource("4_l66rk")
+from = "landed"
+to = "idle"
+conditions = {
+"v_speed": SubResource("Resource_t6agq")
+}
+
+[sub_resource type="Resource" id="Resource_g0rvu"]
+script = ExtResource("5_5vgij")
+value = true
+name = "jump_buffered"
+
+[sub_resource type="Resource" id="Resource_y28ti"]
+script = ExtResource("4_l66rk")
+from = "landed"
+to = "jump"
+conditions = {
+"jump_buffered": SubResource("Resource_g0rvu")
+}
+
+[sub_resource type="Resource" id="Resource_gxu7p"]
+script = ExtResource("4_l66rk")
+from = "sprint"
+to = "idle"
+
+[sub_resource type="Resource" id="Resource_8m43i"]
+script = ExtResource("4_l66rk")
+from = "walk"
+to = "idle"
 
 [sub_resource type="Resource" id="Resource_121qj"]
 script = ExtResource("2_sykxo")
 states = {
 "Entry": SubResource("Resource_48l1f"),
-"jump": SubResource("Resource_0nipp"),
-"sprint": SubResource("Resource_q21fg"),
-"walk": SubResource("Resource_chmaa")
+"ascending": SubResource("Resource_pic5f"),
+"descending": SubResource("Resource_xss7c"),
+"falling": SubResource("Resource_d83qw"),
+"idle": SubResource("Resource_mosq4"),
+"jump": SubResource("Resource_c6t4w"),
+"landed": SubResource("Resource_tkpua"),
+"sprint": SubResource("Resource_7t753"),
+"walk": SubResource("Resource_c64e0")
 }
 transitions = {
 "Entry": {
-"walk": SubResource("Resource_sykxo")
+"idle": SubResource("Resource_lc2w0")
+},
+"ascending": {
+"descending": SubResource("Resource_46b7c")
+},
+"descending": {
+"ascending": SubResource("Resource_67mr2"),
+"landed": SubResource("Resource_c5uvf")
+},
+"falling": {
+"descending": SubResource("Resource_k208p"),
+"jump": SubResource("Resource_5epsc"),
+"landed": SubResource("Resource_2mfco")
+},
+"idle": {
+"falling": SubResource("Resource_odoip"),
+"jump": SubResource("Resource_uhke3"),
+"sprint": SubResource("Resource_qrhkq"),
+"walk": SubResource("Resource_o02e2")
+},
+"jump": {
+"ascending": SubResource("Resource_eswgp")
+},
+"landed": {
+"idle": SubResource("Resource_raap1"),
+"jump": SubResource("Resource_y28ti")
 },
 "sprint": {
-"jump": SubResource("Resource_xhkwq"),
-"walk": SubResource("Resource_owdsj")
+"idle": SubResource("Resource_gxu7p")
 },
 "walk": {
-"jump": SubResource("Resource_mosq4"),
-"sprint": SubResource("Resource_epw64")
+"idle": SubResource("Resource_8m43i")
 }
 }
 metadata/_custom_type_script = "uid://dhw7he35ucnlu"
@@ -180,6 +393,9 @@ albedo_color = Color(0, 1, 0.56078434, 1)
 material = SubResource("StandardMaterial3D_sxd7g")
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tlwt5"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_i8kjj"]
+radius = 2.0
 
 [node name="ModularRigidbodyController" type="RigidBody3D" unique_id=133858657 node_paths=PackedStringArray("root_state")]
 collision_layer = 3
@@ -204,12 +420,25 @@ shape = SubResource("CapsuleShape3D_tlwt5")
 
 [node name="walk" type="Node" parent="." unique_id=1007233602]
 script = ExtResource("3_wer8d")
-damping = Vector3(5, 0, 5)
 
 [node name="sprint" type="Node" parent="." unique_id=915165407]
 script = ExtResource("3_wer8d")
 walk_speed = 125.0
-damping = Vector3(5, 0, 5)
 
 [node name="jump" type="Node" parent="." unique_id=496067049]
 script = ExtResource("7_rxdya")
+jump_buffer_time = 0.5
+
+[node name="walk" type="Node" parent="jump" unique_id=326380287]
+script = ExtResource("3_wer8d")
+walk_speed = 20.0
+
+[node name="Grabber" type="Area3D" parent="." unique_id=225999690 node_paths=PackedStringArray("body")]
+script = ExtResource("11_i8kjj")
+body = NodePath("..")
+metadata/_custom_type_script = "uid://b0vxc2nbll1aq"
+
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="Grabber" unique_id=1327767596]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Grabber" unique_id=904112237]
+shape = SubResource("SphereShape3D_i8kjj")
