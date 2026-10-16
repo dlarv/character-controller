@@ -129,7 +129,7 @@ func update_condition_count():
 
 func update_priority_spinbox_value():
 	priority_spinbox.value = transition.priority
-	priority_spinbox.apply()
+	priority_spinbox.set_value_no_signal(transition.priority)
 	
 func set_priority(value):
 	transition.priority = value
