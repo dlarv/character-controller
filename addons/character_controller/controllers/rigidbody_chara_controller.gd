@@ -1,5 +1,7 @@
 extends RigidBody3D
 
+const DEFAULT_CONTACTS_REPORTED := 100
+
 @export_category("Movement Parameters")
 @export_group("Horizontal Motion")
 @export var walk_speed := 50.0
@@ -90,8 +92,10 @@ var is_falling: bool:
 var is_dashing: bool
 var is_heavy_fall := false
 var is_on_floor := true
+var is_jumping := false
 var can_jump := true
 var can_dash := true
+var last_facing_direction: Vector3
 
 ## For some reason, is_on_floor returns true for the tick right after the player jumps, despite player not
 ## being grounded. This seems to happen for the CharacterBody3D as well, so its not just my impl.
@@ -106,7 +110,6 @@ var _jump_buffer_timer: Timer
 var _dash_velocity: Vector3
 var _dash_y_position: float
 var _dash_timer: Timer
-var _last_facing_direction: Vector3
 var _dash_buffered := false
 var _dash_buffer_timer: Timer
 
@@ -115,6 +118,10 @@ func _enter_tree() -> void:
 	# This allows apply_force() and similar methods to be called in _integrate_forces()
 	can_sleep = false
 	_initial_gravity_scale = gravity_scale
+
+	if not contact_monitor:
+		contact_monitor = true
+		max_contacts_reported = DEFAULT_CONTACTS_REPORTED
 
 	var _create_timer := func(time: float) -> Timer:
 		var _timer := Timer.new()
@@ -170,7 +177,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 	var _walk_speed := _get_movement_vector(sprint_speed if is_sprinting else walk_speed)
 	if _walk_speed.length() > 0:
-		_last_facing_direction = _walk_speed.normalized()
+		last_facing_direction = _walk_speed.normalized()
 	state.apply_central_force(_walk_speed)
 	_calculate_damping(state)
 
@@ -205,7 +212,7 @@ func _calculate_if_on_floor(state: PhysicsDirectBodyState3D) -> void:
 
 	is_on_floor = false
 	for i in state.get_contact_count():
-		if floor_collision_layer > 0: 
+		if floor_collision_layer >= 0: 
 			var _obj = state.get_contact_collider_object(i)
 
 			if not _obj.has_method("get_collision_layer_value") \
@@ -269,10 +276,12 @@ func _try_jump(state: PhysicsDirectBodyState3D) -> bool:
 		_coyote_timer.stop()
 		state.linear_velocity.y = 0
 		_jump(state)
+		is_jumping = true
 		return true
 	elif Input.is_action_pressed(jump_action) and _check_variable_jump_running(true):
 		_jump(state, variable_jump_amount)
 		return true
+	is_jumping = false
 	return false
 
 
@@ -292,7 +301,7 @@ func _try_dash(state: PhysicsDirectBodyState3D) -> bool:
 	_dash_timer.start()
 	state.linear_velocity = Vector3.ZERO
 
-	var _direction := _last_facing_direction
+	var _direction := last_facing_direction
 	var _velocity :=  dash_length / dash_time
 	_dash_velocity = _velocity * _direction
 	state.linear_velocity = _dash_velocity
