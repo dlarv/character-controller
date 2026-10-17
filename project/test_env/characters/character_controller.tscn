@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bn37sg7ohhspq"]
 
-[ext_resource type="Script" uid="uid://beb0c2syh44qw" path="res://addons/character_controller/controllers/character_controller.gd" id="1_e4srk"]
+[ext_resource type="Script" uid="uid://beb0c2syh44qw" path="res://project/addons/character_controller/controllers/character_controller.gd" id="1_e4srk"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_urp3m"]
 albedo_color = Color(0, 0, 1, 1)
@@ -10,7 +10,7 @@ material = SubResource("StandardMaterial3D_urp3m")
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e4srk"]
 
-[node name="CharacterController" type="CharacterBody3D" unique_id=1418535907]
+[node name="CharacterController" type="CharacterBody3D" unique_id=1418535907 groups=["controller"]]
 script = ExtResource("1_e4srk")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1509428955]
