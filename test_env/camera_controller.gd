@@ -1,22 +1,23 @@
 extends Camera3D
 
 @export var offset: Vector3
-@export var targets: Array[Node3D]
 @export var switch_delay := 0.5
 @export var start_idx := 0
 @export var god_mode_speed := 30.0
 
-@onready var _target: Node3D = targets[start_idx] if len(targets) > 0 else null
 @onready var _curr_target_idx := start_idx
+var targets: Array[Node]
+var _target: Node3D
 
 var _perspective_switch_tween: Tween
 var _god_mode := false
 
 
 func _ready():
+	targets = get_tree().get_nodes_in_group("controller")
 	for target in targets:
 		target.process_mode = Node.PROCESS_MODE_DISABLED
-
+	_target = targets[start_idx] if len(targets) > 0 else null
 	_next_perspective(start_idx)
 
 

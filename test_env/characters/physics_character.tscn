@@ -14,7 +14,7 @@ material = SubResource("StandardMaterial3D_d5r4c")
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_b8ce5"]
 
-[node name="Character" type="RigidBody3D" unique_id=133858657]
+[node name="Character" type="RigidBody3D" unique_id=133858657 groups=["controller"]]
 collision_layer = 3
 collision_mask = 3
 collision_priority = 2.0
