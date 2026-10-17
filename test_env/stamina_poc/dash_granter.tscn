@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://d2nvsfm01usyt"]
+
+[ext_resource type="Script" uid="uid://diev6fpp7dd4k" path="res://addons/character_controller/interactables/interactable.gd" id="1_i5jp3"]
+[ext_resource type="Script" uid="uid://cdp5twc8ymo5t" path="res://test_env/stamina_poc/dash_granter.gd" id="1_nnl2l"]
+[ext_resource type="Script" uid="uid://l7gvlh1m33i1" path="res://addons/character_controller/interactables/input_prompt_label.gd" id="3_4drmt"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nnl2l"]
+albedo_color = Color(0, 0, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jehw3"]
+material = SubResource("StandardMaterial3D_nnl2l")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ho3xw"]
+
+[node name="DashGranter" type="Node3D" unique_id=662543046]
+script = ExtResource("1_nnl2l")
+
+[node name="Interactable" type="Area3D" parent="." unique_id=323621698]
+script = ExtResource("1_i5jp3")
+metadata/_custom_type_script = "uid://diev6fpp7dd4k"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Interactable" unique_id=426660624]
+mesh = SubResource("BoxMesh_jehw3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable" unique_id=394402140]
+shape = SubResource("BoxShape3D_ho3xw")
+
+[node name="PromptLabel" type="Label3D" parent="Interactable" unique_id=747755801 node_paths=PackedStringArray("interactable")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+text = "Press Space "
+script = ExtResource("3_4drmt")
+interactable = NodePath("..")
+prompt = "for dash boots"
+idx = 1
+
+[connection signal="interacted" from="Interactable" to="." method="_on_interactable_interacted"]
