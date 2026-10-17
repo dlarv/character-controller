@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1qxooiure0ql"
-path="res://.godot/imported/push-door-svgrepo-com.svg-3616a7f817925ac3a75a215755a1a1b3.ctex"
+uid="uid://jq8ri4g3wpiw"
+path="res://.godot/imported/interactor_icon.svg-7252180ed61bed8c8b321ad7a93fd35c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/character_controller/icons/push-door-svgrepo-com.svg"
-dest_files=["res://.godot/imported/push-door-svgrepo-com.svg-3616a7f817925ac3a75a215755a1a1b3.ctex"]
+source_file="res://addons/character_controller/icons/interactor_icon.svg"
+dest_files=["res://.godot/imported/interactor_icon.svg-7252180ed61bed8c8b321ad7a93fd35c.ctex"]
 
 [params]
 
