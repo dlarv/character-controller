@@ -20,9 +20,4 @@ func _ready() -> void:
 
 
 func _on_interacted(physics_body: Node, interactable: Interactable, interactor: Node3D) -> void:
-	_is_grabbed = not _is_grabbed
-
-	if _is_grabbed:
-		interactor.grab(physics_body)
-	else:
-		interactor.drop()
+	interactor.grab(physics_body)

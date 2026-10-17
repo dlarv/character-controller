@@ -2,6 +2,7 @@
 extends RigidBody3D
 class_name ModularRigidBodyController
 
+signal state_changed(new_state: String)
 
 @export_category("State Machine")
 @export var state_machine: StateMachine
@@ -36,8 +37,8 @@ func _enter_tree() -> void:
 		state_machine_player = StateMachinePlayer.new()
 		add_child(state_machine_player)
 		state_machine_player.state_machine = state_machine
-	if not state_machine_player.updated.is_connected(_on_state_machine_updated):
-		state_machine_player.updated.connect(_on_state_machine_updated)
+	if not state_machine_player.transited.is_connected(_on_state_machine_updated):
+		state_machine_player.transited.connect(_on_state_machine_updated)
 
 	states = {}
 	for child in get_children():
@@ -46,8 +47,9 @@ func _enter_tree() -> void:
 			child.setup(self)
 			states[child.name] = child
 			child.fsm_param_update_request.connect(_update_fsm_param)
-
-
+	root_state.activate()
+	state_changed.emit(root_state.name)
+	
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if Engine.is_editor_hint(): return
@@ -64,14 +66,12 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	state_machine_player.set_param("is_on_floor", is_on_floor)
 
 
-
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	active_state.process_update(delta)
 
 
-func _on_state_machine_updated(key: String, _delta:=0.0) -> void:
-	print(key)
+func _on_state_machine_updated(_from: String, key: String) -> void:
 	var _curr_state := active_state
 	var parsed_key := key.split("/")
 	key = parsed_key[0]
@@ -83,8 +83,10 @@ func _on_state_machine_updated(key: String, _delta:=0.0) -> void:
 		active_state.deactivate()
 		_curr_state.activate()
 		active_state = _curr_state
+		state_changed.emit(key)
 	elif len(parsed_key) > 1:
 		_parse_substate(parsed_key.slice(1))
+		pass
 
 
 ## 't$', starts a timer
@@ -100,7 +102,7 @@ func _parse_substate(substates: Array[String]) -> void:
 		elif key.begins_with("T" + substate_special_char):
 			_timers[key.substr(2)].stop()
 	elif key.begins_with("r" + substate_special_char):
-		_on_state_machine_updated(key.substr(2))
+		_on_state_machine_updated('', key.substr(2))
 	else:
 		active_state.propagate_substate(substates)
 

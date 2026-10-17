@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://dq2sqhaamfpiu" path="res://addons/imjp94.yafsm/src/conditions/FloatCondition.gd" id="5_xhkwq"]
 [ext_resource type="Script" uid="uid://d1ygxhyoe2bc5" path="res://addons/imjp94.yafsm/src/conditions/Condition.gd" id="7_q2p6m"]
 [ext_resource type="Script" uid="uid://dytpysox33va8" path="res://controllers/fsm/action_states/jump_action.gd" id="7_rxdya"]
-[ext_resource type="Script" uid="uid://bub8ow3nuibak" path="res://test_env/characters/drag_action.gd" id="10_i8kjj"]
+[ext_resource type="Script" uid="uid://bub8ow3nuibak" path="res://controllers/fsm/action_states/drag_action.gd" id="10_i8kjj"]
 [ext_resource type="Script" uid="uid://b0vxc2nbll1aq" path="res://addons/character_controller/interactables/grabber.gd" id="11_i8kjj"]
 [ext_resource type="Script" uid="uid://ctl1o214svx1f" path="res://addons/imjp94.yafsm/src/StateMachinePlayer.gd" id="12_xss7c"]
 [ext_resource type="PackedScene" path="res://addons/imjp94.yafsm/src/debugger/StackPlayerDebugger.tscn" id="13_tkpua"]
@@ -24,6 +24,11 @@ script = ExtResource("3_aknp4")
 name = "Entry"
 metadata/graph_offset = Vector2(501.5, 361.5)
 
+[sub_resource type="Resource" id="Resource_db00s"]
+script = ExtResource("3_aknp4")
+name = "Exit"
+metadata/graph_offset = Vector2(981.5, 361.5)
+
 [sub_resource type="Resource" id="Resource_vuiwn"]
 script = ExtResource("3_aknp4")
 name = "ascending"
@@ -33,11 +38,6 @@ metadata/graph_offset = Vector2(732.5, 281.5)
 script = ExtResource("3_aknp4")
 name = "descending"
 metadata/graph_offset = Vector2(728, 401.5)
-
-[sub_resource type="Resource" id="Resource_db00s"]
-script = ExtResource("3_aknp4")
-name = "Exit"
-metadata/graph_offset = Vector2(981.5, 361.5)
 
 [sub_resource type="Resource" id="Resource_aq0oq"]
 script = ExtResource("3_aknp4")
@@ -82,6 +82,18 @@ conditions = {
 "coyote_timeout": SubResource("Resource_bhvrc")
 }
 
+[sub_resource type="Resource" id="Resource_wj7c8"]
+script = ExtResource("5_xhkwq")
+name = "v_speed"
+
+[sub_resource type="Resource" id="Resource_ppkpf"]
+script = ExtResource("4_l66rk")
+from = "ascending"
+to = "Exit"
+conditions = {
+"v_speed": SubResource("Resource_wj7c8")
+}
+
 [sub_resource type="Resource" id="Resource_owwl5"]
 script = ExtResource("5_xhkwq")
 comparation = 3
@@ -95,16 +107,16 @@ conditions = {
 "v_speed": SubResource("Resource_owwl5")
 }
 
-[sub_resource type="Resource" id="Resource_wj7c8"]
+[sub_resource type="Resource" id="Resource_isfdu"]
 script = ExtResource("5_xhkwq")
 name = "v_speed"
 
-[sub_resource type="Resource" id="Resource_ppkpf"]
+[sub_resource type="Resource" id="Resource_ugk4j"]
 script = ExtResource("4_l66rk")
-from = "ascending"
+from = "descending"
 to = "Exit"
 conditions = {
-"v_speed": SubResource("Resource_wj7c8")
+"v_speed": SubResource("Resource_isfdu")
 }
 
 [sub_resource type="Resource" id="Resource_vgf6p"]
@@ -118,18 +130,6 @@ from = "descending"
 to = "ascending"
 conditions = {
 "v_speed": SubResource("Resource_vgf6p")
-}
-
-[sub_resource type="Resource" id="Resource_isfdu"]
-script = ExtResource("5_xhkwq")
-name = "v_speed"
-
-[sub_resource type="Resource" id="Resource_ugk4j"]
-script = ExtResource("4_l66rk")
-from = "descending"
-to = "Exit"
-conditions = {
-"v_speed": SubResource("Resource_isfdu")
 }
 
 [sub_resource type="Resource" id="Resource_qjxtn"]
@@ -166,6 +166,11 @@ transitions = {
 }
 name = "airborne"
 metadata/graph_offset = Vector2(479, 501.5)
+
+[sub_resource type="Resource" id="Resource_xss7c"]
+script = ExtResource("3_aknp4")
+name = "drag"
+metadata/graph_offset = Vector2(881.5, 81.5)
 
 [sub_resource type="Resource" id="Resource_w28wt"]
 script = ExtResource("3_aknp4")
@@ -210,11 +215,6 @@ transitions = {
 name = "falling"
 metadata/graph_offset = Vector2(561.5, 361.5)
 
-[sub_resource type="Resource" id="Resource_tkpua"]
-script = ExtResource("3_aknp4")
-name = "landed"
-metadata/graph_offset = Vector2(921.5, 341.5)
-
 [sub_resource type="Resource" id="Resource_ppjbg"]
 script = ExtResource("3_aknp4")
 name = "Entry"
@@ -225,32 +225,20 @@ script = ExtResource("3_aknp4")
 name = "Exit"
 metadata/graph_offset = Vector2(1321.5, 181.5)
 
-[sub_resource type="Resource" id="Resource_yme2h"]
-script = ExtResource("3_aknp4")
-name = "r$walk"
-metadata/graph_offset = Vector2(1021.5, 61.5)
-
 [sub_resource type="Resource" id="Resource_4oti7"]
 script = ExtResource("3_aknp4")
 name = "r$sprint"
 metadata/graph_offset = Vector2(1021.5, 261.5)
 
+[sub_resource type="Resource" id="Resource_yme2h"]
+script = ExtResource("3_aknp4")
+name = "r$walk"
+metadata/graph_offset = Vector2(1021.5, 61.5)
+
 [sub_resource type="Resource" id="Resource_fg73s"]
 script = ExtResource("3_aknp4")
 name = "router"
 metadata/graph_offset = Vector2(1221.5, 361.5)
-
-[sub_resource type="Resource" id="Resource_0h7gr"]
-script = ExtResource("5_5vgij")
-name = "is_sprinting"
-
-[sub_resource type="Resource" id="Resource_e703f"]
-script = ExtResource("4_l66rk")
-from = "Entry"
-to = "r$walk"
-conditions = {
-"is_sprinting": SubResource("Resource_0h7gr")
-}
 
 [sub_resource type="Resource" id="Resource_cgsb1"]
 script = ExtResource("5_5vgij")
@@ -265,17 +253,54 @@ conditions = {
 "is_sprinting": SubResource("Resource_cgsb1")
 }
 
-[sub_resource type="Resource" id="Resource_yutxh"]
+[sub_resource type="Resource" id="Resource_0h7gr"]
 script = ExtResource("5_5vgij")
-value = true
 name = "is_sprinting"
 
-[sub_resource type="Resource" id="Resource_lis2y"]
+[sub_resource type="Resource" id="Resource_e703f"]
 script = ExtResource("4_l66rk")
-from = "r$walk"
-to = "r$sprint"
+from = "Entry"
+to = "r$walk"
 conditions = {
-"is_sprinting": SubResource("Resource_yutxh")
+"is_sprinting": SubResource("Resource_0h7gr")
+}
+
+[sub_resource type="Resource" id="Resource_h8853"]
+script = ExtResource("5_5vgij")
+value = true
+name = "jump_buffered"
+
+[sub_resource type="Resource" id="Resource_3rtn4"]
+script = ExtResource("4_l66rk")
+from = "r$sprint"
+to = "Exit"
+conditions = {
+"jump_buffered": SubResource("Resource_h8853")
+}
+
+[sub_resource type="Resource" id="Resource_46y1a"]
+script = ExtResource("5_5vgij")
+name = "is_sprinting"
+
+[sub_resource type="Resource" id="Resource_6mw22"]
+script = ExtResource("4_l66rk")
+from = "r$sprint"
+to = "r$walk"
+conditions = {
+"is_sprinting": SubResource("Resource_46y1a")
+}
+
+[sub_resource type="Resource" id="Resource_ym8hw"]
+script = ExtResource("5_xhkwq")
+comparation = 3
+name = "v_speed"
+
+[sub_resource type="Resource" id="Resource_3gh17"]
+script = ExtResource("4_l66rk")
+from = "r$sprint"
+to = "router"
+conditions = {
+"v_speed": SubResource("Resource_ym8hw")
 }
 
 [sub_resource type="Resource" id="Resource_2fnvq"]
@@ -292,6 +317,19 @@ conditions = {
 }
 priority = 2
 
+[sub_resource type="Resource" id="Resource_yutxh"]
+script = ExtResource("5_5vgij")
+value = true
+name = "is_sprinting"
+
+[sub_resource type="Resource" id="Resource_lis2y"]
+script = ExtResource("4_l66rk")
+from = "r$walk"
+to = "r$sprint"
+conditions = {
+"is_sprinting": SubResource("Resource_yutxh")
+}
+
 [sub_resource type="Resource" id="Resource_sjfxs"]
 script = ExtResource("5_xhkwq")
 comparation = 3
@@ -303,44 +341,6 @@ from = "r$walk"
 to = "router"
 conditions = {
 "v_speed": SubResource("Resource_sjfxs")
-}
-
-[sub_resource type="Resource" id="Resource_46y1a"]
-script = ExtResource("5_5vgij")
-name = "is_sprinting"
-
-[sub_resource type="Resource" id="Resource_6mw22"]
-script = ExtResource("4_l66rk")
-from = "r$sprint"
-to = "r$walk"
-conditions = {
-"is_sprinting": SubResource("Resource_46y1a")
-}
-
-[sub_resource type="Resource" id="Resource_h8853"]
-script = ExtResource("5_5vgij")
-value = true
-name = "jump_buffered"
-
-[sub_resource type="Resource" id="Resource_3rtn4"]
-script = ExtResource("4_l66rk")
-from = "r$sprint"
-to = "Exit"
-conditions = {
-"jump_buffered": SubResource("Resource_h8853")
-}
-
-[sub_resource type="Resource" id="Resource_ym8hw"]
-script = ExtResource("5_xhkwq")
-comparation = 3
-name = "v_speed"
-
-[sub_resource type="Resource" id="Resource_3gh17"]
-script = ExtResource("4_l66rk")
-from = "r$sprint"
-to = "router"
-conditions = {
-"v_speed": SubResource("Resource_ym8hw")
 }
 
 [sub_resource type="Resource" id="Resource_hfypn"]
@@ -384,6 +384,53 @@ script = ExtResource("3_aknp4")
 name = "jump"
 metadata/graph_offset = Vector2(341.5, 241.5)
 
+[sub_resource type="Resource" id="Resource_tkpua"]
+script = ExtResource("3_aknp4")
+name = "landed"
+metadata/graph_offset = Vector2(921.5, 341.5)
+
+[sub_resource type="Resource" id="Resource_lc2w0"]
+script = ExtResource("4_l66rk")
+from = "Entry"
+to = "grounded"
+
+[sub_resource type="Resource" id="Resource_gwayd"]
+script = ExtResource("5_xhkwq")
+name = "v_speed"
+
+[sub_resource type="Resource" id="Resource_c5uvf"]
+script = ExtResource("4_l66rk")
+from = "airborne"
+to = "landed"
+conditions = {
+"v_speed": SubResource("Resource_gwayd")
+}
+
+[sub_resource type="Resource" id="Resource_13ksh"]
+script = ExtResource("5_5vgij")
+name = "grabbed_obj"
+
+[sub_resource type="Resource" id="Resource_67mr2"]
+script = ExtResource("4_l66rk")
+from = "drag"
+to = "grounded"
+conditions = {
+"grabbed_obj": SubResource("Resource_13ksh")
+}
+
+[sub_resource type="Resource" id="Resource_2qdxs"]
+script = ExtResource("7_q2p6m")
+name = "coyote_timeout"
+
+[sub_resource type="Resource" id="Resource_k208p"]
+script = ExtResource("4_l66rk")
+from = "falling"
+to = "airborne"
+conditions = {
+"coyote_timeout": SubResource("Resource_2qdxs")
+}
+priority = 1
+
 [sub_resource type="Resource" id="Resource_nlrc2"]
 script = ExtResource("5_5vgij")
 value = true
@@ -410,73 +457,18 @@ conditions = {
 "is_on_floor": SubResource("Resource_0l1cb")
 }
 
-[sub_resource type="Resource" id="Resource_2qdxs"]
-script = ExtResource("7_q2p6m")
-name = "coyote_timeout"
-
-[sub_resource type="Resource" id="Resource_k208p"]
-script = ExtResource("4_l66rk")
-from = "falling"
-to = "airborne"
-conditions = {
-"coyote_timeout": SubResource("Resource_2qdxs")
-}
-priority = 1
-
-[sub_resource type="Resource" id="Resource_g0rvu"]
+[sub_resource type="Resource" id="Resource_conrn"]
 script = ExtResource("5_5vgij")
 value = true
-name = "jump_buffered"
+name = "grabbed_obj"
 
-[sub_resource type="Resource" id="Resource_y28ti"]
+[sub_resource type="Resource" id="Resource_46b7c"]
 script = ExtResource("4_l66rk")
-from = "landed"
-to = "jump"
+from = "grounded"
+to = "drag"
 conditions = {
-"jump_buffered": SubResource("Resource_g0rvu")
+"grabbed_obj": SubResource("Resource_conrn")
 }
-
-[sub_resource type="Resource" id="Resource_t6agq"]
-script = ExtResource("5_xhkwq")
-name = "v_speed"
-
-[sub_resource type="Resource" id="Resource_raap1"]
-script = ExtResource("4_l66rk")
-from = "landed"
-to = "grounded"
-conditions = {
-"v_speed": SubResource("Resource_t6agq")
-}
-
-[sub_resource type="Resource" id="Resource_0nipp"]
-script = ExtResource("5_xhkwq")
-comparation = 2
-name = "v_speed"
-
-[sub_resource type="Resource" id="Resource_eswgp"]
-script = ExtResource("4_l66rk")
-from = "jump"
-to = "airborne"
-conditions = {
-"v_speed": SubResource("Resource_0nipp")
-}
-
-[sub_resource type="Resource" id="Resource_gwayd"]
-script = ExtResource("5_xhkwq")
-name = "v_speed"
-
-[sub_resource type="Resource" id="Resource_c5uvf"]
-script = ExtResource("4_l66rk")
-from = "airborne"
-to = "landed"
-conditions = {
-"v_speed": SubResource("Resource_gwayd")
-}
-
-[sub_resource type="Resource" id="Resource_lc2w0"]
-script = ExtResource("4_l66rk")
-from = "Entry"
-to = "grounded"
 
 [sub_resource type="Resource" id="Resource_c64e0"]
 script = ExtResource("5_xhkwq")
@@ -505,11 +497,50 @@ conditions = {
 }
 priority = 2
 
+[sub_resource type="Resource" id="Resource_0nipp"]
+script = ExtResource("5_xhkwq")
+comparation = 2
+name = "v_speed"
+
+[sub_resource type="Resource" id="Resource_eswgp"]
+script = ExtResource("4_l66rk")
+from = "jump"
+to = "airborne"
+conditions = {
+"v_speed": SubResource("Resource_0nipp")
+}
+
+[sub_resource type="Resource" id="Resource_t6agq"]
+script = ExtResource("5_xhkwq")
+name = "v_speed"
+
+[sub_resource type="Resource" id="Resource_raap1"]
+script = ExtResource("4_l66rk")
+from = "landed"
+to = "grounded"
+conditions = {
+"v_speed": SubResource("Resource_t6agq")
+}
+
+[sub_resource type="Resource" id="Resource_g0rvu"]
+script = ExtResource("5_5vgij")
+value = true
+name = "jump_buffered"
+
+[sub_resource type="Resource" id="Resource_y28ti"]
+script = ExtResource("4_l66rk")
+from = "landed"
+to = "jump"
+conditions = {
+"jump_buffered": SubResource("Resource_g0rvu")
+}
+
 [sub_resource type="Resource" id="Resource_121qj"]
 script = ExtResource("2_sykxo")
 states = {
 "Entry": SubResource("Resource_48l1f"),
 "airborne": SubResource("Resource_osano"),
+"drag": SubResource("Resource_xss7c"),
 "falling": SubResource("Resource_d83qw"),
 "grounded": SubResource("Resource_pb2s6"),
 "jump": SubResource("Resource_ecok3"),
@@ -522,12 +553,16 @@ transitions = {
 "airborne": {
 "landed": SubResource("Resource_c5uvf")
 },
+"drag": {
+"grounded": SubResource("Resource_67mr2")
+},
 "falling": {
 "airborne": SubResource("Resource_k208p"),
 "jump": SubResource("Resource_5epsc"),
 "landed": SubResource("Resource_2mfco")
 },
 "grounded": {
+"drag": SubResource("Resource_46b7c"),
 "falling": SubResource("Resource_7t753"),
 "jump": SubResource("Resource_odoip")
 },
@@ -589,8 +624,14 @@ jump_buffer_time = 0.5
 script = ExtResource("3_wer8d")
 walk_speed = 20.0
 
-[node name="drag" type="Node" parent="." unique_id=1793789076]
+[node name="drag" type="Node" parent="." unique_id=1793789076 node_paths=PackedStringArray("grabber", "watch_actions")]
 script = ExtResource("10_i8kjj")
+grabber = NodePath("../Grabber")
+watch_actions = [NodePath("../walk"), NodePath("../sprint")]
+
+[node name="walk" type="Node" parent="drag" unique_id=293893947]
+script = ExtResource("3_wer8d")
+walk_speed = 100.0
 
 [node name="Grabber" type="Area3D" parent="." unique_id=225999690 node_paths=PackedStringArray("body")]
 script = ExtResource("11_i8kjj")
@@ -612,3 +653,8 @@ layout_mode = 3
 anchors_preset = 15
 grow_horizontal = 2
 grow_vertical = 2
+
+[connection signal="activated" from="walk" to="Grabber" method="set_enabled" binds= [true]]
+[connection signal="deactivated" from="walk" to="Grabber" method="set_enabled" binds= [false]]
+[connection signal="dropped_object" from="Grabber" to="." method="_update_fsm_param" binds= ["grabbed_obj", false]]
+[connection signal="grabbed_object" from="Grabber" to="." method="_update_fsm_param" binds= ["grabbed_obj", true]]

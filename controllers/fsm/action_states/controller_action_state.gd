@@ -6,6 +6,8 @@ class_name ControllerActionState
 signal fsm_param_update_request(key: String, value: Variant)
 @warning_ignore("unused_signal")
 signal timer_register_request(key: String, timer: Timer, reparent: bool)
+signal activated
+signal deactivated
 
 
 var _sub_states: Array[ControllerActionState]
@@ -16,6 +18,7 @@ func setup(_controller: Node3D) -> void:
 	for child in get_children():
 		if child is ControllerActionState:
 			_sub_states.append(child)
+	deactivate()
 
 
 func process_update(delta: float) -> void: 
@@ -33,11 +36,13 @@ func propagate_substate(_state_key: Array[String]) -> void: pass
 
 
 func activate() -> void: 
-	process_mode = Node.PROCESS_MODE_INHERIT
+	activated.emit()
+	# print("Action(%s) activated" % get_path())
 
 
 func deactivate() -> void: 
-	process_mode = Node.PROCESS_MODE_DISABLED
+	deactivated.emit()
+	# print("Action(%s) deactivated" % get_path())
 
 
 static func _create_timer(time: float) -> Timer:

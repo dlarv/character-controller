@@ -65,26 +65,8 @@ material = ExtResource("3_tlwt5")
 transform = Transform3D(1, 0, 0, 0, 0.9063078, 0.42261827, 0, -0.42261824, 0.90630776, 0, 0, 0)
 script = ExtResource("4_aqk2v")
 offset = Vector3(0, 3, 5)
-targets = [NodePath("../Characters/PhysicsCharacter"), NodePath("../Characters/ModularRigidbodyController")]
-start_idx = 2
-
-[node name="Characters" type="Node3D" parent="." unique_id=1939529387]
-
-[node name="PhysicsCharacter" parent="Characters" unique_id=133858657 instance=ExtResource("1_f3sb7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
-continuous_cd = true
-max_contacts_reported = 500
-floor_normal_threshold = 0.5
-heavy_fall_threshold = 25.0
-heavy_fall_wait_time = 0.2
-falling_threshold = -0.5
-coyote_time = 0.3
-dash_time = 0.1
-dash_action = "dash"
-
-[node name="ModularRigidbodyController" parent="Characters" unique_id=1369840596 instance=ExtResource("7_gbfbk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 5)
-damping = Vector3(5, 0, 5)
+targets = [NodePath("../TestingObjects/Characters/PhysicsCharacter"), NodePath("../TestingObjects/Characters/ModularRigidbodyController")]
+start_idx = 1
 
 [node name="TestingObjects" type="Node3D" parent="." unique_id=1436496279]
 
@@ -97,6 +79,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8999996, 1, 1)
 mass = 2.0
 custom_integrator = false
 linear_velocity = Vector3(-10, 0, 0)
+
+[node name="Characters" type="Node3D" parent="TestingObjects" unique_id=1939529387]
+
+[node name="PhysicsCharacter" parent="TestingObjects/Characters" unique_id=133858657 instance=ExtResource("1_f3sb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+continuous_cd = true
+max_contacts_reported = 500
+floor_normal_threshold = 0.5
+heavy_fall_threshold = 25.0
+heavy_fall_wait_time = 0.2
+falling_threshold = -0.5
+coyote_time = 0.3
+dash_time = 0.1
+dash_action = "dash"
+
+[node name="ModularRigidbodyController" parent="TestingObjects/Characters" unique_id=1369840596 instance=ExtResource("7_gbfbk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 5)
+damping = Vector3(5, 0, 5)
 
 [node name="RigidBody3D" type="RigidBody3D" parent="TestingObjects" unique_id=1593975972]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -3)
@@ -119,3 +119,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3000002, 0)
 text = "Press Space "
 script = ExtResource("6_gbfbk")
 interactable = NodePath("..")
+idx = 1
