@@ -6,7 +6,7 @@ class_name Interactable
 # Player leaving range of one Jealous interactable should allow other in-range interactables to potentially show prompt
 # Support for multiple interactors?
 
-signal interacted(package: Node, interactable: Interactable, interactor: Node3D)
+signal interacted(package: Node, interactable: Interactable, interactor: Interactor)
 signal interactor_entered(interactor: Node3D)
 signal interactor_exited(interactor: Node3D)
 
@@ -32,7 +32,7 @@ var _add_prompt_label := func() -> void:
 	label.name = "PromptLabel"
 	label.show()
 
-var _interactor: Node3D
+var _interactor: Interactor
 var _interactor_group := ""
 
 func _enter_tree() -> void:

@@ -4,11 +4,16 @@ class_name Interactor
 
 enum OccupiedMode { FREE, JEALOUS, NON_JEALOUS }
 
+@export var root: Node = null
+
 var occupied_mode := OccupiedMode.FREE
 
 
 func _ready() -> void:
 	add_to_group(Interactable.BASE_INTERACTOR_GROUP)
+
+	if root == null:
+		root = get_parent()
 
 
 func interact_with(interactable: Interactable) -> void:
