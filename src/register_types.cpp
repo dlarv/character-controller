@@ -6,6 +6,7 @@
 #include <godot_cpp/godot.hpp>
 
 #include "example_class.h"
+#include "standard_rigid_body_controller.h"
 
 using namespace godot;
 
@@ -14,6 +15,7 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level) {
 		return;
 	}
 	GDREGISTER_CLASS(ExampleClass);
+	GDREGISTER_CLASS(StandardRigidBodyController);
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {
