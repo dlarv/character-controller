@@ -1,3 +1,4 @@
+@tool
 extends RigidBody3D
 
 signal state_started(key: StringName)

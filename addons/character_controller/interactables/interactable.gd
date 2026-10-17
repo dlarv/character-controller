@@ -1,5 +1,4 @@
 @tool
-@icon("uid://m3m847qoxpd0")
 extends Area3D
 class_name Interactable
 
