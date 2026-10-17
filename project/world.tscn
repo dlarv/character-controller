@@ -1,14 +1,17 @@
 [gd_scene format=3 uid="uid://in8eyraxd88n"]
 
 [ext_resource type="PackedScene" uid="uid://dui6kmiicvskf" path="res://project/test_env/characters/physics_character.tscn" id="1_f3sb7"]
+[ext_resource type="PackedScene" uid="uid://d227aq0f3crnu" path="res://project/test_env/objects/cannon.tscn" id="2_cnbew"]
 [ext_resource type="PackedScene" uid="uid://ch7spnl5xfdw" path="res://project/test_env/objects/box.tscn" id="2_fj7yv"]
 [ext_resource type="Material" uid="uid://plen0swcshlr" path="res://project/assets/placeholder_grid_texture/placeholder_grid.tres" id="3_tlwt5"]
-[ext_resource type="Script" uid="uid://dwqcg3b8431eh" path="res://project/test_env/camera_controller.gd" id="4_aqk2v"]
+[ext_resource type="Script" uid="uid://bfro2p6y5x88u" path="res://project/test_env/camera_controller.gd" id="4_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://bn37sg7ohhspq" path="res://project/test_env/characters/character_controller.tscn" id="5_036b0"]
 [ext_resource type="PackedScene" uid="uid://c6fby36ghp0ru" path="res://project/test_env/interactables/jealous_boxes.tscn" id="7_gbfbk"]
 [ext_resource type="PackedScene" uid="uid://h0iow78t0ico" path="res://project/test_env/testing_tools/detector.tscn" id="7_pkg7o"]
 [ext_resource type="PackedScene" uid="uid://bi7vkl82lfueq" path="res://project/test_env/interactables/non_jealous_boxes.tscn" id="9_ioo17"]
 [ext_resource type="PackedScene" uid="uid://dcrmucc242m3u" path="res://project/test_env/interactables/draggable/draggable.tscn" id="9_wse8f"]
+[ext_resource type="PackedScene" uid="uid://n1124tmn8ms2" path="res://project/test_env/objects/moving_platform.tscn" id="10_vq3xu"]
+[ext_resource type="PackedScene" uid="uid://cp65dvualpcu" path="res://project/test_env/objects/geyser.tscn" id="11_cnbew"]
 
 [node name="World" type="Node3D" unique_id=1225734566]
 
@@ -19,14 +22,14 @@ transform = Transform3D(0.8660254, -0.25, 0.4330127, 0, 0.8660254, 0.5, -0.5, -0
 use_collision = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D" unique_id=17635182]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-size = Vector3(32, 4, 32)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1410522, 0.8, 0)
+size = Vector3(40.282104, 4, 32)
 material = ExtResource("3_tlwt5")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1696843001]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0668945, 2, 0)
 operation = 2
-size = Vector3(30, 4, 30)
+size = Vector3(38.13379, 4, 30)
 material = ExtResource("3_tlwt5")
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D" unique_id=747480814]
@@ -101,3 +104,14 @@ transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.965
 
 [node name="Draggable" parent="TestingObjects" unique_id=1585341445 instance=ExtResource("9_wse8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+
+[node name="Cannon" parent="TestingObjects" unique_id=1145593328 instance=ExtResource("2_cnbew")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.232353, 1.4694128, -14.75)
+speed_range = Vector2(30, 50)
+
+[node name="Geyser" parent="TestingObjects" unique_id=1617478031 instance=ExtResource("11_cnbew")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.932609, 0, 11.587805)
+
+[node name="MovingPlatform" parent="TestingObjects" unique_id=1508655015 instance=ExtResource("10_vq3xu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.747963, 0, 11.845524)
+offset_b = Vector3(10, 0, 0)

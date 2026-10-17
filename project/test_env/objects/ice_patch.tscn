@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://ti8n5apd7bg4"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_k8dk4"]
+friction = 0.0
+rough = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k8dk4"]
+albedo_color = Color(0, 0.71100736, 0.71100736, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jxix8"]
+material = SubResource("StandardMaterial3D_k8dk4")
+size = Vector3(3, 0.3, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_60px4"]
+size = Vector3(3, 0.3, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k8dk4"]
+size = Vector3(3, 5, 20)
+
+[node name="IcePatch" type="StaticBody3D" unique_id=223887710]
+physics_material_override = SubResource("PhysicsMaterial_k8dk4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=506950466]
+mesh = SubResource("BoxMesh_jxix8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2028217721]
+shape = SubResource("BoxShape3D_60px4")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=122761482]
+priority = 1
+linear_damp_space_override = 4
+linear_damp = 0.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=607276411]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+shape = SubResource("BoxShape3D_k8dk4")

@@ -3,11 +3,15 @@
 extends Interactor
 class_name Grabber
 
+signal grabbed_object()
+signal dropped_object()
+
 ## Physics Object to be connected to Grabbable.
 ## Defaults to this object's parent.
 @export var body: PhysicsBody3D
 
 var joint: Joint3D
+
 
 func _ready() -> void:
 	add_to_group(Grabbable.GRABBER_GROUP)
@@ -20,23 +24,30 @@ func _ready() -> void:
 	if not child_exiting_tree.is_connected(_on_child_exiting_tree):
 		child_exiting_tree.connect(_on_child_exiting_tree)
 
+	if not joint:
+		for child in get_children():
+			if child is Joint3D:
+				joint = child
+				break
 
-	var joints := find_children("", "Joint3D", false)
-	if len(joints) > 0:
-		joint = joints[-1]
-
+	if not joint:
+		push_warning("Grabber must have a Joint3D child in order to work")
 
 
 func grab(other: PhysicsBody3D) -> void:
 	if body == null or joint == null: return
-	joint.node_a = body.get_path()
-	joint.node_b = other.get_path()
+	elif not joint.node_b:
+		joint.node_a = body.get_path()
+		joint.node_b = other.get_path()
+		grabbed_object.emit()
+	else:
+		joint.node_a = NodePath()
+		joint.node_b = NodePath()
+		dropped_object.emit()
 
 
-func drop() -> void:
-	if joint == null: return
-	joint.node_a = NodePath()
-	joint.node_b = NodePath()
+func set_enabled(val: bool) -> void:
+	monitorable = val
 
 
 func _get_configuration_warnings() -> PackedStringArray:

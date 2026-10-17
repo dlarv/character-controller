@@ -41,3 +41,8 @@ func _on_body_entered(body: Node3D) -> void:
 		_last_target = body
 	else:
 		$ResultsLabel3D.text = "%.3f" % value
+
+
+func _on_body_exited(_body: Node3D) -> void:
+	value = 0
+	$ResultsLabel3D.text = "0"

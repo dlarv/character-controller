@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://s4r35c0mm362"]
+
+[ext_resource type="PackedScene" uid="uid://dui6kmiicvskf" path="res://test_env/characters/physics_character.tscn" id="1_dsmxq"]
+[ext_resource type="Script" uid="uid://bbuwusg20g0nf" path="res://test_env/stamina_poc/stamina_handler.gd" id="2_m5dlp"]
+[ext_resource type="Script" uid="uid://peqayqykuwxm" path="res://test_env/stamina_poc/stamina_reader.gd" id="3_vn84r"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dsmxq"]
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_m5dlp"]
+material = SubResource("StandardMaterial3D_dsmxq")
+
+[node name="Character" unique_id=133858657 instance=ExtResource("1_dsmxq")]
+dash_enabled = false
+
+[node name="MeshInstance3D" parent="." index="0" unique_id=65133136]
+mesh = SubResource("CapsuleMesh_m5dlp")
+
+[node name="StaminaHandler" type="Node" parent="." index="4" unique_id=2000317727 node_paths=PackedStringArray("player")]
+script = ExtResource("2_m5dlp")
+player = NodePath("..")
+winded_threshold = 30.0
+refresh_amount = 3.0
+drainage_rates = Dictionary[StringName, float]({
+&"dash": 30.0,
+&"sprint": 20.0
+})
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." index="5" unique_id=170655046]
+
+[node name="Panel" type="Panel" parent="CanvasLayer" index="0" unique_id=1293117355]
+custom_minimum_size = Vector2(100, 0)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Panel" index="0" unique_id=1198765771 node_paths=PackedStringArray("stamina")]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3_vn84r")
+stamina = NodePath("../../../StaminaHandler")
+
+[connection signal="ability_granted" from="." to="StaminaHandler" method="_on_ability_granted"]
+[connection signal="state_finished" from="." to="StaminaHandler" method="ability_finished"]
+[connection signal="state_started" from="." to="StaminaHandler" method="ability_started"]

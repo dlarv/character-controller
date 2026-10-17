@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://n1124tmn8ms2"]
+
+[ext_resource type="Script" uid="uid://dfcbpv7acip4" path="res://test_env/objects/moving_platform.gd" id="1_23dbv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gfebg"]
+size = Vector3(3, 3, 3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6rpyx"]
+size = Vector3(3, 3, 3)
+
+[node name="MovingPlatform" type="CharacterBody3D" unique_id=1508655015]
+script = ExtResource("1_23dbv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=511116250]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_gfebg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1896130266]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("BoxMesh_6rpyx")

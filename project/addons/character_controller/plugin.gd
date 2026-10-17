@@ -12,11 +12,10 @@ const GrabberIcon := preload("uid://dfgxtm8kwmq8e")
 
 
 func _enable_plugin() -> void:
-	# add_custom_type("Interactable", "Area3D", InteractableScene, InteractableIcon)
-	# add_custom_type("Interactor", "Area3D", InteractorScene, InteractorIcon)
-	# add_custom_type("Grabbable", "Area3D", GrabbableScene, GrabbableIcon)
-	# add_custom_type("Grabber", "Area3D", GrabberScene, GrabberIcon)
-	pass
+	add_custom_type("Interactable", "Area3D", InteractableScene, InteractableIcon)
+	add_custom_type("Interactor", "Area3D", InteractorScene, InteractorIcon)
+	add_custom_type("Grabbable", "Area3D", GrabbableScene, GrabbableIcon)
+	add_custom_type("Grabber", "Area3D", GrabberScene, GrabberIcon)
 
 
 func _disable_plugin() -> void:

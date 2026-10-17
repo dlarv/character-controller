@@ -1,13 +1,29 @@
 extends RigidBody3D
 
+signal state_started(key: StringName)
+signal state_finished(key: StringName)
+signal ability_granted(key: StringName)
+signal grounded
+signal ungrounded
+
+const WALK_KEY: StringName = "walk"
+const SPRINT_KEY: StringName = "sprint"
+const JUMP_KEY: StringName = "jump"
+const DASH_KEY: StringName = "dash"
+const DEFAULT_CONTACTS_REPORTED := 100
+
 @export_category("Movement Parameters")
 @export_group("Horizontal Motion")
 @export var walk_speed := 50.0
-@export var sprint_enabled := true
+@export var sprint_enabled := true:
+	set(val):
+		sprint_enabled = val
+		is_sprinting = is_sprinting and val
 @export var sprint_speed := 100.0
 ## If false, player must press and hold run button to run
 @export var sprint_toggle_mode := true
-@export var horizontal_damping := 5.0
+@export var grounded_damping := Vector3(5, 0, 5)
+@export var ungrounded_damping := Vector3(10, 0, 10)
 @export_group("Vertical Motion")
 ## How "horizontal" another physics body must be to be considered "ground."
 ## e.g. a value of 1.0 means ground must be perfectly horizontal.
@@ -74,7 +90,11 @@ extends RigidBody3D
 @export var dash_action := ""
 
 # Helper vars that can be read by AnimationTree
-var is_sprinting := false
+var is_sprinting := false:
+	set(val):
+		is_sprinting = val
+		if val: state_started.emit(SPRINT_KEY)
+		else: state_finished.emit(SPRINT_KEY)
 var is_moving_horizontal: bool:
 	get:
 		return abs(linear_velocity.x) > 0 or abs(linear_velocity.z) > 0
@@ -87,11 +107,28 @@ var is_walking: bool:
 var is_falling: bool:
 	get:
 		return linear_velocity.y < falling_threshold
-var is_dashing: bool
+var is_dashing: bool:
+	set(val):
+		is_dashing = val
+		if val: state_started.emit(DASH_KEY)
+		else: state_finished.emit(DASH_KEY)
 var is_heavy_fall := false
-var is_on_floor := true
+var is_on_floor := true:
+	set(val):
+		is_on_floor = val
+		if val: grounded.emit()
+		else: ungrounded.emit()
+var is_jumping := false:
+	set(val):
+		is_jumping = val
+		if val: state_started.emit(JUMP_KEY)
+var can_sprint := true:
+	set(val):
+		can_sprint = val
+		is_sprinting = false
 var can_jump := true
 var can_dash := true
+var last_facing_direction: Vector3
 
 ## For some reason, is_on_floor returns true for the tick right after the player jumps, despite player not
 ## being grounded. This seems to happen for the CharacterBody3D as well, so its not just my impl.
@@ -106,15 +143,19 @@ var _jump_buffer_timer: Timer
 var _dash_velocity: Vector3
 var _dash_y_position: float
 var _dash_timer: Timer
-var _last_facing_direction: Vector3
 var _dash_buffered := false
 var _dash_buffer_timer: Timer
+var _h_speed := Vector3.ZERO
 
 
 func _enter_tree() -> void:
 	# This allows apply_force() and similar methods to be called in _integrate_forces()
 	can_sleep = false
 	_initial_gravity_scale = gravity_scale
+
+	if not contact_monitor:
+		contact_monitor = true
+		max_contacts_reported = DEFAULT_CONTACTS_REPORTED
 
 	var _create_timer := func(time: float) -> Timer:
 		var _timer := Timer.new()
@@ -149,9 +190,11 @@ func _enter_tree() -> void:
 	add_child(_dash_buffer_timer)
 	_dash_buffer_timer.timeout.connect(func(): _dash_buffered = false)
 
+	_connect_state_signals()
+
 
 func _unhandled_input(event: InputEvent) -> void:
-	if sprint_enabled:
+	if sprint_enabled and can_sprint:
 		_set_sprint_mode(event)
 	if event.is_action_pressed(jump_action):
 		_jump_buffer_timer.start()
@@ -168,10 +211,16 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		global_position.y = _dash_y_position
 		return
 
-	var _walk_speed := _get_movement_vector(sprint_speed if is_sprinting else walk_speed)
-	if _walk_speed.length() > 0:
-		_last_facing_direction = _walk_speed.normalized()
-	state.apply_central_force(_walk_speed)
+	var _prev_speed := _h_speed
+	_h_speed = _get_movement_vector(sprint_speed if is_sprinting else walk_speed)
+	if _h_speed.length() > 0:
+		last_facing_direction = _h_speed.normalized()
+		if is_zero_approx(_prev_speed.length()) and not is_sprinting:
+			state_started.emit(WALK_KEY)
+	elif _prev_speed.length() > 0 and not is_sprinting:
+		state_finished.emit(WALK_KEY)
+		
+	state.apply_central_force(_h_speed)
 	_calculate_damping(state)
 
 	_calculate_if_on_floor(state)
@@ -205,7 +254,7 @@ func _calculate_if_on_floor(state: PhysicsDirectBodyState3D) -> void:
 
 	is_on_floor = false
 	for i in state.get_contact_count():
-		if floor_collision_layer > 0: 
+		if floor_collision_layer >= 0: 
 			var _obj = state.get_contact_collider_object(i)
 
 			if not _obj.has_method("get_collision_layer_value") \
@@ -225,14 +274,13 @@ func _check_variable_jump_running(running:=true) -> bool:
 
 
 func _calculate_damping(state: PhysicsDirectBodyState3D) -> void:
-	var _damp := state.total_linear_damp if linear_damp_mode == DAMP_MODE_COMBINE else 0.0
-
-	var _h_damp := 1 - (horizontal_damping + _damp) / Engine.physics_ticks_per_second
-	state.linear_velocity.x *= _h_damp
-	state.linear_velocity.z *= _h_damp
-
-	var _v_damp := 1 - (vertical_damping + _damp) / Engine.physics_ticks_per_second
-	state.linear_velocity *= _v_damp
+	var _tps := Engine.physics_ticks_per_second
+	var _external_damp := Vector3.ONE * state.total_linear_damp
+	var _internal_damp := grounded_damping if is_on_floor else ungrounded_damping
+	_internal_damp += _external_damp * (1 if linear_damp_mode == DAMP_MODE_COMBINE else 0)
+	state.linear_velocity.x *= 1 - _internal_damp.x / _tps
+	state.linear_velocity.y *= 1 - _internal_damp.y / _tps
+	state.linear_velocity.z *= 1 - _internal_damp.z / _tps
 
 
 func _set_sprint_mode(event: InputEvent) -> void:
@@ -269,10 +317,15 @@ func _try_jump(state: PhysicsDirectBodyState3D) -> bool:
 		_coyote_timer.stop()
 		state.linear_velocity.y = 0
 		_jump(state)
+		is_jumping = true
 		return true
 	elif Input.is_action_pressed(jump_action) and _check_variable_jump_running(true):
 		_jump(state, variable_jump_amount)
 		return true
+	if is_jumping:
+		is_jumping = false
+		state_finished.emit(JUMP_KEY)
+
 	return false
 
 
@@ -292,10 +345,108 @@ func _try_dash(state: PhysicsDirectBodyState3D) -> bool:
 	_dash_timer.start()
 	state.linear_velocity = Vector3.ZERO
 
-	var _direction := _last_facing_direction
+	var _direction := last_facing_direction
 	var _velocity :=  dash_length / dash_time
 	_dash_velocity = _velocity * _direction
 	state.linear_velocity = _dash_velocity
 	_dash_y_position = global_position.y
 
 	return true
+
+
+## Public method for enabling/disabling character movement abilities. 
+## Enabling gives the player semi-permanent access to this ability. Use refresh_ability() to temporarily restore ability.
+## Returns false if ability_name doesn't match an existing ability; can be overridden to support more abilities.
+func enable_ability(key: StringName, enabled: bool) -> bool:
+	match key:
+		SPRINT_KEY:
+			sprint_enabled = enabled
+			return true
+		JUMP_KEY:
+			jump_enabled = enabled
+			return true
+		DASH_KEY:
+			dash_enabled = enabled
+			return true
+	return false
+
+
+## Used to bulk enable/disable abilities.
+## Returns array of states not found.
+## See enable_ability() documentation for more details.
+func enable_abilities(keys: Array, enabled: bool) -> Array[StringName]:
+	var remaining_keys: Array[StringName] = []
+	for key in keys:
+		if not enable_ability(key, enabled):
+			remaining_keys.append(key)
+	return remaining_keys
+		
+
+## Public method for returning character's movement abilities. 
+## Refreshing temporarily returns/removes player's access to an ability. Use enable_ability() to semi-permanently enable/disable access.
+## Returns false if ability_name doesn't match an existing ability; can be overridden to support more abilities.
+func refresh_ability(key: StringName, refresh:=true) -> bool:
+	match key:
+		SPRINT_KEY:
+			can_sprint = refresh
+			return true
+		JUMP_KEY:
+			can_jump = refresh
+			return true
+		DASH_KEY:
+			can_dash = refresh
+			return true
+	return false
+
+
+## Used to bulk enable/disable abilities.
+## Returns array of states not found.
+## See refresh_ability() documentation for more details.
+func refresh_abilities(keys: Array, enabled: bool) -> Array[StringName]:
+	var remaining_keys: Array[StringName] = []
+	for key in keys:
+		if not refresh_ability(key, enabled):
+			remaining_keys.append(key)
+	return remaining_keys
+
+
+## Called the first time player receives ability.
+## Signals to any modules to disconnect signals/etc.
+func grant_ability(key: StringName) -> bool:
+	ability_granted.emit(key)
+	return enable_ability(key, true)
+
+
+func get_state_data() -> Dictionary:
+	return {
+		SPRINT_KEY: {
+			"enabled": sprint_enabled,
+			"can": can_sprint,
+			"speed": sprint_speed
+		},
+		WALK_KEY: {
+			"speed": walk_speed
+		},
+		DASH_KEY: {
+			"enabled": dash_enabled,
+			"can": can_dash,
+			"length": dash_length,
+			"duration": dash_time,
+		},
+		JUMP_KEY: {
+			"enabled": jump_enabled,
+			"can": can_jump,
+			"height": jump_height
+		}
+	}
+
+
+func _connect_state_signals(skip:=false) -> void:
+	if skip: return
+	var _debug_show_current_state := func (state_name: String, is_active: bool) -> void:
+		if is_active:
+			print("%s started" % state_name)
+		else:
+			print("%s finished" % state_name)
+	state_started.connect(_debug_show_current_state.bind(true))
+	state_finished.connect(_debug_show_current_state.bind(false))

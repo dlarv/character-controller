@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://dui6kmiicvskf"]
 
-[ext_resource type="Script" uid="uid://275scp4h71ib" path="res://project/addons/character_controller/controllers/rigidbody_chara_controller.gd" id="1_d5r4c"]
-[ext_resource type="Script" uid="uid://d24g57moi63cx" path="res://project/addons/character_controller/interactables/interactor.gd" id="2_0m4bg"]
-[ext_resource type="Script" uid="uid://b0vxc2nbll1aq" path="res://project/addons/character_controller/interactables/grabber.gd" id="3_b8ce5"]
+[ext_resource type="Script" uid="uid://275scp4h71ib" path="res://addons/character_controller/controllers/rigidbody_chara_controller.gd" id="1_d5r4c"]
+[ext_resource type="Script" uid="uid://d24g57moi63cx" path="res://addons/character_controller/interactables/interactor.gd" id="2_0m4bg"]
+[ext_resource type="Script" uid="uid://b0vxc2nbll1aq" path="res://addons/character_controller/interactables/grabber.gd" id="3_b8ce5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d5r4c"]
 albedo_color = Color(1, 0, 0, 1)
@@ -17,12 +17,14 @@ material = SubResource("StandardMaterial3D_d5r4c")
 [node name="Character" type="RigidBody3D" unique_id=133858657 groups=["controller"]]
 collision_layer = 3
 collision_mask = 3
+collision_priority = 2.0
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
 can_sleep = false
 contact_monitor = true
 max_contacts_reported = 100
+linear_damp_mode = 1
 script = ExtResource("1_d5r4c")
 sprint_speed = 125.0
 floor_collision_layer = 1
@@ -54,4 +56,4 @@ metadata/_custom_type_script = "uid://b0vxc2nbll1aq"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_b8ce5")
 
-[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="Grabber" unique_id=878823347]
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="Grabber" unique_id=1211058267]
