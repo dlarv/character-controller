@@ -70,4 +70,4 @@ func _move_god_mode(delta: float) -> void:
 		global_position.y += vertical_dir * god_mode_speed * delta
 
 
-	_target.position = position - offset
+	_target.global_position = global_position - offset
