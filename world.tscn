@@ -2,11 +2,15 @@
 
 [ext_resource type="PackedScene" uid="uid://dui6kmiicvskf" path="res://test_env/characters/physics_character.tscn" id="1_f3sb7"]
 [ext_resource type="PackedScene" uid="uid://ch7spnl5xfdw" path="res://test_env/objects/box.tscn" id="2_fj7yv"]
+[ext_resource type="PackedScene" uid="uid://d227aq0f3crnu" path="res://test_env/objects/cannon.tscn" id="2_k3n1d"]
 [ext_resource type="Material" uid="uid://plen0swcshlr" path="res://assets/placeholder_grid_texture/placeholder_grid.tres" id="3_tlwt5"]
 [ext_resource type="Script" uid="uid://bfro2p6y5x88u" path="res://test_env/camera_controller.gd" id="4_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://bn37sg7ohhspq" path="res://test_env/characters/character_controller.tscn" id="5_036b0"]
+[ext_resource type="PackedScene" uid="uid://cp65dvualpcu" path="res://test_env/objects/geyser.tscn" id="6_ic0uy"]
 [ext_resource type="PackedScene" uid="uid://c6fby36ghp0ru" path="res://test_env/interactables/jealous_boxes.tscn" id="7_gbfbk"]
 [ext_resource type="PackedScene" uid="uid://h0iow78t0ico" path="res://test_env/testing_tools/detector.tscn" id="7_pkg7o"]
+[ext_resource type="PackedScene" uid="uid://n1124tmn8ms2" path="res://test_env/objects/moving_platform.tscn" id="7_wse8f"]
+[ext_resource type="PackedScene" uid="uid://ti8n5apd7bg4" path="res://test_env/objects/ice_patch.tscn" id="8_2o6r5"]
 [ext_resource type="PackedScene" uid="uid://bi7vkl82lfueq" path="res://test_env/interactables/non_jealous_boxes.tscn" id="9_ioo17"]
 [ext_resource type="PackedScene" uid="uid://dcrmucc242m3u" path="res://test_env/interactables/draggable/draggable.tscn" id="9_wse8f"]
 
@@ -21,14 +25,14 @@ transform = Transform3D(0.8660254, -0.25, 0.4330127, 0, 0.8660254, 0.5, -0.5, -0
 use_collision = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D" unique_id=17635182]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-size = Vector3(32, 4, 32)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.8, 0)
+size = Vector3(39, 4, 32)
 material = ExtResource("3_tlwt5")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1696843001]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2, 0)
 operation = 2
-size = Vector3(30, 4, 30)
+size = Vector3(37, 4, 30)
 material = ExtResource("3_tlwt5")
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D" unique_id=747480814]
@@ -75,6 +79,21 @@ mass = 2.0
 custom_integrator = false
 linear_velocity = Vector3(0, 0, 0)
 
+[node name="MovingPlatform" parent="TestingObjects" unique_id=1508655015 instance=ExtResource("7_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 11)
+offset_b = Vector3(10, 0, 0)
+
+[node name="Geyser" parent="TestingObjects" unique_id=1617478031 instance=ExtResource("6_ic0uy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 10)
+speed = 30.0
+
+[node name="Cannon" parent="TestingObjects" unique_id=1145593328 instance=ExtResource("2_k3n1d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 1, -15)
+speed_range = Vector2(30, 50)
+
+[node name="IcePatch" parent="TestingObjects" unique_id=223887710 instance=ExtResource("8_2o6r5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -4)
+
 [node name="Characters" type="Node3D" parent="." unique_id=1939529387]
 
 [node name="CharacterController" parent="Characters" unique_id=1418535907 instance=ExtResource("5_036b0")]
@@ -89,9 +108,12 @@ max_contacts_reported = 500
 floor_normal_threshold = 0.5
 heavy_fall_threshold = 25.0
 heavy_fall_wait_time = 0.2
+jump_height = 3.0
+falling_gravity_mod = 1.2
 falling_threshold = -0.5
 coyote_time = 0.3
-variable_jump_amount = 0.2
+variable_jump_frames = 20
+variable_jump_amount = 0.01
 dash_time = 0.1
 dash_action = "dash"
 

@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cf88041mxmve"]
+
+[ext_resource type="Script" uid="uid://k5xlgv3j1pn7" path="res://test_env/objects/projectile.gd" id="1_psr55"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_ytq14"]
+resource_local_to_scene = true
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_psr55"]
+resource_local_to_scene = true
+
+[node name="Projectile" type="RigidBody3D" unique_id=811884891]
+gravity_scale = 0.0
+can_sleep = false
+contact_monitor = true
+max_contacts_reported = 100
+script = ExtResource("1_psr55")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1995501547]
+mesh = SubResource("SphereMesh_ytq14")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1323627668]
+shape = SubResource("SphereShape3D_psr55")

@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://d227aq0f3crnu"]
+
+[ext_resource type="Script" uid="uid://dbuj4qodwncio" path="res://test_env/objects/cannon.gd" id="1_v6vu8"]
+[ext_resource type="Script" uid="uid://diev6fpp7dd4k" path="res://addons/character_controller/interactables/interactable.gd" id="2_qx63b"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_xqlw2"]
+height = 0.5
+radius = 1.0
+
+[sub_resource type="TorusMesh" id="TorusMesh_xqlw2"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qx63b"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qx63b"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_1arvq"]
+material = SubResource("StandardMaterial3D_qx63b")
+
+[node name="Cannon" type="StaticBody3D" unique_id=1145593328]
+script = ExtResource("1_v6vu8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1338097189]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_xqlw2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1160980076]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("TorusMesh_xqlw2")
+
+[node name="Interactable" type="Area3D" parent="." unique_id=1646805404]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 0.3)
+script = ExtResource("2_qx63b")
+metadata/_custom_type_script = "uid://diev6fpp7dd4k"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable" unique_id=1965559489]
+shape = SubResource("SphereShape3D_qx63b")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Interactable" unique_id=1388097886]
+mesh = SubResource("SphereMesh_1arvq")
+
+[connection signal="interacted" from="Interactable" to="." method="_on_interactable_interacted"]

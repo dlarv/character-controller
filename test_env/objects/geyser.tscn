@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://cp65dvualpcu"]
+
+[ext_resource type="Script" uid="uid://cbodapumu2u18" path="res://test_env/objects/geyser.gd" id="1_su4ox"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_afi7b"]
+height = 5.0
+radius = 2.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_uso8d"]
+top_radius = 2.0
+bottom_radius = 2.0
+height = 0.1
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_uso8d"]
+height = 0.1
+radius = 2.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_su4ox"]
+emission_shape_offset = Vector3(0, 2, 0)
+emission_shape_scale = Vector3(2, 2, 2)
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 1)
+gravity = Vector3(0, 9.8, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_afi7b"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="Geyser" type="Area3D" unique_id=1617478031]
+script = ExtResource("1_su4ox")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1086169155]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+shape = SubResource("CylinderShape3D_afi7b")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=988944150]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1483857612]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+mesh = SubResource("CylinderMesh_uso8d")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=644536448]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+shape = SubResource("CylinderShape3D_uso8d")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=863437086]
+amount = 100
+lifetime = 0.5
+process_material = SubResource("ParticleProcessMaterial_su4ox")
+draw_pass_1 = SubResource("BoxMesh_afi7b")
