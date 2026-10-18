@@ -1,4 +1,8 @@
 #pragma once
+#define BIND_PROP(n, s, g, t, ...) ClassDB::bind_method(D_METHOD("set_" n, n), &StandardRigidBodyController::s); ClassDB::bind_method(D_METHOD("get_" n), &StandardRigidBodyController::g); ADD_PROPERTY(PropertyInfo(t, n __VA_OPT__(,) __VA_ARGS__), "set_" n, "get_" n);
+#define BIND_PROP_HIDE(n, s, g, t) ClassDB::bind_method(D_METHOD("set_" n, n), &StandardRigidBodyController::s); ClassDB::bind_method(D_METHOD("get_" n), &StandardRigidBodyController::g); ADD_PROPERTY(PropertyInfo(t, n, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_" n, "get_" n);
+#define GET_SET(n, t) void set_ ## n(t p) { n = p; } t get_ ## n() const { return n; }
+
 
 #include "godot_cpp/core/class_db.hpp"
 #include "godot_cpp/classes/wrapped.hpp"
@@ -49,7 +53,19 @@ private:
 	double dash_buffer_time = 0.1;
 
 	/* NON-EXPORTED PROPERTIES */
+	bool is_on_floor = true;
+	Vector3 h_speed;
+	Vector3 v_speed;
+	bool is_walking = false;
 	bool is_sprinting = false;
+	bool is_jumping = false;
+	bool is_dashing = false;
+	bool is_heavy_fall = false;
+	bool can_sprint = true;
+	bool can_jump = true;
+	bool can_dash = true;
+	Vector3 last_facing_direction;
+
 public:
 	/* CONSTANTS */
 	const StringName WALK_KEY = "walk";
@@ -133,306 +149,60 @@ public:
 	double get_dash_buffer_time() const { return dash_buffer_time; }
 
 	/* NON-EXPORTED GETTERS AND SETTERS */
+	void set_is_walking(const bool p) { is_walking = p; }
+	bool get_is_walking() const { return is_walking; }
 	void set_is_sprinting(const bool p) { is_sprinting = p; }
 	bool get_is_sprinting() const { return is_sprinting; }
 
 protected:
-	static void _bind_methods() {
-		ADD_SIGNAL(MethodInfo("state_started", PropertyInfo(Variant::STRING_NAME, "key")));
-		ADD_SIGNAL(MethodInfo("state_finished", PropertyInfo(Variant::STRING_NAME, "key")));
-		ADD_SIGNAL(MethodInfo("ability_granted", PropertyInfo(Variant::STRING_NAME, "key")));
+static void _bind_methods() {
+	ADD_SIGNAL(MethodInfo("state_started", PropertyInfo(Variant::STRING_NAME, "key")));
+	ADD_SIGNAL(MethodInfo("state_finished", PropertyInfo(Variant::STRING_NAME, "key")));
+	ADD_SIGNAL(MethodInfo("ability_granted", PropertyInfo(Variant::STRING_NAME, "key")));
 
-		ClassDB::bind_method(
-			D_METHOD("set_grounded_damping", "grounded_damping"), 
-			&StandardRigidBodyController::set_grounded_damping
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_grounded_damping"), 
-			&StandardRigidBodyController::get_grounded_damping
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "grounded_damping"), "set_grounded_damping", "get_grounded_damping");
+	// BASIC PHYSICS
+	BIND_PROP("grounded_damping", set_grounded_damping, get_grounded_damping, Variant::VECTOR3);
+	BIND_PROP("ungrounded_damping", set_ungrounded_damping, get_ungrounded_damping, Variant::VECTOR3);
+	BIND_PROP("floor_normal_threshold", set_floor_normal_threshold, get_floor_normal_threshold, Variant::FLOAT, PROPERTY_HINT_RANGE, "0,1");
+	BIND_PROP("floor_collision_layer", set_floor_collision_layer, get_floor_collision_layer, Variant::INT, PROPERTY_HINT_LAYERS_3D_PHYSICS);
+	BIND_PROP("falling_gravity_mod", set_falling_gravity_mod, get_falling_gravity_mod, Variant::FLOAT, PROPERTY_HINT_RANGE, "0.01,1000");
+	BIND_PROP("falling_threshold", set_falling_threshold, get_falling_threshold, Variant::FLOAT);
+	BIND_PROP("heavy_fall_threshold", set_heavy_fall_threshold, get_heavy_fall_threshold, Variant::FLOAT);
+	BIND_PROP("heavy_fall_wait_time", set_heavy_fall_wait_time, get_heavy_fall_wait_time, Variant::FLOAT);
 
-		ClassDB::bind_method(
-			D_METHOD("set_ungrounded_damping", "ungrounded_damping"), 
-			&StandardRigidBodyController::set_ungrounded_damping
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_ungrounded_damping"), 
-			&StandardRigidBodyController::get_ungrounded_damping
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "ungrounded_damping"), "set_ungrounded_damping", "get_ungrounded_damping");
+	// WALKING
+	BIND_PROP("walk_speed", set_walk_speed, get_walk_speed, Variant::FLOAT);
+	BIND_PROP("move_left_action", set_move_left_action, get_move_left_action, Variant::STRING, PROPERTY_HINT_INPUT_NAME, "show_builtin");
+	BIND_PROP("move_right_action", set_move_right_action, get_move_right_action, Variant::STRING, PROPERTY_HINT_INPUT_NAME, "show_builtin");
+	BIND_PROP("move_up_action", set_move_up_action, get_move_up_action, Variant::STRING, PROPERTY_HINT_INPUT_NAME, "show_builtin");
+	BIND_PROP("move_down_action", set_move_down_action, get_move_down_action, Variant::STRING, PROPERTY_HINT_INPUT_NAME, "show_builtin");
 
-		ClassDB::bind_method(
-			D_METHOD("set_floor_normal_threshold", "floor_normal_threshold"), 
-			&StandardRigidBodyController::set_floor_normal_threshold
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_floor_normal_threshold"), 
-			&StandardRigidBodyController::get_floor_normal_threshold
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "floor_normal_threshold", PROPERTY_HINT_RANGE, "0,1"), "set_floor_normal_threshold", "get_floor_normal_threshold");
+	// SPRINTING
+	ADD_GROUP("Sprint", "");
+	BIND_PROP("sprint_enabled", set_sprint_enabled, get_sprint_enabled, Variant::BOOL, PROPERTY_HINT_GROUP_ENABLE);
+	BIND_PROP("sprint_action", set_sprint_action, get_sprint_action, Variant::STRING, PROPERTY_HINT_INPUT_NAME, "show_builtin");
+	BIND_PROP("sprint_speed", set_sprint_speed, get_sprint_speed, Variant::FLOAT);
+	BIND_PROP("sprint_toggle_mode", set_sprint_toggle_mode, get_sprint_toggle_mode, Variant::BOOL);
 
-		ClassDB::bind_method(
-			D_METHOD("set_floor_collision_layer", "floor_collision_layer"), 
-			&StandardRigidBodyController::set_floor_collision_layer
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_floor_collision_layer"), 
-			&StandardRigidBodyController::get_floor_collision_layer
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::INT, "floor_collision_layer", PROPERTY_HINT_LAYERS_3D_PHYSICS), "set_floor_collision_layer", "get_floor_collision_layer");
+	// JUMPING 
+	ADD_GROUP("Jump", "");
+	BIND_PROP("jump_enabled", set_jump_enabled, get_jump_enabled, Variant::BOOL, PROPERTY_HINT_GROUP_ENABLE);
+	BIND_PROP("jump_action", set_jump_action, get_jump_action, Variant::STRING, PROPERTY_HINT_INPUT_NAME, "show_builtin");
+	BIND_PROP("jump_height", set_jump_height, get_jump_height, Variant::FLOAT);
+	BIND_PROP("coyote_time", set_coyote_time, get_coyote_time, Variant::FLOAT);
+	BIND_PROP("variable_jump_frames", set_variable_jump_frames, get_variable_jump_frames, Variant::INT);
+	BIND_PROP("variable_jump_amount", set_variable_jump_amount, get_variable_jump_amount, Variant::FLOAT);
+	BIND_PROP("jump_buffer_time", set_jump_buffer_time, get_jump_buffer_time, Variant::FLOAT);
 
-		ClassDB::bind_method(
-			D_METHOD("set_falling_gravity_mod", "falling_gravity_mod"), 
-			&StandardRigidBodyController::set_falling_gravity_mod
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_falling_gravity_mod"), 
-			&StandardRigidBodyController::get_falling_gravity_mod
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "falling_gravity_mod", PROPERTY_HINT_RANGE, "0.01,1000"), "set_falling_gravity_mod", "get_falling_gravity_mod");
+	// DASHING
+	ADD_GROUP("Dash", "");
+	BIND_PROP("dash_enabled", set_dash_enabled, get_dash_enabled, Variant::BOOL, PROPERTY_HINT_GROUP_ENABLE);
+	BIND_PROP("dash_action", set_dash_action, get_dash_action, Variant::STRING, PROPERTY_HINT_INPUT_NAME, "show_builtin");
+	BIND_PROP("dash_length", set_dash_length, get_dash_length, Variant::FLOAT);
+	BIND_PROP("dash_time", set_dash_time, get_dash_time, Variant::FLOAT);
+	BIND_PROP("dash_buffer_time", set_dash_buffer_time, get_dash_buffer_time, Variant::FLOAT);
 
-		ClassDB::bind_method(
-			D_METHOD("set_falling_threshold", "falling_threshold"), 
-			&StandardRigidBodyController::set_falling_threshold
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_falling_threshold"), 
-			&StandardRigidBodyController::get_falling_threshold
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "falling_threshold"), "set_falling_threshold", "get_falling_threshold");
-
-		ClassDB::bind_method(
-			D_METHOD("set_heavy_fall_threshold", "heavy_fall_threshold"), 
-			&StandardRigidBodyController::set_heavy_fall_threshold
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_heavy_fall_threshold"), 
-			&StandardRigidBodyController::get_heavy_fall_threshold
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "heavy_fall_threshold"), "set_heavy_fall_threshold", "get_heavy_fall_threshold");
-
-		ClassDB::bind_method(
-			D_METHOD("set_heavy_fall_wait_time", "heavy_fall_wait_time"), 
-			&StandardRigidBodyController::set_heavy_fall_wait_time
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_heavy_fall_wait_time"), 
-			&StandardRigidBodyController::get_heavy_fall_wait_time
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "heavy_fall_wait_time"), "set_heavy_fall_wait_time", "get_heavy_fall_wait_time");
-
-		ClassDB::bind_method(
-			D_METHOD("set_walk_speed", "walk_speed"), 
-			&StandardRigidBodyController::set_walk_speed
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_walk_speed"), 
-			&StandardRigidBodyController::get_walk_speed
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "walk_speed"), "set_walk_speed", "get_walk_speed");
-
-		ClassDB::bind_method(
-			D_METHOD("set_move_left_action", "move_left_action"), 
-			&StandardRigidBodyController::set_move_left_action
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_move_left_action"), 
-			&StandardRigidBodyController::get_move_left_action
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::STRING, "move_left_action",PROPERTY_HINT_INPUT_NAME, "show_builtin"), "set_move_left_action", "get_move_left_action");
-
-		ClassDB::bind_method(
-			D_METHOD("set_move_right_action", "move_right_action"), 
-			&StandardRigidBodyController::set_move_right_action
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_move_right_action"), 
-			&StandardRigidBodyController::get_move_right_action
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::STRING, "move_right_action",PROPERTY_HINT_INPUT_NAME, "show_builtin"), "set_move_right_action", "get_move_right_action");
-
-		ClassDB::bind_method(
-			D_METHOD("set_move_up_action", "move_up_action"), 
-			&StandardRigidBodyController::set_move_up_action
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_move_up_action"), 
-			&StandardRigidBodyController::get_move_up_action
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::STRING, "move_up_action",PROPERTY_HINT_INPUT_NAME, "show_builtin"), "set_move_up_action", "get_move_up_action");
-
-		ClassDB::bind_method(
-			D_METHOD("set_move_down_action", "move_down_action"), 
-			&StandardRigidBodyController::set_move_down_action
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_move_down_action"), 
-			&StandardRigidBodyController::get_move_down_action
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::STRING, "move_down_action",PROPERTY_HINT_INPUT_NAME, "show_builtin"), "set_move_down_action", "get_move_down_action");
-
-		ADD_GROUP("Sprint", "");
-		ClassDB::bind_method(
-			D_METHOD("set_sprint_enabled", "sprint_enabled"), 
-			&StandardRigidBodyController::set_sprint_enabled
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_sprint_enabled"), 
-			&StandardRigidBodyController::get_sprint_enabled
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sprint_enabled", PROPERTY_HINT_GROUP_ENABLE), "set_sprint_enabled", "get_sprint_enabled");
-
-		ClassDB::bind_method(
-			D_METHOD("set_sprint_action", "sprint_action"), 
-			&StandardRigidBodyController::set_sprint_action
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_sprint_action"), 
-			&StandardRigidBodyController::get_sprint_action
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::STRING, "sprint_action",PROPERTY_HINT_INPUT_NAME, "show_builtin"), "set_sprint_action", "get_sprint_action");
-
-		ClassDB::bind_method(
-			D_METHOD("set_sprint_speed", "sprint_speed"), 
-			&StandardRigidBodyController::set_sprint_speed
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_sprint_speed"), 
-			&StandardRigidBodyController::get_sprint_speed
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sprint_speed"), "set_sprint_speed", "get_sprint_speed");
-
-		ClassDB::bind_method(
-			D_METHOD("set_sprint_toggle_mode", "sprint_toggle_mode"), 
-			&StandardRigidBodyController::set_sprint_toggle_mode
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_sprint_toggle_mode"), 
-			&StandardRigidBodyController::get_sprint_toggle_mode
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sprint_toggle_mode"), "set_sprint_toggle_mode", "get_sprint_toggle_mode");
-
-		ADD_GROUP("Jump", "");
-		ClassDB::bind_method(
-			D_METHOD("set_jump_enabled", "jump_enabled"), 
-			&StandardRigidBodyController::set_jump_enabled
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_jump_enabled"), 
-			&StandardRigidBodyController::get_jump_enabled
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::BOOL, "jump_enabled", PROPERTY_HINT_GROUP_ENABLE), "set_jump_enabled", "get_jump_enabled");
-
-		ClassDB::bind_method(
-			D_METHOD("set_jump_action", "jump_action"), 
-			&StandardRigidBodyController::set_jump_action
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_jump_action"), 
-			&StandardRigidBodyController::get_jump_action
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::STRING, "jump_action",PROPERTY_HINT_INPUT_NAME, "show_builtin"), "set_jump_action", "get_jump_action");
-
-		ClassDB::bind_method(
-			D_METHOD("set_jump_height", "jump_height"), 
-			&StandardRigidBodyController::set_jump_height
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_jump_height"), 
-			&StandardRigidBodyController::get_jump_height
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "jump_height"), "set_jump_height", "get_jump_height");
-
-		ClassDB::bind_method(
-			D_METHOD("set_coyote_time", "coyote_time"), 
-			&StandardRigidBodyController::set_coyote_time
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_coyote_time"), 
-			&StandardRigidBodyController::get_coyote_time
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "coyote_time"), "set_coyote_time", "get_coyote_time");
-
-		ClassDB::bind_method(
-			D_METHOD("set_variable_jump_frames", "variable_jump_frames"), 
-			&StandardRigidBodyController::set_variable_jump_frames
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_variable_jump_frames"), 
-			&StandardRigidBodyController::get_variable_jump_frames
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::INT, "variable_jump_frames"), "set_variable_jump_frames", "get_variable_jump_frames");
-
-		ClassDB::bind_method(
-			D_METHOD("set_variable_jump_amount", "variable_jump_amount"), 
-			&StandardRigidBodyController::set_variable_jump_amount
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_variable_jump_amount"), 
-			&StandardRigidBodyController::get_variable_jump_amount
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "variable_jump_amount"), "set_variable_jump_amount", "get_variable_jump_amount");
-
-		ClassDB::bind_method(
-			D_METHOD("set_jump_buffer_time", "jump_buffer_time"), 
-			&StandardRigidBodyController::set_jump_buffer_time
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_jump_buffer_time"), 
-			&StandardRigidBodyController::get_jump_buffer_time
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "jump_buffer_time"), "set_jump_buffer_time", "get_jump_buffer_time");
-
-		ADD_GROUP("Dash", "");
-		ClassDB::bind_method(
-			D_METHOD("set_dash_enabled", "dash_enabled"), 
-			&StandardRigidBodyController::set_dash_enabled
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_dash_enabled"), 
-			&StandardRigidBodyController::get_dash_enabled
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::BOOL, "dash_enabled", PROPERTY_HINT_GROUP_ENABLE), "set_dash_enabled", "get_dash_enabled");
-
-		ClassDB::bind_method(
-			D_METHOD("set_dash_action", "dash_action"), 
-			&StandardRigidBodyController::set_dash_action
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_dash_action"), 
-			&StandardRigidBodyController::get_dash_action
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::STRING, "dash_action",PROPERTY_HINT_INPUT_NAME, "show_builtin"), "set_dash_action", "get_dash_action");
-
-		ClassDB::bind_method(
-			D_METHOD("set_dash_length", "dash_length"), 
-			&StandardRigidBodyController::set_dash_length
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_dash_length"), 
-			&StandardRigidBodyController::get_dash_length
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "dash_length"), "set_dash_length", "get_dash_length");
-
-		ClassDB::bind_method(
-			D_METHOD("set_dash_time", "dash_time"), 
-			&StandardRigidBodyController::set_dash_time
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_dash_time"), 
-			&StandardRigidBodyController::get_dash_time
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "dash_time"), "set_dash_time", "get_dash_time");
-
-		ClassDB::bind_method(
-			D_METHOD("set_dash_buffer_time", "dash_buffer_time"), 
-			&StandardRigidBodyController::set_dash_buffer_time
-		);
-		ClassDB::bind_method(
-			D_METHOD("get_dash_buffer_time"), 
-			&StandardRigidBodyController::get_dash_buffer_time
-		);
-		ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "dash_buffer_time"), "set_dash_buffer_time", "get_dash_buffer_time");
-	}
+	// ANIMATION/ETC HELPER VARS
+	BIND_PROP_HIDE("is_sprinting", set_is_sprinting, get_is_sprinting, Variant::BOOL);
+}
 };
