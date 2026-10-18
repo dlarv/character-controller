@@ -101,16 +101,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 continuous_cd = true
 max_contacts_reported = 500
 floor_normal_threshold = 0.5
+falling_gravity_mod = 1.2
+falling_threshold = -0.5
 heavy_fall_threshold = 25.0
 heavy_fall_wait_time = 0.2
 jump_height = 3.0
-falling_gravity_mod = 1.2
-falling_threshold = -0.5
 coyote_time = 0.3
 variable_jump_frames = 20
 variable_jump_amount = 0.01
-dash_time = 0.1
 dash_action = "dash"
+dash_time = 0.1
 
 [node name="Area3D" type="Area3D" parent="Characters/PhysicsCharacter" unique_id=1216281669]
 
@@ -121,6 +121,7 @@ shape = SubResource("BoxShape3D_ioo17")
 
 [node name="StaminaCharacter" parent="Characters" unique_id=150925175 instance=ExtResource("10_2o6r5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+floor_collision_layer = 1
 dash_action = "dash"
 
 [node name="DashGranter" parent="Characters" unique_id=662543046 instance=ExtResource("11_70uel")]

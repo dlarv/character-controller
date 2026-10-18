@@ -21,7 +21,7 @@ const DEFAULT_CONTACTS_REPORTED := 100
 ## e.g. a value of 1.0 means ground must be perfectly horizontal.
 @export_range(0, 1) var floor_normal_threshold := 0.99
 ## If value != -1, only consider colliders with in this layer when checking whether player is grounded.
-@export var floor_collision_layer := -1
+@export_custom(PROPERTY_HINT_LAYERS_3D_PHYSICS, "") var floor_collision_layer := 2 ** 32 - 1
 @export_range(.01, 1000) var falling_gravity_mod := 1.0
 ## Once velocity.y falls below this value, body is considered to be falling.
 @export var falling_threshold := 0.0
@@ -258,11 +258,11 @@ func _calculate_if_on_floor(state: PhysicsDirectBodyState3D) -> void:
 
 	is_on_floor = false
 	for i in state.get_contact_count():
-		if floor_collision_layer >= 0: 
+		if floor_collision_layer > 0: 
 			var _obj = state.get_contact_collider_object(i)
 
-			if not _obj.has_method("get_collision_layer_value") \
-					or not _obj.get_collision_layer_value(floor_collision_layer):
+			if not "collision_layer" in _obj \
+					or not _obj.collision_layer & floor_collision_layer:
 				continue
 
 		var _normal := state.get_contact_local_normal(i)
@@ -454,5 +454,3 @@ func _connect_state_signals(skip:=false) -> void:
 			print("%s finished" % state_name)
 	state_started.connect(_debug_show_current_state.bind(true))
 	state_finished.connect(_debug_show_current_state.bind(false))
-
-
