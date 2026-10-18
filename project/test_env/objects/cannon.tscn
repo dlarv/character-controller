@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d227aq0f3crnu"]
 
-[ext_resource type="Script" uid="uid://dbuj4qodwncio" path="res://test_env/objects/cannon.gd" id="1_v6vu8"]
+[ext_resource type="Script" uid="uid://dbuj4qodwncio" path="res://project/test_env/objects/cannon.gd" id="1_v6vu8"]
 [ext_resource type="Script" uid="uid://diev6fpp7dd4k" path="res://addons/character_controller/interactables/interactable.gd" id="2_qx63b"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_xqlw2"]

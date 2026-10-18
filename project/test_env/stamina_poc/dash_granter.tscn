@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d2nvsfm01usyt"]
 
 [ext_resource type="Script" uid="uid://diev6fpp7dd4k" path="res://addons/character_controller/interactables/interactable.gd" id="1_i5jp3"]
-[ext_resource type="Script" uid="uid://cdp5twc8ymo5t" path="res://test_env/stamina_poc/dash_granter.gd" id="1_nnl2l"]
+[ext_resource type="Script" uid="uid://cdp5twc8ymo5t" path="res://project/test_env/stamina_poc/dash_granter.gd" id="1_nnl2l"]
 [ext_resource type="Script" uid="uid://l7gvlh1m33i1" path="res://addons/character_controller/interactables/input_prompt_label.gd" id="3_4drmt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nnl2l"]
