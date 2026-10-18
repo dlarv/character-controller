@@ -71,7 +71,6 @@ max_contacts_reported = 500
 floor_normal_threshold = 0.5
 falling_gravity_mod = 2.0
 falling_threshold = -0.5
-heavy_fall_threshold = 25.0
 heavy_fall_wait_time = 0.2
 coyote_time = 0.3
 variable_jump_amount = 0.2

@@ -194,16 +194,16 @@ func _enter_tree() -> void:
 	add_child(_dash_buffer_timer)
 	_dash_buffer_timer.timeout.connect(func(): _dash_buffered = false)
 
-	_connect_state_signals()
+	_connect_state_signals(true)
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if sprint_enabled and can_sprint:
 		_set_sprint_mode(event)
-	if event.is_action_pressed(jump_action):
+	if jump_enabled and event.is_action_pressed(jump_action):
 		_jump_buffer_timer.start()
 		_jump_buffered = true
-	if event.is_action_pressed(dash_action):
+	if dash_enabled and event.is_action_pressed(dash_action):
 		_dash_buffer_timer.start()
 		_dash_buffered = true
 
