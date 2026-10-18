@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://m3m847qoxpd0"
-path="res://.godot/imported/interactable_icon.svg-016532d3aa0b89785fea817482ce21c5.ctex"
+uid="uid://bdrsjlid525ke"
+path="res://.godot/imported/rb_controller.svg-1fb40b5fe46aee7198d6c461822d38f6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://project/addons/character_controller/icons/interactable_icon.svg"
-dest_files=["res://.godot/imported/interactable_icon.svg-016532d3aa0b89785fea817482ce21c5.ctex"]
+source_file="res://addons/character_controller/icons/rb_controller.svg"
+dest_files=["res://.godot/imported/rb_controller.svg-1fb40b5fe46aee7198d6c461822d38f6.ctex"]
 
 [params]
 

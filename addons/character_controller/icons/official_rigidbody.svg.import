@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfgxtm8kwmq8e"
-path="res://.godot/imported/grabber_icon.svg-4f71fd5503174722950d77db5b9ce85b.ctex"
+uid="uid://dwna8xwx8fns2"
+path="res://.godot/imported/official_rigidbody.svg-7116c5d2663cad1cebfb63522c612d19.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://project/addons/character_controller/icons/grabber_icon.svg"
-dest_files=["res://.godot/imported/grabber_icon.svg-4f71fd5503174722950d77db5b9ce85b.ctex"]
+source_file="res://addons/character_controller/icons/official_rigidbody.svg"
+dest_files=["res://.godot/imported/official_rigidbody.svg-7116c5d2663cad1cebfb63522c612d19.ctex"]
 
 [params]
 
