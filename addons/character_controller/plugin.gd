@@ -28,11 +28,12 @@ func _add_types() -> void:
 	add_custom_type("Interactor", "Area3D", Interactor, InteractorIcon)
 	add_custom_type("Grabbable", "Area3D", Grabbable, GrabbableIcon)
 	add_custom_type("Grabber", "Area3D", Grabber, GrabberIcon)
-	add_custom_type("StdRigidBodyController", "RigidBody3D", RBController, RBControllerIcon)
+	add_custom_type("StandardRBController", "RigidBody3D", RBController, RBControllerIcon)
+
 
 func _remove_types() -> void:
 	remove_custom_type("Interactable")
 	remove_custom_type("Interactor")
 	remove_custom_type("Grabbable")
 	remove_custom_type("Grabber")
-	remove_custom_type("StdRigidBodyController")
+	remove_custom_type("StandardRBController")
