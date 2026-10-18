@@ -1,4 +1,6 @@
+@tool
 extends RigidBody3D
+class_name StandardRBController
 
 signal state_started(key: StringName)
 signal state_finished(key: StringName)
@@ -12,26 +14,19 @@ const JUMP_KEY: StringName = "jump"
 const DASH_KEY: StringName = "dash"
 const DEFAULT_CONTACTS_REPORTED := 100
 
-@export_category("Movement Parameters")
-@export_group("Horizontal Motion")
-@export var walk_speed := 50.0
-@export var sprint_enabled := true:
-	set(val):
-		sprint_enabled = val
-		is_sprinting = is_sprinting and val
-@export var sprint_speed := 100.0
-## If false, player must press and hold run button to run
-@export var sprint_toggle_mode := true
+@export_category("Basic Physics")
 @export var grounded_damping := Vector3(5, 0, 5)
 @export var ungrounded_damping := Vector3(10, 0, 10)
-@export_group("Vertical Motion")
 ## How "horizontal" another physics body must be to be considered "ground."
 ## e.g. a value of 1.0 means ground must be perfectly horizontal.
 @export_range(0, 1) var floor_normal_threshold := 0.99
 ## If value != -1, only consider colliders with in this layer when checking whether player is grounded.
-@export var floor_collision_layer := -1
-@export var vertical_damping := 0.0
+@export_custom(PROPERTY_HINT_LAYERS_3D_PHYSICS, "") var floor_collision_layer := 2 ** 32 - 1
+@export_range(.01, 1000) var falling_gravity_mod := 1.0
+## Once velocity.y falls below this value, body is considered to be falling.
+@export var falling_threshold := 0.0
 ## If player's velocity meets or exceeds this amount, they'll be temp immobilized after hitting ground.
+## Negative values disable heavy fall
 @export var heavy_fall_threshold := 50.0
 ## How long player will be immobilized for after hitting ground in heavy fall.
 @export var heavy_fall_wait_time := 1.0:
@@ -39,12 +34,28 @@ const DEFAULT_CONTACTS_REPORTED := 100
 		heavy_fall_wait_time = val
 		if not Engine.is_editor_hint() and _heavy_fall_timer:
 			_heavy_fall_timer.wait_time = val
-@export_subgroup("Jumping")
-@export var jump_enabled := true
+@export_category("Basic Abilities")
+@export var walk_speed := 50.0
+@export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var move_left_action := "ui_left"
+@export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var move_right_action := "ui_right"
+@export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var move_up_action := "ui_up"
+@export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var move_down_action := "ui_down"
+
+@export_group("Sprint")
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "")
+var sprint_enabled := true:
+	set(val):
+		sprint_enabled = val
+		is_sprinting = is_sprinting and val
+@export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var sprint_action := ""
+@export var sprint_speed := 100.0
+## If false, player must press and hold run button to run
+@export var sprint_toggle_mode := true
+@export_group("Jumping")
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "")
+var jump_enabled := true
+@export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var jump_action := "ui_select"
 @export_range(1, 1000) var jump_height := 10.0
-@export_range(.01, 1000) var falling_gravity_mod := 1.0
-## Once velocity.y falls below this value, body is considered to be falling.
-@export var falling_threshold := 0.0
 @export var coyote_time := 0.1:
 	set(val):
 		coyote_time = val
@@ -66,8 +77,10 @@ const DEFAULT_CONTACTS_REPORTED := 100
 		if not Engine.is_editor_hint() and _jump_buffer_timer:
 			_jump_buffer_timer.wait_time = val
 
-@export_category("Dash")
-@export var dash_enabled := true
+@export_group("Dash")
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "")
+var dash_enabled := true
+@export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var dash_action := ""
 @export var dash_length := 3.0
 @export var dash_time := 1.0:
 	set(val):
@@ -80,14 +93,6 @@ const DEFAULT_CONTACTS_REPORTED := 100
 		if not Engine.is_editor_hint() and _dash_buffer_timer:
 			_dash_buffer_timer.wait_time = val
 
-@export_category("Input Action Labels")
-@export var move_left_action := "ui_left"
-@export var move_right_action := "ui_right"
-@export var move_up_action := "ui_up"
-@export var move_down_action := "ui_down"
-@export var sprint_action := ""
-@export var jump_action := "ui_select"
-@export var dash_action := ""
 
 # Helper vars that can be read by AnimationTree
 var is_sprinting := false:
@@ -147,7 +152,6 @@ var _dash_buffered := false
 var _dash_buffer_timer: Timer
 var _h_speed := Vector3.ZERO
 
-
 func _enter_tree() -> void:
 	# This allows apply_force() and similar methods to be called in _integrate_forces()
 	can_sleep = false
@@ -173,7 +177,7 @@ func _enter_tree() -> void:
 		_variable_jump_timer = _create_timer.call(float(variable_jump_frames) / Engine.physics_ticks_per_second)
 		add_child(_variable_jump_timer)
 	
-	if OS.is_debug_build() or heavy_fall_threshold > 0:
+	if OS.is_debug_build() or heavy_fall_threshold >= 0:
 		_heavy_fall_timer = _create_timer.call(heavy_fall_wait_time)
 		add_child(_heavy_fall_timer)
 		_heavy_fall_timer.timeout.connect(func(): is_heavy_fall = false)
@@ -235,7 +239,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		if is_heavy_fall and _heavy_fall_timer:
 			_heavy_fall_timer.start()
 	
-	if abs(linear_velocity.y) >= heavy_fall_threshold:
+	if heavy_fall_threshold >= 0 and abs(linear_velocity.y) >= heavy_fall_threshold:
 		is_heavy_fall = true
 	
 
@@ -254,11 +258,11 @@ func _calculate_if_on_floor(state: PhysicsDirectBodyState3D) -> void:
 
 	is_on_floor = false
 	for i in state.get_contact_count():
-		if floor_collision_layer >= 0: 
+		if floor_collision_layer > 0: 
 			var _obj = state.get_contact_collider_object(i)
 
-			if not _obj.has_method("get_collision_layer_value") \
-					or not _obj.get_collision_layer_value(floor_collision_layer):
+			if not "collision_layer" in _obj \
+					or not _obj.collision_layer & floor_collision_layer:
 				continue
 
 		var _normal := state.get_contact_local_normal(i)

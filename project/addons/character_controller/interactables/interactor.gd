@@ -1,4 +1,4 @@
-@icon("uid://jq8ri4g3wpiw")
+@tool
 extends Area3D
 class_name Interactor
 

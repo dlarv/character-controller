@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfgxtm8kwmq8e"
-path="res://.godot/imported/push-svgrepo-com.svg-4f85e8fab7635d6cf4812a815bd2d473.ctex"
+uid="uid://1qxooiure0ql"
+path="res://.godot/imported/grabbable_icon.svg-b58b951b79d18ef196325476417db0ad.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://project/addons/character_controller/icons/push-svgrepo-com.svg"
-dest_files=["res://.godot/imported/push-svgrepo-com.svg-4f85e8fab7635d6cf4812a815bd2d473.ctex"]
+source_file="res://project/addons/character_controller/icons/grabbable_icon.svg"
+dest_files=["res://.godot/imported/grabbable_icon.svg-b58b951b79d18ef196325476417db0ad.ctex"]
 
 [params]
 

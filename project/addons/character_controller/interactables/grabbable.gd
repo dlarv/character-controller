@@ -1,5 +1,4 @@
 @tool
-@icon("uid://1qxooiure0ql")
 extends Interactable
 class_name Grabbable
 
@@ -19,5 +18,5 @@ func _ready() -> void:
 	_interactor_group = GRABBER_GROUP
 
 
-func _on_interacted(physics_body: Node, interactable: Interactable, interactor: Node3D) -> void:
+func _on_interacted(physics_body: Node, interactable: Interactable, interactor: Grabber) -> void:
 	interactor.grab(physics_body)

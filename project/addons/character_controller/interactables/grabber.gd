@@ -1,5 +1,4 @@
 @tool
-@icon("uid://dfgxtm8kwmq8e")
 extends Interactor
 class_name Grabber
 

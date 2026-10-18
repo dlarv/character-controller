@@ -69,14 +69,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 continuous_cd = true
 max_contacts_reported = 500
 floor_normal_threshold = 0.5
-heavy_fall_threshold = 25.0
-heavy_fall_wait_time = 0.2
 falling_gravity_mod = 2.0
 falling_threshold = -0.5
+heavy_fall_threshold = 25.0
+heavy_fall_wait_time = 0.2
 coyote_time = 0.3
 variable_jump_amount = 0.2
-dash_time = 0.1
 dash_action = "dash"
+dash_time = 0.1
 
 [node name="TestingObjects" type="Node3D" parent="." unique_id=1436496279]
 
