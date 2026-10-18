@@ -1,0 +1,16 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://d4epmgihvb7nd"
+
+[deps]
+
+source_file="res://perf_logs/perf_cpp_test.csv"
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

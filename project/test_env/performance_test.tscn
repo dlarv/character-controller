@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://bqxcgkmra8ibj"]
+
+[ext_resource type="Script" uid="uid://pg12jy78nqth" path="res://project/test_env/performance_test.gd" id="1_dldq0"]
+[ext_resource type="Material" uid="uid://plen0swcshlr" path="res://project/assets/placeholder_grid_texture/placeholder_grid.tres" id="2_dldq0"]
+
+[node name="PerformanceTest" type="Node3D" unique_id=2040013575]
+script = ExtResource("1_dldq0")
+spawn_time = 3.0
+metadata/_edit_lock_ = true
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1011214640]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1853675013]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1410522, 0.8, 0)
+size = Vector3(40.282104, 4, 32)
+material = ExtResource("2_dldq0")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D" unique_id=793934439]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0668945, 2, 0)
+operation = 2
+size = Vector3(38.13379, 4, 30)
+material = ExtResource("2_dldq0")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1911793734]
+transform = Transform3D(1, 0, 0, 0, 0.30755588, 0.95153004, 0, -0.95153004, 0.30755588, 0, 19.12106, 10.497719)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1551585859]
+transform = Transform3D(0.8660254, -0.25, 0.4330127, 0, 0.8660254, 0.5, -0.5, -0.4330127, 0.75, 0, 13.401474, 0)
+
+[node name="Parent" type="Node3D" parent="." unique_id=1860363535]
+unique_name_in_owner = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1842119807]
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer" unique_id=1258881431]
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer" unique_id=220217307]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=140770308]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1782459690]
+layout_mode = 2
+text = "Iters: "
+
+[node name="SpinBox" type="SpinBox" parent="CanvasLayer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1102216452]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=555324241]
+layout_mode = 2
+text = "GD Control"
+
+[node name="Button2" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=1097188879]
+layout_mode = 2
+text = "GD Test"
+
+[node name="Button3" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=923572173]
+layout_mode = 2
+text = "CPP Control"
+
+[node name="Button4" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=917991172]
+layout_mode = 2
+text = "CPP Test"
