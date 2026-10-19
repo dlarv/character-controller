@@ -94,9 +94,9 @@ public:
 
 	/* METHODS */
 	bool enable_ability(StringName key, bool enabled);
-	TypedArray<StringName> enable_abilities(TypedArray<StringName> key, bool enabled);
+	TypedArray<StringName> enable_abilities(TypedArray<StringName> keys, bool enabled);
 	bool refresh_ability(StringName key, bool enabled);
-	TypedArray<StringName> refresh_abilities(TypedArray<StringName> key, bool enabled);
+	TypedArray<StringName> refresh_abilities(TypedArray<StringName> keys, bool enabled);
 	bool grant_ability(StringName key, bool enabled);
 	Dictionary get_state_data();
 
@@ -197,10 +197,10 @@ static void _bind_methods() {
 
 	// CONSTANTS
 	BIND_CONSTANT(DEFAULT_CONTACTS_REPORTED);
-	// BIND_CONST("WALK_KEY", get_walk_key, Variant::STRING_NAME);
-	// BIND_CONST("SPRINT_KEY", get_sprint_key, Variant::STRING_NAME);
-	// BIND_CONST("DASH_KEY", get_dash_key, Variant::STRING_NAME);
-	// BIND_CONST("JUMP_KEY", get_jump_key, Variant::STRING_NAME);
+	BIND_CONST("WALK_KEY", get_walk_key, Variant::STRING_NAME);
+	BIND_CONST("SPRINT_KEY", get_sprint_key, Variant::STRING_NAME);
+	BIND_CONST("DASH_KEY", get_dash_key, Variant::STRING_NAME);
+	BIND_CONST("JUMP_KEY", get_jump_key, Variant::STRING_NAME);
 
 	// PUBLIC METHODS
 	ClassDB::bind_method(D_METHOD("enable_ability"), &StandardRigidBodyController::enable_ability);
