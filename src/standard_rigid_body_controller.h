@@ -264,7 +264,6 @@ static void _bind_methods() {
 	BIND_PROP_HIDE("can_sprint", set_can_sprint, get_can_sprint, Variant::BOOL);
 	BIND_PROP_HIDE("can_jump", set_can_jump, get_can_jump, Variant::BOOL);
 	BIND_PROP_HIDE("can_dash", set_can_dash, get_can_dash, Variant::BOOL);
-	BIND_PROP_HIDE("can_dash", set_can_dash, get_can_dash, Variant::VECTOR3);
 	BIND_PROP_HIDE("last_facing_direction", set_last_facing_direction, get_last_facing_direction, Variant::VECTOR3);
 }
 };
