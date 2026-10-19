@@ -1,7 +1,17 @@
 #pragma once
-#define BIND_PROP(n, s, g, t, ...) ClassDB::bind_method(D_METHOD("set_" n, n), &StandardRigidBodyController::s); ClassDB::bind_method(D_METHOD("get_" n), &StandardRigidBodyController::g); ADD_PROPERTY(PropertyInfo(t, n __VA_OPT__(,) __VA_ARGS__), "set_" n, "get_" n);
-#define BIND_PROP_HIDE(n, s, g, t) ClassDB::bind_method(D_METHOD("set_" n, n), &StandardRigidBodyController::s); ClassDB::bind_method(D_METHOD("get_" n), &StandardRigidBodyController::g); ADD_PROPERTY(PropertyInfo(t, n, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_" n, "get_" n);
-#define GET_SET(n, t) void set_ ## n(t p) { n = p; } t get_ ## n() const { return n; }
+#define BIND_PROP(n, s, g, t, ...) \
+	ClassDB::bind_method(D_METHOD("set_" n, n), &StandardRigidBodyController::s); \
+	ClassDB::bind_method(D_METHOD("get_" n), &StandardRigidBodyController::g); \
+	ADD_PROPERTY(PropertyInfo(t, n __VA_OPT__(,) __VA_ARGS__), "set_" n, "get_" n);
+#define BIND_PROP_HIDE(n, s, g, t) \
+	ClassDB::bind_method(D_METHOD("set_" n, n), &StandardRigidBodyController::s);\
+	ClassDB::bind_method(D_METHOD("get_" n), &StandardRigidBodyController::g); \
+	ADD_PROPERTY(PropertyInfo(t, n, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_" n, "get_" n);
+#define GET_SET(n, t) void set_ ## n(t p) { n = p; }\
+	t get_ ## n() const { return n; }
+#define BIND_CONST(n, g, t) \
+	ClassDB::bind_method(D_METHOD("get_" n), &StandardRigidBodyController::g); \
+	ADD_PROPERTY(PropertyInfo(t, n, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_READ_ONLY), "", "get_" n);
 
 #include "godot_cpp/core/class_db.hpp"
 #include "godot_cpp/classes/wrapped.hpp"
@@ -14,8 +24,8 @@
 #include <godot_cpp/variant/vector3.hpp>
 #include <godot_cpp/templates/vector.hpp>
 
-
 using namespace godot;
+
 class StandardRigidBodyController: public RigidBody3D {
 	GDCLASS(StandardRigidBodyController, RigidBody3D)
 
@@ -71,7 +81,12 @@ public:
 	const StringName SPRINT_KEY = "sprint";
 	const StringName JUMP_KEY = "jump";
 	const StringName DASH_KEY = "dash";
-	const int DEFAULT_CONTACTS_REPORTED = 100;
+	static const int DEFAULT_CONTACTS_REPORTED = 100;
+
+	StringName get_walk_key() const { return WALK_KEY; }
+	StringName get_sprint_key() const { return SPRINT_KEY; }
+	StringName get_jump_key() const { return JUMP_KEY; }
+	StringName get_dash_key() const { return DASH_KEY; }
 
 	/* (DE)CONSTRUCTOR */
 	StandardRigidBodyController() = default;
@@ -179,6 +194,13 @@ static void _bind_methods() {
 	ADD_SIGNAL(MethodInfo("state_started", PropertyInfo(Variant::STRING_NAME, "key")));
 	ADD_SIGNAL(MethodInfo("state_finished", PropertyInfo(Variant::STRING_NAME, "key")));
 	ADD_SIGNAL(MethodInfo("ability_granted", PropertyInfo(Variant::STRING_NAME, "key")));
+
+	// CONSTANTS
+	BIND_CONSTANT(DEFAULT_CONTACTS_REPORTED);
+	// BIND_CONST("WALK_KEY", get_walk_key, Variant::STRING_NAME);
+	// BIND_CONST("SPRINT_KEY", get_sprint_key, Variant::STRING_NAME);
+	// BIND_CONST("DASH_KEY", get_dash_key, Variant::STRING_NAME);
+	// BIND_CONST("JUMP_KEY", get_jump_key, Variant::STRING_NAME);
 
 	// PUBLIC METHODS
 	ClassDB::bind_method(D_METHOD("enable_ability"), &StandardRigidBodyController::enable_ability);
