@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://ch7spnl5xfdw" path="res://project/test_env/objects/box.tscn" id="2_fj7yv"]
 [ext_resource type="Material" uid="uid://plen0swcshlr" path="res://project/assets/placeholder_grid_texture/placeholder_grid.tres" id="3_tlwt5"]
 [ext_resource type="Script" uid="uid://bfro2p6y5x88u" path="res://project/test_env/camera_controller.gd" id="4_aqk2v"]
+[ext_resource type="PackedScene" uid="uid://bfu5vy4qjmw1s" path="res://project/test_env/characters/standard_rigid_body_controller.tscn" id="4_cnbew"]
 [ext_resource type="PackedScene" uid="uid://c6fby36ghp0ru" path="res://project/test_env/interactables/jealous_boxes.tscn" id="7_gbfbk"]
 [ext_resource type="PackedScene" uid="uid://h0iow78t0ico" path="res://project/test_env/testing_tools/detector.tscn" id="7_pkg7o"]
 [ext_resource type="PackedScene" uid="uid://bi7vkl82lfueq" path="res://project/test_env/interactables/non_jealous_boxes.tscn" id="9_ioo17"]
@@ -72,10 +73,14 @@ floor_normal_threshold = 0.5
 falling_gravity_mod = 2.0
 falling_threshold = -0.5
 heavy_fall_wait_time = 0.2
+sprint_action = "sprint"
 coyote_time = 0.3
 variable_jump_amount = 0.2
 dash_action = "dash"
 dash_time = 0.1
+
+[node name="StandardRigidBodyController" parent="Characters" unique_id=264252557 instance=ExtResource("4_cnbew")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.41003, 0, 0)
 
 [node name="TestingObjects" type="Node3D" parent="." unique_id=1436496279]
 

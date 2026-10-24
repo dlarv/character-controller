@@ -99,7 +99,7 @@ private:
 	void on_heavy_fall_timeout() { is_heavy_fall = false; }
 	void on_jump_buffer_timeout() { jump_buffered = false; }
 	void on_dash_buffer_timeout() { dash_buffered = false; }
-	void on_dash_timeout() { is_dashing = false; }
+	void on_dash_timeout() { is_dashing = false; UtilityFunctions::print("HERE"); }
 
 public:
 	/* CONSTANTS */

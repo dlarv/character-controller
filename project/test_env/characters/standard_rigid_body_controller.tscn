@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://bfu5vy4qjmw1s"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d5r4c"]
+albedo_color = Color(0.97130746, 0, 0.439102, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_vq3xu"]
+material = SubResource("StandardMaterial3D_d5r4c")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cnbew"]
+
+[node name="StandardRigidBodyController" type="StandardRigidBodyController" unique_id=264252557 groups=["controller"]]
+grounded_damping = Vector3(5, 0, 5)
+ungrounded_damping = Vector3(10, 0, 10)
+sprint_action = "sprint"
+dash_action = "dash"
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+max_contacts_reported = 100
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1842666745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_vq3xu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1987955176]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_cnbew")

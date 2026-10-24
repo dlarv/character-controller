@@ -26,10 +26,8 @@ contact_monitor = true
 max_contacts_reported = 100
 linear_damp_mode = 1
 script = ExtResource("1_d5r4c")
-sprint_speed = 125.0
 floor_collision_layer = 1
 jump_height = 5.0
-sprint_action = "sprint"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=65133136]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -39,9 +37,10 @@ mesh = SubResource("CapsuleMesh_fj7yv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_tlwt5")
 
-[node name="Interactor" type="Area3D" parent="." unique_id=2111413141]
+[node name="Interactor" type="Area3D" parent="." unique_id=2111413141 node_paths=PackedStringArray("root")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("2_0m4bg")
+root = NodePath("..")
 metadata/_custom_type_script = "uid://d24g57moi63cx"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interactor" unique_id=1932481718]

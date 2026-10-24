@@ -314,7 +314,6 @@ void SRBC::calculate_damping(PhysicsDirectBodyState3D* state) {
 		initial_velocity.y * (1 - internal_damp.y / tps),
 		initial_velocity.z * (1 - internal_damp.z / tps)
 	));
-
 }
 
 Vector3 SRBC::get_movement(double speed) {
