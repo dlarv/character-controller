@@ -127,11 +127,10 @@ void SRBC::_integrate_forces(PhysicsDirectBodyState3D* state) {
 	if(heavy_fall_threshold >= 0 && std::abs(linear_velocity.y) >= heavy_fall_threshold) {
 		is_heavy_fall = true;
 	}
-
 }
 
 Vector3 SRBC::walk(Vector3 prev_speed, Vector3* direction) {
-	Vector3 curr_speed = get_movement(walk_speed);
+	Vector3 curr_speed = get_movement(is_sprinting ? sprint_speed : walk_speed);
 	if(curr_speed.length() > 0) {
 		*direction = curr_speed.normalized();
 		if(Math::is_zero_approx(prev_speed.length()) && !is_sprinting) {
