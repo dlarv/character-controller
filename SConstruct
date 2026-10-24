@@ -4,6 +4,10 @@ import sys
 
 from methods import print_error
 
+env = Environment()
+env.Tool('compilation_db')
+cdb = env.CompilationDatabase()
+Alias('cdb', cdb)
 
 libname = "CHARACTER-CONTROLLER"
 projectdir = "addons/character_controller"
@@ -28,6 +32,7 @@ Help(opts.GenerateHelpText(localEnv))
 
 env = localEnv.Clone()
 
+
 if not (os.path.isdir("godot-cpp") and os.listdir("godot-cpp")):
     print_error("""godot-cpp is not available within this folder, as Git submodules haven't been initialized.
 Run the following command to download godot-cpp:
@@ -37,8 +42,10 @@ Run the following command to download godot-cpp:
 
 env = SConscript("godot-cpp/SConstruct", {"api_version": 4.6, "env": env, "customs": customs})
 
+
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
+
 
 if env["target"] in ["editor", "template_debug"]:
     try:
