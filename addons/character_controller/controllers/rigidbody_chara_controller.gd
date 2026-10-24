@@ -336,6 +336,7 @@ func _try_jump(state: PhysicsDirectBodyState3D) -> bool:
 func _jump(state: PhysicsDirectBodyState3D, velocity_modifier:=1.0) -> void:
 	# 0 = v^2 + 2ax
 	var _velocity := sqrt(2 * abs(state.total_gravity.y) * jump_height) * velocity_modifier
+	print(_velocity)
 	state.apply_central_impulse(Vector3.UP * _velocity)
 
 	_skip_next_grounded_check = true
