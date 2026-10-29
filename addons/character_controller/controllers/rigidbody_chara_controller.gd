@@ -194,8 +194,6 @@ func _enter_tree() -> void:
 	add_child(_dash_buffer_timer)
 	_dash_buffer_timer.timeout.connect(func(): _dash_buffered = false)
 
-	_connect_state_signals()
-
 
 func _unhandled_input(event: InputEvent) -> void:
 	if sprint_enabled and can_sprint:
@@ -203,7 +201,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(jump_action):
 		_jump_buffer_timer.start()
 		_jump_buffered = true
-	if event.is_action_pressed(dash_action):
+	if dash_enabled and event.is_action_pressed(dash_action):
 		_dash_buffer_timer.start()
 		_dash_buffered = true
 
@@ -445,12 +443,3 @@ func get_state_data() -> Dictionary:
 	}
 
 
-func _connect_state_signals(skip:=false) -> void:
-	if skip: return
-	var _debug_show_current_state := func (state_name: String, is_active: bool) -> void:
-		if is_active:
-			print("%s started" % state_name)
-		else:
-			print("%s finished" % state_name)
-	state_started.connect(_debug_show_current_state.bind(true))
-	state_finished.connect(_debug_show_current_state.bind(false))
