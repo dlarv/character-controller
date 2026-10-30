@@ -1,12 +1,10 @@
-@tool
-extends StandardRBController
-class_name FreeCamRBController
-## Builds off of StandardRBController, adding camera controls.
-##
-## Allows player to freely rotate camera, independent of Controller.
-## If no Camera3D found in children, one will be created at runtime.
+extends Camera3D
+class_name OrbitalCameraController
+## Controller Module allowing player to rotate camera around Controller.
 
 
+## Controller this camera should orbit. Defaults to parent, if applicable.
+@export var target: RigidBody3D = null
 @export_group("Camera Movement Controls")
 @export_custom(PROPERTY_HINT_GROUP_ENABLE, "") var free_cam_enabled := false
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_left_action := ""
@@ -19,72 +17,63 @@ class_name FreeCamRBController
 @export var camera_pan_speed := 0.5
 @export var camera_zoom_speed := 3.0
 @export_custom(PROPERTY_HINT_RANGE, "-90,90,degrees") var camera_vertical_angle_lock := Vector2()
-## This controller wants to force ignore_rotation to be false. Disable this override to use value set in editor.
-@export var ignore_rotation_override := true
 
-var _camera: Camera3D
 var _radius: float
 
 func _ready() -> void:
-	if ignore_rotation_override:
-		ignore_rotation = false
+	var _parent := get_parent()
+	if not target and _parent is RigidBody3D:
+		target = _parent
 
-	for child in get_children():
-		if child is Camera3D:
-			_camera = child
-			break
-	
-	if _camera == null:
-		_camera = Camera3D.new()
-		add_child(_camera)
-	
-	reset_camera()
+	reset()
 
-	_radius = _camera.global_position.distance_to(global_position)
-	
-
-func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
-	super._integrate_forces(state)
-
-	if not free_cam_enabled: return
-
-	var _cam_rotation := Input.get_axis(camera_left_action, camera_right_action)
-	state.apply_torque(Vector3.UP * _cam_rotation * camera_pan_speed)
+	_radius = global_position.distance_to(target.global_position)
 
 
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	if not free_cam_enabled: return
 	if len(camera_reset_action) > 0 and Input.is_action_just_pressed(camera_reset_action):
-		reset_camera()
+		reset()
+
+	# Rotate target Controller
+	var _cam_rotation := Input.get_axis(camera_left_action, camera_right_action)
+	target.apply_torque(Vector3.UP * _cam_rotation * camera_pan_speed)
 	
+	# Rotate self
 	var _cam_v_rotation := Input.get_axis(camera_up_action, camera_down_action) * delta * camera_pan_speed
 	if is_zero_approx(_cam_v_rotation): return
 
 	var _phi: float = clampf(
-		_camera.rotation_degrees.x + _cam_v_rotation,
+		rotation_degrees.x + _cam_v_rotation,
 		camera_vertical_angle_lock.x,
 		camera_vertical_angle_lock.y
 	)
 
 	var _rad := deg_to_rad(-_phi)
-	_camera.position.z = _radius * cos(_rad)
-	_camera.position.y = _radius * sin(_rad)
-	_camera.rotation_degrees.x = _phi
+	position.z = _radius * cos(_rad)
+	position.y = _radius * sin(_rad)
+	rotation_degrees.x = _phi
+
+
+
+func reset() -> void:
+	var _pos := target.global_position
+	target.global_rotation_degrees.y = 0
+	global_position = _pos + initial_offset
+	look_at(_pos)
 
 
 func _get_configuration_warnings() -> PackedStringArray:
-	var output := super._get_configuration_warnings()
+	var output := []
+
+	if not get_parent() is RigidBody3D:
+		output.append("For CameraController to work properly, it must be child of RigidBody3D")
+
 	if not free_cam_enabled: return output
+
 	for action in [camera_left_action, camera_right_action, camera_up_action, camera_down_action]:
 		if len(action) == 0:
 			output.append("Free cam mode is enabled, but one or more camera control actions are undefined.")
 			break
 	return output
-
-
-func reset_camera() -> void:
-	global_rotation_degrees.y = 0
-	_camera.global_position = global_position + initial_offset
-	_camera.look_at(global_position)
-

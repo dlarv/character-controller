@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://7bdnfrq622mb"]
 
-[ext_resource type="Script" uid="uid://b6hfsmylmvau1" path="res://addons/character_controller/controllers/free_cam_rb_controller.gd" id="1_g2yvp"]
+[ext_resource type="Script" uid="uid://275scp4h71ib" path="res://addons/character_controller/controllers/standard_rb_controller.gd" id="1_0vu4k"]
+[ext_resource type="Script" uid="uid://qk65wqodt4sh" path="res://addons/character_controller/extra_modules/orbital_camera_controller.gd" id="2_v2pnf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g2yvp"]
 albedo_color = Color(0, 0, 1, 1)
@@ -16,19 +17,13 @@ height = 1.0
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_g2yvp"]
 
-[node name="FreeCamCharacter" type="RigidBody3D" unique_id=469213683]
+[node name="FreeCamCharacter" type="RigidBody3D" unique_id=1738575080]
 can_sleep = false
 contact_monitor = true
 max_contacts_reported = 100
-script = ExtResource("1_g2yvp")
-free_cam_enabled = true
-camera_left_action = "cam_left"
-camera_right_action = "cam_right"
-camera_up_action = "cam_up"
-camera_down_action = "cam_down"
-camera_reset_action = "cam_reset"
-camera_pan_speed = 10.0
-metadata/_custom_type_script = "uid://b6hfsmylmvau1"
+script = ExtResource("1_0vu4k")
+ignore_rotation = false
+metadata/_custom_type_script = "uid://275scp4h71ib"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=99573567]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -41,3 +36,13 @@ mesh = SubResource("CylinderMesh_g2yvp")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1181818873]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_g2yvp")
+
+[node name="OrbitalCameraController" type="Camera3D" parent="." unique_id=447038536]
+script = ExtResource("2_v2pnf")
+free_cam_enabled = true
+camera_left_action = "cam_left"
+camera_right_action = "cam_right"
+camera_up_action = "cam_up"
+camera_down_action = "cam_down"
+camera_reset_action = "cam_reset"
+metadata/_custom_type_script = "uid://qk65wqodt4sh"
