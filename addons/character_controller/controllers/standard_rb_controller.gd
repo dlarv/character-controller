@@ -40,7 +40,9 @@ const DEFAULT_CONTACTS_REPORTED := 100
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var move_right_action := "ui_right"
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var move_up_action := "ui_up"
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var move_down_action := "ui_down"
-
+## Whether to use local rotation when calculating forces.
+## E.g. If true, pressing move_up_action will always move character along global z axis
+@export var ignore_rotation := true
 @export_group("Sprint")
 @export_custom(PROPERTY_HINT_GROUP_ENABLE, "")
 var sprint_enabled := false:
@@ -252,8 +254,17 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	
 
 func _get_movement_vector(speed: float) -> Vector3:
-	var _input_dir := Input.get_vector(move_left_action, move_right_action, move_up_action, move_down_action)
-	var _direction := Vector3(_input_dir.x, 0, _input_dir.y).normalized()
+	var _direction: Vector3
+
+	if ignore_rotation:
+		var _input_dir := Input.get_vector(move_left_action, move_right_action, move_up_action, move_down_action)
+		_direction = Vector3(_input_dir.x, 0, _input_dir.y).normalized()
+	else:
+		var _z_dir := Input.get_axis(move_up_action, move_down_action)
+		var _x_dir := Input.get_axis(move_left_action, move_right_action)
+		_direction = (transform.basis.x * _x_dir) + (transform.basis.z * _z_dir)
+
+
 	return _direction * speed
 
 
