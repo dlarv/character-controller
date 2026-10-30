@@ -29,9 +29,12 @@ func _input(event: InputEvent):
 	if not enabled: return
 	if event.is_action_pressed("switch_perspective"):
 		_next_perspective((_curr_target_idx + 1) % len(targets))
+		make_current()
 	elif event.is_action_pressed("toggle_god_mode"):
 		_god_mode = not _god_mode 
 		if _god_mode:
+			if _target.has_method("reset_camera"):
+				_target.reset_camera()
 			_target.process_mode = Node.PROCESS_MODE_DISABLED
 		else:
 			_target.process_mode = Node.PROCESS_MODE_INHERIT
@@ -62,6 +65,14 @@ func _next_perspective(idx: int) -> void:
 	_perspective_switch_tween.tween_property(self, "position", _target.position + offset, switch_delay)
 	_perspective_switch_tween.finished.connect(func():
 		_target.process_mode = Node.PROCESS_MODE_INHERIT
+		var _found_cam := false
+		for child in _target.get_children(): 
+			if child is Camera3D:
+				child.make_current()
+				_found_cam = true
+				break
+		if not _found_cam:
+			make_current()
 	)
 
 func _move_god_mode(delta: float) -> void:

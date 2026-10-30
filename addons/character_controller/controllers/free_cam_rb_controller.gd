@@ -33,8 +33,7 @@ func _ready() -> void:
 		_camera = Camera3D.new()
 		add_child(_camera)
 	
-	_camera.global_position = global_position + initial_offset
-	_camera.look_at(global_position)
+	reset_camera()
 
 	_radius = _camera.global_position.distance_to(global_position)
 	
@@ -52,8 +51,7 @@ func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	if not free_cam_enabled: return
 	if len(camera_reset_action) > 0 and Input.is_action_just_pressed(camera_reset_action):
-		_camera.global_position = global_position + initial_offset
-		_camera.look_at(global_position)
+		reset_camera()
 	
 	var _cam_v_rotation := Input.get_axis(camera_up_action, camera_down_action) * delta * camera_pan_speed
 	if is_zero_approx(_cam_v_rotation): return
@@ -86,3 +84,10 @@ func _get_configuration_warnings() -> PackedStringArray:
 			output.append("Free cam mode is enabled, but one or more camera control actions are undefined.")
 			break
 	return output
+
+
+func reset_camera() -> void:
+	global_rotation_degrees.y = 0
+	_camera.global_position = global_position + initial_offset
+	_camera.look_at(global_position)
+

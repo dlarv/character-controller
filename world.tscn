@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://7bdnfrq622mb" path="res://test_env/characters/free_cam_character.tscn" id="8_2o6r5"]
 [ext_resource type="PackedScene" uid="uid://bi7vkl82lfueq" path="res://test_env/interactables/non_jealous_boxes.tscn" id="9_ioo17"]
 [ext_resource type="PackedScene" uid="uid://dcrmucc242m3u" path="res://test_env/interactables/draggable/draggable.tscn" id="9_wse8f"]
-[ext_resource type="PackedScene" uid="uid://d2nvsfm01usyt" path="res://test_env/stamina_poc/dash_granter.tscn" id="11_70uel"]
+[ext_resource type="PackedScene" uid="uid://dui6kmiicvskf" path="res://test_env/characters/physics_character.tscn" id="10_2o6r5"]
 
 [node name="World" type="Node3D" unique_id=1225734566]
 
@@ -61,7 +61,6 @@ material = ExtResource("3_tlwt5")
 [node name="Camera3D" type="Camera3D" parent="." unique_id=337223818]
 transform = Transform3D(1, 0, 0, 0, 0.9063078, 0.4226182, 0, -0.42261824, 0.90630776, 0, 0, 0)
 script = ExtResource("4_aqk2v")
-enabled = false
 offset = Vector3(0, 3, 5)
 
 [node name="TestingObjects" type="Node3D" parent="." unique_id=1436496279]
@@ -90,12 +89,11 @@ speed_range = Vector2(30, 50)
 
 [node name="Characters" type="Node3D" parent="." unique_id=1939529387]
 
-[node name="FreeCamCharacter" parent="Characters" unique_id=469213683 instance=ExtResource("8_2o6r5")]
+[node name="FreeCamCharacter" parent="Characters" unique_id=469213683 groups=["controller"] instance=ExtResource("8_2o6r5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
 axis_lock_angular_x = true
 axis_lock_angular_z = true
 angular_damp = 5.0
-free_cam_enabled = true
 camera_left_action = "cam_left"
 camera_right_action = "cam_right"
 camera_up_action = "cam_up"
@@ -107,13 +105,13 @@ move_left_action = "move_left"
 move_right_action = "move_right"
 move_up_action = "move_up"
 move_down_action = "move_down"
+ignore_rotation = true
 
-[node name="Camera3D" type="Camera3D" parent="Characters/FreeCamCharacter" unique_id=31954610]
-transform = Transform3D(1, 0, 0, 0, 0.8574929, 0.5144958, 0, -0.5144958, 0.8574929, 0, 3, 5)
-current = true
-
-[node name="DashGranter" parent="Characters" unique_id=662543046 instance=ExtResource("11_70uel")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, -9)
+[node name="Character" parent="Characters" unique_id=899115962 instance=ExtResource("10_2o6r5")]
+axis_lock_angular_y = false
+dash_enabled = true
+dash_action = "dash"
+dash_time = 0.1
 
 [node name="JealousBoxes" parent="." unique_id=1822857881 instance=ExtResource("7_gbfbk")]
 transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -11, 0, 3)
