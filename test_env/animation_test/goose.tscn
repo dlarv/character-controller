@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dl8rw307orwjh"]
 
-[ext_resource type="Script" uid="uid://275scp4h71ib" path="res://addons/character_controller/controllers/rigidbody_chara_controller.gd" id="1_j3sk7"]
+[ext_resource type="Script" uid="uid://275scp4h71ib" path="res://addons/character_controller/controllers/standard_rb_controller.gd" id="1_j3sk7"]
 [ext_resource type="PackedScene" uid="uid://dx4vs3amy34h2" path="res://assets/goose_v4.blend" id="2_0bfld"]
 [ext_resource type="Script" uid="uid://c7oys2v83d7t6" path="res://test_env/animation_test/rotator.gd" id="3_haaq7"]
 

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dui6kmiicvskf"]
 
-[ext_resource type="Script" uid="uid://275scp4h71ib" path="res://addons/character_controller/controllers/rigidbody_chara_controller.gd" id="1_d5r4c"]
+[ext_resource type="Script" uid="uid://275scp4h71ib" path="res://addons/character_controller/controllers/standard_rb_controller.gd" id="1_d5r4c"]
 [ext_resource type="Script" uid="uid://d24g57moi63cx" path="res://addons/character_controller/interactables/interactor.gd" id="2_0m4bg"]
 [ext_resource type="Script" uid="uid://b0vxc2nbll1aq" path="res://addons/character_controller/interactables/grabber.gd" id="3_b8ce5"]
 

@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://7bdnfrq622mb"]
+
+[ext_resource type="Script" uid="uid://b6hfsmylmvau1" path="res://addons/character_controller/controllers/free_cam_rb_controller.gd" id="1_g2yvp"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g2yvp"]
+albedo_color = Color(0, 0, 1, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_g2yvp"]
+material = SubResource("StandardMaterial3D_g2yvp")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_g2yvp"]
+material = SubResource("StandardMaterial3D_g2yvp")
+top_radius = 0.05
+bottom_radius = 0.2
+height = 1.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_g2yvp"]
+
+[node name="FreeCamCharacter" type="RigidBody3D" unique_id=469213683]
+can_sleep = false
+contact_monitor = true
+max_contacts_reported = 100
+script = ExtResource("1_g2yvp")
+camera_pan_speed = 10.0
+metadata/_custom_type_script = "uid://b6hfsmylmvau1"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=99573567]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_g2yvp")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1782996064]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1.4, 0.5)
+mesh = SubResource("CylinderMesh_g2yvp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1181818873]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_g2yvp")

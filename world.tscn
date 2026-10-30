@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://in8eyraxd88n"]
 
-[ext_resource type="PackedScene" uid="uid://dui6kmiicvskf" path="res://test_env/characters/physics_character.tscn" id="1_f3sb7"]
 [ext_resource type="PackedScene" uid="uid://ch7spnl5xfdw" path="res://test_env/objects/box.tscn" id="2_fj7yv"]
 [ext_resource type="PackedScene" uid="uid://d227aq0f3crnu" path="res://test_env/objects/cannon.tscn" id="2_k3n1d"]
 [ext_resource type="Material" uid="uid://plen0swcshlr" path="res://assets/placeholder_grid_texture/placeholder_grid.tres" id="3_tlwt5"]
@@ -9,12 +8,10 @@
 [ext_resource type="PackedScene" uid="uid://c6fby36ghp0ru" path="res://test_env/interactables/jealous_boxes.tscn" id="7_gbfbk"]
 [ext_resource type="PackedScene" uid="uid://h0iow78t0ico" path="res://test_env/testing_tools/detector.tscn" id="7_pkg7o"]
 [ext_resource type="PackedScene" uid="uid://n1124tmn8ms2" path="res://test_env/objects/moving_platform.tscn" id="7_wse8f"]
+[ext_resource type="PackedScene" uid="uid://7bdnfrq622mb" path="res://test_env/characters/free_cam_character.tscn" id="8_2o6r5"]
 [ext_resource type="PackedScene" uid="uid://bi7vkl82lfueq" path="res://test_env/interactables/non_jealous_boxes.tscn" id="9_ioo17"]
 [ext_resource type="PackedScene" uid="uid://dcrmucc242m3u" path="res://test_env/interactables/draggable/draggable.tscn" id="9_wse8f"]
-[ext_resource type="PackedScene" uid="uid://s4r35c0mm362" path="res://test_env/stamina_poc/stamina_character.tscn" id="10_2o6r5"]
 [ext_resource type="PackedScene" uid="uid://d2nvsfm01usyt" path="res://test_env/stamina_poc/dash_granter.tscn" id="11_70uel"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_ioo17"]
 
 [node name="World" type="Node3D" unique_id=1225734566]
 
@@ -62,8 +59,9 @@ depth = 2.0
 material = ExtResource("3_tlwt5")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=337223818]
-transform = Transform3D(1, 0, 0, 0, 0.9063078, 0.42261827, 0, -0.42261824, 0.90630776, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.9063078, 0.4226182, 0, -0.42261824, 0.90630776, 0, 0, 0)
 script = ExtResource("4_aqk2v")
+enabled = false
 offset = Vector3(0, 3, 5)
 
 [node name="TestingObjects" type="Node3D" parent="." unique_id=1436496279]
@@ -92,34 +90,26 @@ speed_range = Vector2(30, 50)
 
 [node name="Characters" type="Node3D" parent="." unique_id=1939529387]
 
-[node name="PhysicsCharacter" parent="Characters" unique_id=133858657 instance=ExtResource("1_f3sb7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
-continuous_cd = true
-max_contacts_reported = 500
-floor_normal_threshold = 0.5
-falling_gravity_mod = 1.5
-falling_threshold = -0.5
-heavy_fall_threshold = 25.0
-heavy_fall_wait_time = 0.2
-jump_height = 3.0
-coyote_time = 0.3
-variable_jump_frames = 20
-variable_jump_amount = 0.01
-dash_action = "dash"
-dash_time = 0.1
+[node name="FreeCamCharacter" parent="Characters" unique_id=469213683 instance=ExtResource("8_2o6r5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
+axis_lock_angular_x = true
+axis_lock_angular_z = true
+angular_damp = 5.0
+camera_left_action = "cam_left"
+camera_right_action = "cam_right"
+camera_up_action = "cam_up"
+camera_down_action = "cam_down"
+camera_reset_action = "cam_reset"
+camera_pan_speed = 20.0
+camera_vertical_angle_lock = Vector2(-80, 0)
+move_left_action = "move_left"
+move_right_action = "move_right"
+move_up_action = "move_up"
+move_down_action = "move_down"
 
-[node name="Area3D" type="Area3D" parent="Characters/PhysicsCharacter" unique_id=1216281669]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Characters/PhysicsCharacter/Area3D" unique_id=1196508215]
-shape = SubResource("BoxShape3D_ioo17")
-
-[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="Characters/PhysicsCharacter" unique_id=1706790214]
-
-[node name="StaminaCharacter" parent="Characters" unique_id=150925175 instance=ExtResource("10_2o6r5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
-floor_collision_layer = 1
-running_jump_mod = null
-dash_action = "dash"
+[node name="Camera3D" type="Camera3D" parent="Characters/FreeCamCharacter" unique_id=31954610]
+transform = Transform3D(1, 0, 0, 0, 0.8574929, 0.5144958, 0, -0.5144958, 0.8574929, 0, 3, 5)
+current = true
 
 [node name="DashGranter" parent="Characters" unique_id=662543046 instance=ExtResource("11_70uel")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, -9)

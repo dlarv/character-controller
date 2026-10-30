@@ -1,5 +1,6 @@
 extends Camera3D
 
+@export var enabled := true
 @export var offset: Vector3
 @export var switch_delay := 0.5
 @export var start_idx := 0
@@ -17,12 +18,15 @@ func _ready():
 	targets = get_tree().get_nodes_in_group("controller")
 	for target in targets:
 		target.process_mode = Node.PROCESS_MODE_DISABLED
-	_target = targets[start_idx] if len(targets) > 0 else null
-	_next_perspective(start_idx)
+
+	if enabled: 
+		_target = targets[start_idx] if len(targets) > 0 else null
+		_next_perspective(start_idx)
 
 
 
 func _input(event: InputEvent):
+	if not enabled: return
 	if event.is_action_pressed("switch_perspective"):
 		_next_perspective((_curr_target_idx + 1) % len(targets))
 	elif event.is_action_pressed("toggle_god_mode"):
@@ -39,6 +43,7 @@ func _input(event: InputEvent):
 
 
 func _process(delta: float) -> void:
+	if not enabled: return
 	if len(targets) == 0 or _target == null: return
 	if _perspective_switch_tween and _perspective_switch_tween.is_running(): return
 	if _god_mode:
