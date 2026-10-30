@@ -11,29 +11,32 @@ const Grabber := preload("uid://b0vxc2nbll1aq")
 const GrabberIcon := preload("uid://dfgxtm8kwmq8e")
 const RBController := preload("uid://275scp4h71ib")
 const RBControllerIcon := preload("uid://bdrsjlid525ke")
+const OrbitalCamera := preload("uid://qk65wqodt4sh")
 
 
 func _enter_tree() -> void:
 	print("Character controller plugin enabled")
-	_add_types()
+	add_custom_type("StandardRBController", "RigidBody3D", RBController, RBControllerIcon)
+	_add_module_types()
 
 
 func _exit_tree() -> void:
 	print("Character controller plugin disabled")
-	_remove_types()
+	remove_custom_type("StandardRBController")
+	_remove_module_types()
 
 
-func _add_types() -> void:
+func _add_module_types() -> void:
 	add_custom_type("Interactable", "Area3D", Interactable, InteractableIcon)
 	add_custom_type("Interactor", "Area3D", Interactor, InteractorIcon)
 	add_custom_type("Grabbable", "Area3D", Grabbable, GrabbableIcon)
 	add_custom_type("Grabber", "Area3D", Grabber, GrabberIcon)
-	add_custom_type("StandardRBController", "RigidBody3D", RBController, RBControllerIcon)
+	add_custom_type("OrbitalCameraController", "Camera3D", OrbitalCamera, null)
 
 
-func _remove_types() -> void:
+func _remove_module_types() -> void:
 	remove_custom_type("Interactable")
 	remove_custom_type("Interactor")
 	remove_custom_type("Grabbable")
 	remove_custom_type("Grabber")
-	remove_custom_type("StandardRBController")
+	remove_custom_type("OrbitalCameraController")
