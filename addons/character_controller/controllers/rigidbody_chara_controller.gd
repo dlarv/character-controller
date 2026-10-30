@@ -43,7 +43,7 @@ const DEFAULT_CONTACTS_REPORTED := 100
 
 @export_group("Sprint")
 @export_custom(PROPERTY_HINT_GROUP_ENABLE, "")
-var sprint_enabled := true:
+var sprint_enabled := false:
 	set(val):
 		sprint_enabled = val
 		is_sprinting = is_sprinting and val
@@ -81,7 +81,7 @@ var jump_enabled := true
 @export var running_jump_mod := 10.0
 @export_group("Dash")
 @export_custom(PROPERTY_HINT_GROUP_ENABLE, "")
-var dash_enabled := true
+var dash_enabled := false
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var dash_action := ""
 @export var dash_length := 3.0
 @export var dash_time := 1.0:
