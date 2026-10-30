@@ -75,7 +75,7 @@ func _physics_process(delta: float) -> void:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var output := super._get_configuration_warnings()
-	if not free_cam_enabled: return []
+	if not free_cam_enabled: return output
 	for action in [camera_left_action, camera_right_action, camera_up_action, camera_down_action]:
 		if len(action) == 0:
 			output.append("Free cam mode is enabled, but one or more camera control actions are undefined.")
