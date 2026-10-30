@@ -22,8 +22,12 @@ contact_monitor = true
 max_contacts_reported = 100
 script = ExtResource("1_g2yvp")
 free_cam_enabled = true
+camera_left_action = "cam_left"
+camera_right_action = "cam_right"
+camera_up_action = "cam_up"
+camera_down_action = "cam_down"
+camera_reset_action = "cam_reset"
 camera_pan_speed = 10.0
-ignore_rotation = null
 metadata/_custom_type_script = "uid://b6hfsmylmvau1"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=99573567]

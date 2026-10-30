@@ -19,11 +19,16 @@ class_name FreeCamRBController
 @export var camera_pan_speed := 0.5
 @export var camera_zoom_speed := 3.0
 @export_custom(PROPERTY_HINT_RANGE, "-90,90,degrees") var camera_vertical_angle_lock := Vector2()
+## This controller wants to force ignore_rotation to be false. Disable this override to use value set in editor.
+@export var ignore_rotation_override := true
 
 var _camera: Camera3D
 var _radius: float
 
 func _ready() -> void:
+	if ignore_rotation_override:
+		ignore_rotation = false
+
 	for child in get_children():
 		if child is Camera3D:
 			_camera = child
@@ -66,14 +71,6 @@ func _physics_process(delta: float) -> void:
 	_camera.position.z = _radius * cos(_rad)
 	_camera.position.y = _radius * sin(_rad)
 	_camera.rotation_degrees.x = _phi
-
-
-func _get_movement_vector(speed: float) -> Vector3:
-	var _z_dir := Input.get_axis(move_up_action, move_down_action)
-	var _x_dir := Input.get_axis(move_left_action, move_right_action)
-	var _direction := (transform.basis.x * _x_dir) + (transform.basis.z * _z_dir)
-
-	return _direction * speed
 
 
 func _get_configuration_warnings() -> PackedStringArray:

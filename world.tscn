@@ -94,18 +94,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
 axis_lock_angular_x = true
 axis_lock_angular_z = true
 angular_damp = 5.0
-camera_left_action = "cam_left"
-camera_right_action = "cam_right"
-camera_up_action = "cam_up"
-camera_down_action = "cam_down"
-camera_reset_action = "cam_reset"
 camera_pan_speed = 20.0
 camera_vertical_angle_lock = Vector2(-80, 0)
 move_left_action = "move_left"
 move_right_action = "move_right"
 move_up_action = "move_up"
 move_down_action = "move_down"
-ignore_rotation = true
+ignore_rotation = false
 
 [node name="Character" parent="Characters" unique_id=899115962 instance=ExtResource("10_2o6r5")]
 axis_lock_angular_y = false
