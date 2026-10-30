@@ -15,8 +15,7 @@ class_name OrbitalCameraController
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_reset_action := ""
 @export var initial_offset := Vector3(0, 3, 5)
 @export var camera_pan_speed := 0.5
-@export var camera_zoom_speed := 3.0
-@export_custom(PROPERTY_HINT_RANGE, "-90,90,degrees") var camera_vertical_angle_lock := Vector2()
+@export_custom(PROPERTY_HINT_RANGE, "-90,90,degrees") var camera_vertical_angle_lock := Vector2(-90, 0)
 
 var _radius: float
 
