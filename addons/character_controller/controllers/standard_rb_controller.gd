@@ -458,3 +458,14 @@ func get_state_data() -> Dictionary:
 	}
 
 
+func _get_configuration_warnings() -> PackedStringArray:
+	var output := []
+
+	if sprint_enabled and len(sprint_action) == 0:
+		output.append("Sprint is enabled, but sprint action is undefined.")
+	if jump_enabled and len(jump_action) == 0:
+		output.append("Jump is enabled, but jump action is undefined.")
+	if dash_enabled and len(dash_action) == 0:
+		output.append("Dash is enabled, but dash action is undefined.")
+
+	return output

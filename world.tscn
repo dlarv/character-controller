@@ -95,6 +95,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
 axis_lock_angular_x = true
 axis_lock_angular_z = true
 angular_damp = 5.0
+free_cam_enabled = true
 camera_left_action = "cam_left"
 camera_right_action = "cam_right"
 camera_up_action = "cam_up"

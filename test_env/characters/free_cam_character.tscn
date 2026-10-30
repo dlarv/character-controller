@@ -29,7 +29,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_g2yvp")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1782996064]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1.4, 0.5)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1.4, -0.5)
 mesh = SubResource("CylinderMesh_g2yvp")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1181818873]

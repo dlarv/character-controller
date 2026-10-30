@@ -2,7 +2,8 @@
 extends StandardRBController
 class_name FreeCamRBController
 
-@export_category("Camera Controls")
+@export_group("Camera Movement Controls")
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "") var free_cam_enabled := false
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_left_action := ""
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_right_action := ""
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_up_action := ""
@@ -36,12 +37,16 @@ func _ready() -> void:
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	super._integrate_forces(state)
 
+	if not free_cam_enabled: return
+
 	var _cam_rotation := Input.get_axis(camera_left_action, camera_right_action)
 	state.apply_torque(Vector3.UP * _cam_rotation * camera_pan_speed)
 
 
 func _physics_process(delta: float) -> void:
-	if Input.is_action_just_pressed(camera_reset_action):
+	if Engine.is_editor_hint(): return
+	if not free_cam_enabled: return
+	if len(camera_reset_action) > 0 and Input.is_action_just_pressed(camera_reset_action):
 		_camera.global_position = global_position + initial_offset
 		_camera.look_at(global_position)
 	
@@ -68,3 +73,11 @@ func _get_movement_vector(speed: float) -> Vector3:
 	return _direction * speed
 
 
+func _get_configuration_warnings() -> PackedStringArray:
+	var output := super._get_configuration_warnings()
+	if not free_cam_enabled: return []
+	for action in [camera_left_action, camera_right_action, camera_up_action, camera_down_action]:
+		if len(action) == 0:
+			output.append("Free cam mode is enabled, but one or more camera control actions are undefined.")
+			break
+	return output
