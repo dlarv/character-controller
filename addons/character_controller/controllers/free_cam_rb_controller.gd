@@ -1,6 +1,11 @@
 @tool
 extends StandardRBController
 class_name FreeCamRBController
+## Builds off of StandardRBController, adding camera controls.
+##
+## Allows player to freely rotate camera, independent of Controller.
+## If no Camera3D found in children, one will be created at runtime.
+
 
 @export_group("Camera Movement Controls")
 @export_custom(PROPERTY_HINT_GROUP_ENABLE, "") var free_cam_enabled := false

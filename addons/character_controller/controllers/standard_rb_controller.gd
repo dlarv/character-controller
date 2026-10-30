@@ -1,6 +1,10 @@
 @tool
 extends RigidBody3D
 class_name StandardRBController
+## Basic character controller based off of a RigidBody3D.
+##
+## Provides builtin support for walking, sprinting, jumping, and dashing.
+## All but walking can be optional enabled/disabled.
 
 signal state_started(key: StringName)
 signal state_finished(key: StringName)
