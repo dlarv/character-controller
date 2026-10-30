@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dcrmucc242m3u"]
 
-[ext_resource type="Script" uid="uid://ch7n1cjy556v7" path="res://addons/character_controller/interactables/grabbable.gd" id="1_1rjvv"]
-[ext_resource type="Script" uid="uid://l7gvlh1m33i1" path="res://addons/character_controller/interactables/input_prompt_label.gd" id="2_dpal8"]
+[ext_resource type="Script" uid="uid://ch7n1cjy556v7" path="res://addons/character_controller/extra_modules/interactables/grabbable.gd" id="1_1rjvv"]
+[ext_resource type="Script" uid="uid://l7gvlh1m33i1" path="res://addons/character_controller/extra_modules/interactables/input_prompt_label.gd" id="2_dpal8"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_1rjvv"]
 
