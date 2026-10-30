@@ -11,7 +11,6 @@ class_name OrbitalCameraController
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_right_action := ""
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_up_action := ""
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_down_action := ""
-@export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_zoom_action := ""
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_reset_action := ""
 @export var initial_offset := Vector3(0, 3, 5)
 @export var camera_pan_speed := 0.5
