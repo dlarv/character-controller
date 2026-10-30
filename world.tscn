@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://c6fby36ghp0ru" path="res://test_env/interactables/jealous_boxes.tscn" id="7_gbfbk"]
 [ext_resource type="PackedScene" uid="uid://h0iow78t0ico" path="res://test_env/testing_tools/detector.tscn" id="7_pkg7o"]
 [ext_resource type="PackedScene" uid="uid://n1124tmn8ms2" path="res://test_env/objects/moving_platform.tscn" id="7_wse8f"]
-[ext_resource type="PackedScene" uid="uid://ti8n5apd7bg4" path="res://test_env/objects/ice_patch.tscn" id="8_2o6r5"]
 [ext_resource type="PackedScene" uid="uid://bi7vkl82lfueq" path="res://test_env/interactables/non_jealous_boxes.tscn" id="9_ioo17"]
 [ext_resource type="PackedScene" uid="uid://dcrmucc242m3u" path="res://test_env/interactables/draggable/draggable.tscn" id="9_wse8f"]
 [ext_resource type="PackedScene" uid="uid://s4r35c0mm362" path="res://test_env/stamina_poc/stamina_character.tscn" id="10_2o6r5"]
@@ -91,9 +90,6 @@ speed = 30.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 1, -15)
 speed_range = Vector2(30, 50)
 
-[node name="IcePatch" parent="TestingObjects" unique_id=223887710 instance=ExtResource("8_2o6r5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -4)
-
 [node name="Characters" type="Node3D" parent="." unique_id=1939529387]
 
 [node name="PhysicsCharacter" parent="Characters" unique_id=133858657 instance=ExtResource("1_f3sb7")]
@@ -101,7 +97,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 continuous_cd = true
 max_contacts_reported = 500
 floor_normal_threshold = 0.5
-falling_gravity_mod = 1.2
+falling_gravity_mod = 1.5
 falling_threshold = -0.5
 heavy_fall_threshold = 25.0
 heavy_fall_wait_time = 0.2
@@ -122,6 +118,7 @@ shape = SubResource("BoxShape3D_ioo17")
 [node name="StaminaCharacter" parent="Characters" unique_id=150925175 instance=ExtResource("10_2o6r5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
 floor_collision_layer = 1
+running_jump_mod = null
 dash_action = "dash"
 
 [node name="DashGranter" parent="Characters" unique_id=662543046 instance=ExtResource("11_70uel")]

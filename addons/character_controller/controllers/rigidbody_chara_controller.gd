@@ -76,7 +76,9 @@ var jump_enabled := true
 		jump_buffer_time = val
 		if not Engine.is_editor_hint() and _jump_buffer_timer:
 			_jump_buffer_timer.wait_time = val
-
+## Used to balance out sudden drop in momentum when player is running and jumping, by adding a burst of speed
+## when they hit the ground.
+@export var running_jump_mod := 10.0
 @export_group("Dash")
 @export_custom(PROPERTY_HINT_GROUP_ENABLE, "")
 var dash_enabled := true
@@ -127,6 +129,7 @@ var is_jumping := false:
 	set(val):
 		is_jumping = val
 		if val: state_started.emit(JUMP_KEY)
+var is_running_jump := false
 var can_sprint := true:
 	set(val):
 		can_sprint = val
@@ -213,6 +216,8 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		global_position.y = _dash_y_position
 		return
 
+	_calculate_if_on_floor(state)
+
 	var _prev_speed := _h_speed
 	_h_speed = _get_movement_vector(sprint_speed if is_sprinting else walk_speed)
 	if _h_speed.length() > 0:
@@ -221,14 +226,19 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			state_started.emit(WALK_KEY)
 	elif _prev_speed.length() > 0 and not is_sprinting:
 		state_finished.emit(WALK_KEY)
+
+	if is_running_jump and is_on_floor:
+		state.linear_velocity.y = max(0, state.linear_velocity.y)
+		_h_speed *= running_jump_mod
+		is_running_jump = false
 		
 	state.apply_central_force(_h_speed)
 	_calculate_damping(state)
 
-	_calculate_if_on_floor(state)
-
 	if _try_dash(state): pass
-	elif _try_jump(state): pass
+	elif _try_jump(state): 
+		if not _h_speed.is_zero_approx():
+			is_running_jump = true
 	elif _try_fall(falling_gravity_mod): pass
 	else:
 		gravity_scale = _initial_gravity_scale
@@ -313,11 +323,16 @@ func _try_jump(state: PhysicsDirectBodyState3D) -> bool:
 	if jump_enabled \
 			and _jump_buffered \
 			and can_jump:
+
 		if _check_variable_jump_running(false):
 			_variable_jump_timer.start()
-		can_jump = false
 		_coyote_timer.stop()
-		state.linear_velocity.y = 0
+
+		can_jump = false
+
+		# If falling and in coyote time, don't sum player's falling velocity with jump velocity.
+		state.linear_velocity.y = max(0, state.linear_velocity.y)
+
 		_jump(state)
 		is_jumping = true
 		return true
