@@ -262,14 +262,13 @@ func _get_movement_vector(speed: float) -> Vector3:
 
 	if ignore_rotation:
 		var _input_dir := Input.get_vector(move_left_action, move_right_action, move_up_action, move_down_action)
-		_direction = Vector3(_input_dir.x, 0, _input_dir.y).normalized()
+		_direction = Vector3(_input_dir.x, 0, _input_dir.y)
 	else:
 		var _z_dir := Input.get_axis(move_up_action, move_down_action)
 		var _x_dir := Input.get_axis(move_left_action, move_right_action)
 		_direction = (transform.basis.x * _x_dir) + (transform.basis.z * _z_dir)
 
-
-	return _direction * speed
+	return _direction.normalized() * speed
 
 
 ## Checks if player is standing on horizontal surface.
