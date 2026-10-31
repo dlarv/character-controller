@@ -16,9 +16,9 @@ class_name OrbitalCameraController
 		free_cam_enabled = val
 		if target == null: return
 		if override_ignore_rotation:
-			target.ignore_rotation = not free_cam_enabled
+			target.set_deferred("ignore_rotation", not free_cam_enabled)
 		if override_angular_lock:
-			target.axis_lock_angular_y = _initial_angular_y_lock and not val
+			target.set_deferred("axis_lock_angular_y", _initial_angular_y_lock and not val)
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_left_action := ""
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_right_action := ""
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_up_action := ""
