@@ -5,18 +5,14 @@ class_name Grabber
 signal grabbed_object()
 signal dropped_object()
 
-## Physics Object to be connected to Grabbable.
-## Defaults to this object's parent.
-@export var body: PhysicsBody3D
-
 var joint: Joint3D
 
 
 func _ready() -> void:
 	add_to_group(Grabbable.GRABBER_GROUP)
 
-	if Engine.is_editor_hint() and body == null and get_parent() is PhysicsBody3D:
-		body = get_parent()
+	if Engine.is_editor_hint() and root == null and get_parent() is PhysicsBody3D:
+		root = get_parent()
 
 	if not child_entered_tree.is_connected(_on_child_entered_tree):
 		child_entered_tree.connect(_on_child_entered_tree)
@@ -34,9 +30,9 @@ func _ready() -> void:
 
 
 func grab(other: PhysicsBody3D) -> void:
-	if body == null or joint == null: return
+	if root == null or joint == null: return
 	elif not joint.node_b:
-		joint.node_a = body.get_path()
+		joint.node_a = root.get_path()
 		joint.node_b = other.get_path()
 		grabbed_object.emit()
 	else:
