@@ -2,7 +2,7 @@
 extends Interactor
 class_name Grabber
 
-signal grabbed_object()
+signal grabbed_object(obj: PhysicsBody3D)
 signal dropped_object()
 
 var joint: Joint3D
@@ -34,7 +34,7 @@ func grab(other: PhysicsBody3D) -> void:
 	elif not joint.node_b:
 		joint.node_a = root.get_path()
 		joint.node_b = other.get_path()
-		grabbed_object.emit()
+		grabbed_object.emit(other)
 	else:
 		joint.node_a = NodePath()
 		joint.node_b = NodePath()
