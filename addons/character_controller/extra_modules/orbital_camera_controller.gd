@@ -25,7 +25,8 @@ class_name OrbitalCameraController
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_down_action := ""
 @export_custom(PROPERTY_HINT_INPUT_NAME, "show_builtin") var camera_reset_action := ""
 @export var initial_offset := Vector3(0, 3, 5)
-@export var camera_pan_speed := 10.0
+## Horizontal and vertical pan speed
+@export var camera_pan_speed := Vector2(10.0, 10.0)
 @export_custom(PROPERTY_HINT_RANGE, "-90,90,degrees") var camera_vertical_angle_lock := Vector2(-90, 0)
 
 var _radius: float
@@ -54,10 +55,10 @@ func _physics_process(delta: float) -> void:
 
 	# Rotate target Controller
 	var _cam_rotation := Input.get_axis(camera_left_action, camera_right_action)
-	target.apply_torque(Vector3.UP * _cam_rotation * camera_pan_speed * delta)
+	target.apply_torque(Vector3.UP * _cam_rotation * camera_pan_speed.x * delta)
 	
 	# Rotate self
-	var _cam_v_rotation := Input.get_axis(camera_up_action, camera_down_action) * delta * camera_pan_speed
+	var _cam_v_rotation := Input.get_axis(camera_up_action, camera_down_action) * delta * camera_pan_speed.y
 	if is_zero_approx(_cam_v_rotation): return
 
 	var _phi: float = clampf(
