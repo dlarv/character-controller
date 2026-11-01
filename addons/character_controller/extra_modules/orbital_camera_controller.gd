@@ -82,7 +82,7 @@ func reset() -> void:
 func set_enabled(val: bool, reset_transform:=true) -> void:
 	free_cam_enabled = val
 
-	if reset_transform:
+	if not val and reset_transform:
 		call_deferred("reset")
 
 
