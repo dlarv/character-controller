@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://dui6kmiicvskf"]
 
 [ext_resource type="Script" uid="uid://275scp4h71ib" path="res://addons/character_controller/controllers/standard_rb_controller.gd" id="1_d5r4c"]
-[ext_resource type="Script" uid="uid://d24g57moi63cx" path="res://addons/character_controller/extra_modules/interactables/interactor.gd" id="2_0m4bg"]
 [ext_resource type="Script" uid="uid://b0vxc2nbll1aq" path="res://addons/character_controller/extra_modules/interactables/grabber.gd" id="3_b8ce5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d5r4c"]
@@ -29,7 +28,6 @@ script = ExtResource("1_d5r4c")
 sprint_action = "sprint"
 sprint_speed = 125.0
 jump_height = 5.0
-metadata/_custom_type_script = "uid://beb0c2syh44qw"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=65133136]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -39,18 +37,9 @@ mesh = SubResource("CapsuleMesh_fj7yv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_tlwt5")
 
-[node name="Interactor" type="Area3D" parent="." unique_id=2111413141 node_paths=PackedStringArray("root")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-script = ExtResource("2_0m4bg")
-root = NodePath("..")
-metadata/_custom_type_script = "uid://d24g57moi63cx"
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactor" unique_id=1932481718]
-shape = SubResource("CapsuleShape3D_b8ce5")
-
-[node name="Grabber" type="Area3D" parent="." unique_id=787360321 node_paths=PackedStringArray("body")]
+[node name="Grabber" type="Area3D" parent="." unique_id=787360321 node_paths=PackedStringArray("root") groups=["interactor"]]
 script = ExtResource("3_b8ce5")
-body = NodePath("..")
+root = NodePath("..")
 metadata/_custom_type_script = "uid://b0vxc2nbll1aq"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Grabber" unique_id=288113911]
