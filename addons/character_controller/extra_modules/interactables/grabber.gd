@@ -36,9 +36,13 @@ func grab(other: PhysicsBody3D) -> void:
 		joint.node_b = other.get_path()
 		grabbed_object.emit(other)
 	else:
-		joint.node_a = NodePath()
-		joint.node_b = NodePath()
-		dropped_object.emit()
+		drop()
+
+
+func drop() -> void:
+	joint.node_a = NodePath()
+	joint.node_b = NodePath()
+	dropped_object.emit()
 
 
 func set_enabled(val: bool) -> void:
